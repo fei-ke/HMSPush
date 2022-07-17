@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">HMSPush</string>
+    <string name="xposedDescription">启用 HMSCore 系统级推送、伪装华为设备</string>
+</resources>
