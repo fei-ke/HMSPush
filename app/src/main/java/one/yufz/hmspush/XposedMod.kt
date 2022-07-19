@@ -90,7 +90,7 @@ class XposedMod : IXposedHookLoadPackage {
     }
 
     private fun hookPush(classLoader: ClassLoader) {
-        Class::class.java.hookMethod("forName", String::class.java) {
+        Class::class.java.hookMethod("forName", String::class.java, Boolean::class.java, ClassLoader::class.java) {
             doBefore {
                 if (args[0] == NotificationManagerEx::class.java.name) {
                     result = NotificationManagerEx::class.java
