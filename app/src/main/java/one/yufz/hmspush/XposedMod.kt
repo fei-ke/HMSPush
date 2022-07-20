@@ -10,7 +10,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
 
 class XposedMod : IXposedHookLoadPackage {
     companion object {
-        private const val TAG = "XposedMod.HMSPush"
+        private const val TAG = "XposedMod"
     }
 
     @Throws(Throwable::class)
@@ -23,25 +23,30 @@ class XposedMod : IXposedHookLoadPackage {
         }
 
         if (lpparam.packageName == HMS_PACKAGE_NAME) {
-            hookHMS()
+            if (lpparam.processName == HMS_CORE_PROCESS) {
+                hookHMS()
+            }
             return
         }
 
-        fakeDevices(lpparam)
+        fakeDevice(lpparam)
     }
 
     private fun hookHMS() {
         DexClassLoader::class.java.hookAllConstructor {
             doAfter {
                 val dexPath = args[0] as String
-                if (dexPath.contains(HMS_PUSH_PACKAGE_NAME)) {
-                    hookPush(thisObject as ClassLoader)
+                //XLog.d(TAG, "load dex path: $dexPath")
+                if (dexPath.endsWith(HMS_PUSH_BASE)) {
+                    hookLegacyPush(thisObject as ClassLoader)
+                } else if (dexPath.endsWith(HMS_PUSH_NC)) {
+                    HookPushNC.hook(thisObject as ClassLoader)
                 }
             }
         }
     }
 
-    private fun fakeDevices(lpparam: LoadPackageParam) {
+    private fun fakeDevice(lpparam: LoadPackageParam) {
         val classSystemProperties = lpparam.classLoader.findClass("android.os.SystemProperties")
         val callback: HookContext.() -> Unit = {
             doBefore {
@@ -89,7 +94,9 @@ class XposedMod : IXposedHookLoadPackage {
         }
     }
 
-    private fun hookPush(classLoader: ClassLoader) {
+    private fun hookLegacyPush(classLoader: ClassLoader) {
+        XLog.d(TAG, "hookLegacyPush() called with: classLoader = $classLoader")
+
         Class::class.java.hookMethod("forName", String::class.java, Boolean::class.java, ClassLoader::class.java) {
             doBefore {
                 if (args[0] == NotificationManagerEx::class.java.name) {
