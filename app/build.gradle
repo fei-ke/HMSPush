@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "one.yufz.hmspush"
-        minSdk 30
+        minSdk 29
         targetSdk 31
         versionCode 2
         versionName "0.0.2"

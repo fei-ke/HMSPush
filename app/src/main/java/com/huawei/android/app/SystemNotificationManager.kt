@@ -5,6 +5,7 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.os.Build
 import one.yufz.hmspush.HMS_PACKAGE_NAME
 import one.yufz.hmspush.callMethod
 import one.yufz.hmspush.callStaticMethod
@@ -38,8 +39,15 @@ class SystemNotificationManager : INotificationManager {
     }
 
     override fun cancelNotification(context: Context, packageName: String, id: Int) {
-        context.getSystemService(NotificationManager::class.java)
-            .cancelAsPackage(packageName, null, id)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            context.getSystemService(NotificationManager::class.java)
+                .cancelAsPackage(packageName, null, id)
+        } else {
+            val userId = context.callMethod("getUserId") as Int
+            //  public void cancelNotificationWithTag(String pkg, String tag, int id, int userId)
+            val methodCancelNotificationWithTag = XposedHelpers.findMethodExact(notificationManager.javaClass, "cancelNotificationWithTag", String::class.java, String::class.java, Int::class.java, Int::class.java)
+            methodCancelNotificationWithTag.invoke(notificationManager, packageName, null, id, userId)
+        }
     }
 
     override fun deleteNotificationChannel(packageName: String, channelId: String) {
