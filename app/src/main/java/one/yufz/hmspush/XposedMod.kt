@@ -36,11 +36,25 @@ class XposedMod : IXposedHookLoadPackage {
         DexClassLoader::class.java.hookAllConstructor {
             doAfter {
                 val dexPath = args[0] as String
-                //XLog.d(TAG, "load dex path: $dexPath")
-                if (dexPath.endsWith(HMS_PUSH_BASE)) {
-                    hookLegacyPush(thisObject as ClassLoader)
-                } else if (dexPath.endsWith(HMS_PUSH_NC)) {
-                    HookPushNC.hook(thisObject as ClassLoader)
+                if (dexPath.contains("push")) {
+                    XLog.d(TAG, "load push related dex path: $dexPath")
+
+                    val paths = dexPath.split("/")
+                    val version = paths.getOrNull(paths.size - 2)?.toIntOrNull() ?: 0
+
+                    XLog.d(TAG, "load push version: $version")
+
+                    val classLoader = thisObject as ClassLoader
+
+                    if (dexPath.endsWith(HMS_PUSH_NC)) {
+                        if (version >= 60600300) {
+                            HookPushNC.hook(classLoader)
+                        } else {
+                            hookLegacyPush(classLoader)
+                        }
+                    } else if (version <= 60200301) {
+                        hookLegacyPush(classLoader)
+                    }
                 }
             }
         }
