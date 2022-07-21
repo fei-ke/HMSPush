@@ -23,3 +23,7 @@ HMS Core 是华为提供的一套服务，其中包含了推送功能，可以�
 ### 注意：
 - 并不是所有应用都支持 HMS 推送，目前测试支持的有 QQ、抖音、知乎、酷安、企业微信
 - 微信、咸鱼、支付宝测试不支持
+
+### License
+[GNU General Public License v3 (GPL-3)](http://www.gnu.org/copyleft/gpl.html).
+
