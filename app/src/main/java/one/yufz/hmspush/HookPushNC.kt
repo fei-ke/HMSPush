@@ -11,6 +11,8 @@ object HookPushNC {
     fun hook(classLoader: ClassLoader) {
         XLog.d(TAG, "hookPushNC() called with: classLoader = $classLoader")
 
+        FakeHsf.hook(classLoader)
+
         val classHwNotificationManager = classLoader.findClass("com.huawei.hsf.notification.HwNotificationManager")
         val classHsfApi = classLoader.findClass("com.huawei.hsf.common.api.HsfApi")
 

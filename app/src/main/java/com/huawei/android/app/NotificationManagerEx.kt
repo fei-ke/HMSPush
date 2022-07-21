@@ -36,7 +36,7 @@ object NotificationManagerEx {
     }
 
     fun notify(context: Context, packageName: String, id: Int, notification: Notification) {
-        XLog.d(TAG, "getNotificationChannel() called with: context = $context, packageName = $packageName, id = $id, notification = $notification")
+        XLog.d(TAG, "notify() called with: context = $context, packageName = $packageName, id = $id, notification = $notification")
         notificationManager.notify(context, packageName, id, notification)
     }
 
