@@ -16,6 +16,13 @@ object HookPushNC {
         val classHwNotificationManager = classLoader.findClass("com.huawei.hsf.notification.HwNotificationManager")
         val classHsfApi = classLoader.findClass("com.huawei.hsf.common.api.HsfApi")
 
+        //change default priority of notification
+        classLoader.findClass("com.huawei.hms.pushnc.entity.PushSelfShowMessage").hookMethod("getPriority") {
+            doAfter {
+                if (result == 2) result = 1
+            }
+        }
+
         classHwNotificationManager.hookMethod("isSupportHmsNc", classHsfApi) {
             replace { true }
         }
