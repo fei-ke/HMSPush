@@ -10,9 +10,9 @@ HMS Core 是华为提供的一套服务，其中包含了推送功能，可以�
 同时支持将应用运行环境伪装成华为设备，以此来实现无后台系统级别的推送通道。
 
 ### 安装步骤：
-- 下载 [HMS Push](https://github.com/fei-ke/HMSPush/releases/download/v0.0.4/HMSPush-v0.0.4.apk) 并安装，在 LSPosed 中启用 HMSPush 模块，并勾选 「系统框架」作用域
+- 下载 [HMS Push](https://github.com/fei-ke/HMSPush/releases) 并安装，在 LSPosed 中启用 HMSPush 模块，并勾选 「系统框架」作用域
 
-- 下载 [HMS Core](https://github.com/fei-ke/HMSPush/releases/download/v0.0.4/hms-push-v0.2.zip) 在 Magisk 中刷入然后重启设备
+- 下载 [HMS Core](https://github.com/fei-ke/HMSPush/releases/download/v0.0.6/HMSCore-v0.3.zip) 在 Magisk 中刷入然后重启设备
 
 - LSPosed 里 HMSPush 模块里继续勾选 「HMS Core」作用域（这一步目的是实现不唤醒应用弹出通知），然后强行停止一次「HMS Core」让作用域生效
 
