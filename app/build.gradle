@@ -32,4 +32,6 @@ android {
 dependencies {
     compileOnly 'de.robv.android.xposed:api:82'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
 }

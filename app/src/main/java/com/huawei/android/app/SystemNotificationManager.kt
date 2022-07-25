@@ -6,12 +6,16 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import de.robv.android.xposed.XposedHelpers
 import one.yufz.hmspush.HMS_PACKAGE_NAME
 import one.yufz.hmspush.callMethod
 import one.yufz.hmspush.callStaticMethod
-import de.robv.android.xposed.XposedHelpers
+import org.lsposed.hiddenapibypass.HiddenApiBypass
 
 class SystemNotificationManager : INotificationManager {
+    init {
+        HiddenApiBypass.addHiddenApiExemptions("");
+    }
 
     private val notificationManager: Any = NotificationManager::class.java.callStaticMethod("getService")!!
 
