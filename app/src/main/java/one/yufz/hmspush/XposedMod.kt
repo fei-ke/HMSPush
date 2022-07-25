@@ -1,5 +1,6 @@
 package one.yufz.hmspush
 
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import com.huawei.android.app.NotificationManagerEx
@@ -103,6 +104,14 @@ class XposedMod : IXposedHookLoadPackage {
                     }
                 } catch (e: Exception) {
                     //ignore
+                }
+            }
+        }
+        classNotificationManagerService.hookMethod("onBootPhase", Int::class.java) {
+            doAfter {
+                //com.android.server.SystemService#PHASE_BOOT_COMPLETED
+                if (args[0] == 1000) {
+                    KeepHmsAlive(thisObject.callMethod("getContext") as Context).start()
                 }
             }
         }
