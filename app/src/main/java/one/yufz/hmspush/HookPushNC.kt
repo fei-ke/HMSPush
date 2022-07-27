@@ -3,7 +3,10 @@ package one.yufz.hmspush
 import android.app.AndroidAppHelper
 import android.app.Notification
 import android.app.NotificationChannel
+import android.content.Context
+import android.content.SharedPreferences
 import com.huawei.android.app.NotificationManagerEx
+import java.util.prefs.PreferenceChangeListener
 
 object HookPushNC {
     private const val TAG = "HookPushNC"
@@ -22,6 +25,8 @@ object HookPushNC {
                 if (result == 2) result = 1
             }
         }
+
+        PushSignWatcher().watch()
 
         classHwNotificationManager.hookMethod("isSupportHmsNc", classHsfApi) {
             replace { true }
