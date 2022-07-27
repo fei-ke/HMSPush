@@ -72,10 +72,12 @@ class KeepHmsAlive(private val context: Context) {
             return
         }
 
-        wakeupHms()
-
-        val bound = context.bindService(createServiceIntent(), serviceConnection, Context.BIND_AUTO_CREATE or Context.BIND_IMPORTANT)
-
+        val bound = try {
+            context.bindService(createServiceIntent(), serviceConnection, Context.BIND_AUTO_CREATE or Context.BIND_IMPORTANT)
+        } catch (t: Throwable) {
+            XLog.e(TAG, "bindService error", t)
+            false
+        }
         XLog.d(TAG, "connect() result: $bound")
 
         if (!bound) {
@@ -112,10 +114,5 @@ class KeepHmsAlive(private val context: Context) {
         if (connected) {
             context.unbindService(serviceConnection)
         }
-    }
-
-    private fun wakeupHms() {
-        XLog.d(TAG, "wakeupHms() called")
-        context.startService(createServiceIntent())
     }
 }
