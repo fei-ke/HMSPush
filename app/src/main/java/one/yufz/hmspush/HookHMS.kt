@@ -6,6 +6,7 @@ import android.content.Intent
 import com.huawei.android.app.NotificationManagerEx
 import dalvik.system.DexClassLoader
 import de.robv.android.xposed.callbacks.XC_LoadPackage
+import one.yufz.hmspush.settings.HookSettings
 
 class HookHMS {
     companion object {
@@ -48,6 +49,8 @@ class HookHMS {
                 }
             }
         }
+
+        HookSettings().hook(lpparam.classLoader)
     }
 
 
