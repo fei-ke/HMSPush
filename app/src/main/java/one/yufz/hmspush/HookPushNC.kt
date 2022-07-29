@@ -26,8 +26,6 @@ object HookPushNC {
             }
         }
 
-        PushSignWatcher().watch()
-
         classHwNotificationManager.hookMethod("isSupportHmsNc", classHsfApi) {
             replace { true }
         }

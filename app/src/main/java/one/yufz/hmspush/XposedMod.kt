@@ -34,6 +34,7 @@ class XposedMod : IXposedHookLoadPackage {
     }
 
     private fun hookHMS() {
+        PushSignWatcher().watch()
         DexClassLoader::class.java.hookAllConstructor {
             doAfter {
                 val dexPath = args[0] as String
@@ -53,7 +54,7 @@ class XposedMod : IXposedHookLoadPackage {
                         } else {
                             hookLegacyPush(classLoader)
                         }
-                    } else if (version <= 60200301) {
+                    } else if (version <= 60300301) {
                         hookLegacyPush(classLoader)
                     }
                 }
