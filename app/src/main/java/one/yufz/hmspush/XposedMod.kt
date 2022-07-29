@@ -34,7 +34,6 @@ class XposedMod : IXposedHookLoadPackage {
     }
 
     private fun hookHMS() {
-        PushSignWatcher().watch()
         DexClassLoader::class.java.hookAllConstructor {
             doAfter {
                 val dexPath = args[0] as String
@@ -120,6 +119,8 @@ class XposedMod : IXposedHookLoadPackage {
 
     private fun hookLegacyPush(classLoader: ClassLoader) {
         XLog.d(TAG, "hookLegacyPush() called with: classLoader = $classLoader")
+
+        PushSignWatcher().watch()
 
         Class::class.java.hookMethod("forName", String::class.java, Boolean::class.java, ClassLoader::class.java) {
             doBefore {
