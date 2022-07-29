@@ -67,6 +67,7 @@ class XposedMod : IXposedHookLoadPackage {
                     "ro.build.hw_emui_api_level" -> result = "21"
                     //"ro.product.model" -> result = "NOP-AN00"
                     "ro.product.brand", "ro.product.manufacturer" -> result = "HUAWEI"
+                    "ro.miui.ui.version.name" -> result = ""
                 }
             }
         }
