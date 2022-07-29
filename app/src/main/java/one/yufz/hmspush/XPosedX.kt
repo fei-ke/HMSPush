@@ -29,8 +29,8 @@ typealias HookCallback = HookContext.() -> Unit
 fun Class<*>.hookMethod(methodName: String, vararg parameterTypes: Class<*>, callback: HookCallback) =
     XposedHelpers.findAndHookMethod(this, methodName, *parameterTypes, MethodHook(callback))
 
-fun Class<*>.hookConstructor(methodName: String, vararg parameterTypes: Class<*>, callback: HookCallback) =
-    XposedHelpers.findAndHookConstructor(this, methodName, *parameterTypes, MethodHook(callback))
+fun Class<*>.hookConstructor(vararg parameterTypes: Class<*>, callback: HookCallback) =
+    XposedHelpers.findAndHookConstructor(this, *parameterTypes, MethodHook(callback))
 
 fun Class<*>.hookAllConstructor(callback: HookCallback) =
     XposedBridge.hookAllConstructors(this, MethodHook(callback))

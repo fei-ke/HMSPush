@@ -1,12 +1,9 @@
 package one.yufz.hmspush
 
-import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Build
 import com.huawei.android.app.NotificationManagerEx
 import dalvik.system.DexClassLoader
 import de.robv.android.xposed.IXposedHookLoadPackage
-import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
 
 class XposedMod : IXposedHookLoadPackage {
@@ -18,8 +15,8 @@ class XposedMod : IXposedHookLoadPackage {
     override fun handleLoadPackage(lpparam: LoadPackageParam) {
         XLog.d(TAG, "Loaded app: " + lpparam.packageName + " process:" + lpparam.processName)
 
-        if (lpparam.packageName == "android") {
-            hookSystemServer(lpparam.classLoader)
+        if (lpparam.packageName == ANDROID_PACKAGE_NAME) {
+            HookSystemService().hook(lpparam.classLoader)
             return
         }
 
@@ -79,42 +76,6 @@ class XposedMod : IXposedHookLoadPackage {
         //Build::class.java["MODEL"] = "NOP-AN00"
         Build::class.java["BRAND"] = "HUAWEI"
         Build::class.java["MANUFACTURER"] = "HUAWEI"
-    }
-
-    private fun hookSystemServer(classLoader: ClassLoader) {
-        val classPreferencesHelper = XposedHelpers.findClass("com.android.server.notification.PreferencesHelper", classLoader)
-        classPreferencesHelper.hookMethod("isDelegateAllowed", String::class.java, Int::class.java, String::class.java, Int::class.java) {
-            doBefore {
-                val potentialDelegatePkg = args[2] as String
-                if (potentialDelegatePkg == HMS_PACKAGE_NAME) {
-                    result = true
-                }
-            }
-        }
-
-        val classNotificationManagerService = XposedHelpers.findClass("com.android.server.notification.NotificationManagerService", classLoader)
-        classNotificationManagerService.hookMethod("isUidSystemOrPhone", Int::class.java) {
-            doBefore {
-                val pm: PackageManager = thisObject["mPackageManagerClient"]
-                val uid = args[0] as Int
-                try {
-                    val hmsUid = pm.getPackageUid(HMS_PACKAGE_NAME, 0)
-                    if (hmsUid == uid) {
-                        result = true
-                    }
-                } catch (e: Exception) {
-                    //ignore
-                }
-            }
-        }
-        classNotificationManagerService.hookMethod("onBootPhase", Int::class.java) {
-            doAfter {
-                //com.android.server.SystemService#PHASE_BOOT_COMPLETED
-                if (args[0] == 1000) {
-                    KeepHmsAlive(thisObject.callMethod("getContext") as Context).start()
-                }
-            }
-        }
     }
 
     private fun hookLegacyPush(classLoader: ClassLoader) {
