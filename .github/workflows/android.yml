@@ -30,7 +30,6 @@ jobs:
       with:
         releaseDirectory: |
           app/build/outputs/apk/release
-          app/build/outputs/bundle/release
         signingKeyBase64: ${{ secrets.SIGNING_KEY }}
         output: build/release/signed
         alias: ${{ secrets.ALIAS }}
