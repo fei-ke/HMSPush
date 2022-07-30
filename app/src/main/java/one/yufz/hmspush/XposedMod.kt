@@ -65,7 +65,7 @@ class XposedMod : IXposedHookLoadPackage {
                 val key = args[0] as String
                 when (key) {
                     "ro.build.hw_emui_api_level" -> result = "21"
-                    //"ro.product.model" -> result = "NOP-AN00"
+                    "ro.build.version.emui" -> result = "EmotionUI"
                     "ro.product.brand", "ro.product.manufacturer" -> result = "HUAWEI"
                     "ro.miui.ui.version.name" -> result = ""
                 }
@@ -74,7 +74,6 @@ class XposedMod : IXposedHookLoadPackage {
         classSystemProperties.hookMethod("get", String::class.java, callback = callback)
         classSystemProperties.hookMethod("get", String::class.java, String::class.java, callback = callback)
 
-        //Build::class.java["MODEL"] = "NOP-AN00"
         Build::class.java["BRAND"] = "HUAWEI"
         Build::class.java["MANUFACTURER"] = "HUAWEI"
     }
