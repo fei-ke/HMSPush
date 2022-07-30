@@ -21,7 +21,7 @@ object XLog {
     fun XC_MethodHook.MethodHookParam.logMethod(tag: String) {
         d(tag, "╔═══════════════════════════════════════════════════════")
         d(tag, method.toString())
-        d(tag, "${method.name} called with ${args.contentToString()}")
+        d(tag, "${method.name} called with ${args.contentDeepToString()}")
 
         if (hasThrowable()) {
             e(tag, "${method.name} thrown", throwable)

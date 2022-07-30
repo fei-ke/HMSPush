@@ -1,10 +1,10 @@
 package one.yufz.hmspush
 
-import android.os.Build
 import com.huawei.android.app.NotificationManagerEx
 import dalvik.system.DexClassLoader
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
+import one.yufz.hmspush.fakedevice.FakeDevice
 
 class XposedMod : IXposedHookLoadPackage {
     companion object {
@@ -27,7 +27,7 @@ class XposedMod : IXposedHookLoadPackage {
             return
         }
 
-        fakeDevice(lpparam)
+        FakeDevice.fake(lpparam)
     }
 
     private fun hookHMS() {
@@ -58,25 +58,6 @@ class XposedMod : IXposedHookLoadPackage {
         }
     }
 
-    private fun fakeDevice(lpparam: LoadPackageParam) {
-        val classSystemProperties = lpparam.classLoader.findClass("android.os.SystemProperties")
-        val callback: HookContext.() -> Unit = {
-            doBefore {
-                val key = args[0] as String
-                when (key) {
-                    "ro.build.hw_emui_api_level" -> result = "21"
-                    "ro.build.version.emui" -> result = "EmotionUI"
-                    "ro.product.brand", "ro.product.manufacturer" -> result = "HUAWEI"
-                    "ro.miui.ui.version.name" -> result = ""
-                }
-            }
-        }
-        classSystemProperties.hookMethod("get", String::class.java, callback = callback)
-        classSystemProperties.hookMethod("get", String::class.java, String::class.java, callback = callback)
-
-        Build::class.java["BRAND"] = "HUAWEI"
-        Build::class.java["MANUFACTURER"] = "HUAWEI"
-    }
 
     private fun hookLegacyPush(classLoader: ClassLoader) {
         XLog.d(TAG, "hookLegacyPush() called with: classLoader = $classLoader")
