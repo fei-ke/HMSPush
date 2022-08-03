@@ -10,8 +10,8 @@ android {
         applicationId "one.yufz.hmspush"
         minSdk 26
         targetSdk 31
-        versionCode 10
-        versionName "v0.0.8"
+        versionCode 11
+        versionName "v0.0.9"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
