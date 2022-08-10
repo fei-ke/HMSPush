@@ -12,6 +12,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
     - name: Force fetch Tags
       run: |
         git fetch --tags --force
@@ -27,27 +30,25 @@ jobs:
         distribution: 'adopt'
         cache: gradle
 
+    - name: Write key
+      run: |
+        if [ ! -z "${{ secrets.SIGNING_KEY }}" ]; then
+          echo STORE_PASSWORD='${{ secrets.KEY_STORE_PASSWORD }}' >> gradle.properties
+          echo KEY_ALIAS='${{ secrets.ALIAS }}' >> gradle.properties
+          echo KEY_PASSWORD='${{ secrets.KEY_PASSWORD }}' >> gradle.properties
+          echo STORE_FILE_PATH='../release.keystore' >> gradle.properties
+          echo ${{ secrets.SIGNING_KEY }} | base64 --decode > release.keystore
+        fi
+
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew assembleRelease
 
-    - uses: r0adkll/sign-android-release@v1
-      name: Sign app APK
-      id: sign_apk
-      with:
-        releaseDirectory: app/build/outputs/apk/release
-        signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-        alias: ${{ secrets.ALIAS }}
-        keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-        keyPassword: ${{ secrets.KEY_PASSWORD }}
-      env:
-        BUILD_TOOLS_VERSION: "30.0.2"
-
     - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v2.3.1
+      uses: actions/upload-artifact@v3
       with:
-        path: ${{steps.sign_apk.outputs.signedReleaseFile}}
+        path: app/build/outputs/apk/release/*.apk
 
     - uses: ericcornelissen/git-tag-annotation-action@v2
       id: tag-data
@@ -63,11 +64,10 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
     - name: Upload APK
-      uses: actions/upload-release-asset@v1
+      uses: alexellis/upload-assets@0.3.0
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ steps.sign_apk.outputs.signedReleaseFile }}
-        asset_name: HMSPush-${{ steps.var.outputs.tag }}.apk
+        asset_path: '["app/build/outputs/apk/release/*.apk"]'
         asset_content_type: application/zip
