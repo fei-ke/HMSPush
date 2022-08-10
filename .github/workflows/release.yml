@@ -64,10 +64,9 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
     - name: Upload APK
-      uses: alexellis/upload-assets@0.3.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      uses: csexton/release-asset-action@v2
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: '["app/build/outputs/apk/release/*.apk"]'
+        github-token: ${{ secrets.GH_TOKEN }}
+        release-url: ${{ steps.create_release.outputs.upload_url }}
+        pattern: "app/build/outputs/apk/release/*.apk"
         asset_content_type: application/zip
