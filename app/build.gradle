@@ -15,11 +15,26 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        setProperty("archivesBaseName", "${rootProject.name}-${versionName}(${versionCode})")
+        archivesBaseName = "${rootProject.name}-${versionName}(${versionCode})"
+    }
+
+    signingConfigs {
+        release {
+            storeFile file(STORE_FILE_PATH)
+            keyAlias KEY_ALIAS
+            keyPassword KEY_PASSWORD
+            storePassword STORE_PASSWORD
+        }
     }
 
     buildTypes {
+        debug {
+            if (signingConfigs.release.storeFile.exists()) {
+                signingConfig signingConfigs.release
+            }
+        }
         release {
+            signingConfig signingConfigs.release
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
