@@ -1,7 +1,10 @@
 package one.yufz.hmspush.hook.fakedevice
 
+import android.app.Application
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import one.yufz.hmspush.hook.XLog
+import one.yufz.hmspush.hook.system.HookSystemService
+import one.yufz.xposed.hookMethod
 
 object FakeDevice {
     private const val TAG = "FakeDevice"
@@ -26,5 +29,13 @@ object FakeDevice {
 
         val fakes = FakeDeviceConfig[lpparam.packageName] ?: Default
         fakes.forEach { it.newInstance().fake(lpparam) }
+
+        Application::class.java.hookMethod("onCreate") {
+            doAfter {
+                if (!HookSystemService.isSystemHookReady) {
+                    FakeHmsSignature.hook(lpparam)
+                }
+            }
+        }
     }
 }

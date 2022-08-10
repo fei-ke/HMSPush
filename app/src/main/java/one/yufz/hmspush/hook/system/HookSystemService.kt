@@ -1,9 +1,12 @@
 package one.yufz.hmspush.hook.system
 
+import android.app.AndroidAppHelper
+import android.app.NotificationManager
 import android.content.Context
 import android.os.Binder
 import de.robv.android.xposed.XposedHelpers
 import one.yufz.hmspush.common.IS_SYSTEM_HOOK_READY
+import one.yufz.hmspush.hook.XLog
 import one.yufz.xposed.callMethod
 import one.yufz.xposed.get
 import one.yufz.xposed.hookMethod
@@ -11,6 +14,17 @@ import one.yufz.xposed.hookMethod
 class HookSystemService {
     companion object {
         private const val TAG = "HookSystemService"
+
+        val isSystemHookReady: Boolean by lazy {
+            try {
+                val nm = AndroidAppHelper.currentApplication().getSystemService(NotificationManager::class.java)
+                nm.callMethod("isSystemConditionProviderEnabled", IS_SYSTEM_HOOK_READY) as Boolean
+            } catch (t: Throwable) {
+                XLog.e(TAG, "isSystemHookReady error", t)
+                false
+            }
+        }
+
     }
 
     fun hook(classLoader: ClassLoader) {

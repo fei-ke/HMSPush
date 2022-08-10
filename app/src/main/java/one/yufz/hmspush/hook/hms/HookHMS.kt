@@ -11,6 +11,7 @@ import de.robv.android.xposed.XposedHelpers.ClassNotFoundError
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import one.yufz.hmspush.hook.XLog
 import one.yufz.hmspush.hook.bridge.HookContentProvider
+import one.yufz.hmspush.hook.system.HookSystemService
 import one.yufz.xposed.*
 
 class HookHMS {
@@ -58,8 +59,8 @@ class HookHMS {
         }
 
         HookContentProvider().hook(lpparam.classLoader)
+        fakeFingerprint(lpparam)
     }
-
 
     private fun hookLegacyPush(classLoader: ClassLoader) {
         XLog.d(TAG, "hookLegacyPush() called with: classLoader = $classLoader")
@@ -80,5 +81,21 @@ class HookHMS {
                 }
             }
         }
+    }
+
+    private fun fakeFingerprint(lpparam: XC_LoadPackage.LoadPackageParam) {
+        lpparam.classLoader.findClass("com.huawei.hms.auth.api.CheckFingerprintRequest")
+            .hookMethod("parseEntity", String::class.java) {
+                doBefore {
+                    if (!HookSystemService.isSystemHookReady) {
+                        val request = args[0] as String
+                        if (request.contains("auth.checkFingerprint")) {
+                            val response = """{"header":{"auth_rtnCode":"0"},"body":{}}"""
+                            thisObject.callMethod("call", response)
+                            result = null
+                        }
+                    }
+                }
+            }
     }
 }
