@@ -14,6 +14,8 @@ android {
         versionName gitVersionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        setProperty("archivesBaseName", "${rootProject.name}-${versionName}(${versionCode})")
     }
 
     buildTypes {
