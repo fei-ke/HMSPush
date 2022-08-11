@@ -16,7 +16,7 @@ object HookPushNC {
 
         FakeHsf.hook(classLoader)
 
-        PushSignWatcher().watch()
+        PushSignWatcher.watch()
 
         val classHwNotificationManager = classLoader.findClass("com.huawei.hsf.notification.HwNotificationManager")
         val classHsfApi = classLoader.findClass("com.huawei.hsf.common.api.HsfApi")

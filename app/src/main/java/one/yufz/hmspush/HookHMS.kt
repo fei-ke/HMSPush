@@ -57,7 +57,7 @@ class HookHMS {
     private fun hookLegacyPush(classLoader: ClassLoader) {
         XLog.d(TAG, "hookLegacyPush() called with: classLoader = $classLoader")
 
-        PushSignWatcher().watch()
+        PushSignWatcher.watch()
 
         Class::class.java.hookMethod("forName", String::class.java, Boolean::class.java, ClassLoader::class.java) {
             doBefore {

@@ -1,4 +1,7 @@
 package one.yufz.hmspush.settings
 
-class AppInfo(var packageName: String) {
-}
+class AppInfo(
+    val packageName: String,
+    var registered: Boolean = false,
+    val lastPushTime: Long? = null
+)

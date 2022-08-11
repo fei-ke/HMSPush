@@ -3,14 +3,19 @@ package one.yufz.hmspush
 import android.app.AndroidAppHelper
 import android.content.Context
 import android.content.SharedPreferences
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.runBlocking
 
 
-class PushSignWatcher : SharedPreferences.OnSharedPreferenceChangeListener {
-    companion object {
-        private const val TAG = "PushSignWatcher"
-    }
+object PushSignWatcher : SharedPreferences.OnSharedPreferenceChangeListener {
+    private const val TAG = "PushSignWatcher"
 
-    private var lastRegistered: Set<String> = emptySet()
+    var lastRegistered: Set<String> = emptySet()
+        private set
+
+    private val pushSignFlow = MutableStateFlow(getRegisteredPackageSet())
 
     fun watch() {
         XLog.d(TAG, "watch() called")
@@ -43,10 +48,21 @@ class PushSignWatcher : SharedPreferences.OnSharedPreferenceChangeListener {
         }
 
         lastRegistered = newList
+
+        runBlocking {
+            pushSignFlow.emit(getRegisteredPackageSet())
+        }
     }
 
     private fun getAllPackages(perf: SharedPreferences): Set<String> {
         return perf.all.keys.toSet()
     }
 
+    private fun getRegisteredPackageSet(): Set<String> {
+        return lastRegistered
+            .map { it.split("/")[0] }
+            .toSet()
+    }
+
+    fun observe(): Flow<Set<String>> = pushSignFlow.asStateFlow()
 }

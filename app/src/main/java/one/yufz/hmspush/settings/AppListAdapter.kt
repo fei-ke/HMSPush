@@ -3,7 +3,6 @@ package one.yufz.hmspush.settings
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.TextView
 
 class AppListAdapter : BaseAdapter() {
     private var data: List<AppInfo> = emptyList()
@@ -21,9 +20,19 @@ class AppListAdapter : BaseAdapter() {
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val item = getItem(position)
-        return TextView(parent.context).apply {
-            text = item.packageName
+        val itemView = if (convertView is AppItemView) {
+            convertView
+        } else {
+            AppItemView(parent.context)
         }
+
+        itemView.bind(getItem(position))
+
+        return itemView
+    }
+
+    fun updateData(list: List<AppInfo>) {
+        data = list
+        notifyDataSetChanged()
     }
 }

@@ -1,8 +1,11 @@
 package one.yufz.hmspush.settings
 
 import android.app.Activity
+import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import android.view.Window
+import android.view.WindowManager
 import de.robv.android.xposed.XposedHelpers
 import one.yufz.hmspush.FLAG_HMS_PUSH_SETTINGS
 import one.yufz.hmspush.XLog
@@ -25,6 +28,10 @@ class HookSettings {
             doBefore {
                 XLog.d(TAG, "onCreate doBefore() called")
                 XposedHelpers.setAdditionalInstanceField(thisObject, KEY_IGNORE_FIRST_FINISH, true)
+
+                if (args[0] != null) {
+                    args[0] = null
+                }
             }
 
             doAfter {
@@ -35,6 +42,8 @@ class HookSettings {
                 XLog.d(TAG, "onCreate doAfter() called, hmsPushSetting = $hmsPushSetting")
 
                 if (hmsPushSetting) {
+                    makeActivityFullscreen(thisObject as Activity)
+
                     addHmsPushSetting(activity)
                 }
             }
@@ -56,6 +65,17 @@ class HookSettings {
                     XposedHelpers.removeAdditionalInstanceField(activity, KEY_IGNORE_FIRST_FINISH)
                 }
             }
+        }
+    }
+
+    private fun makeActivityFullscreen(activity: Activity) {
+        activity.window.apply {
+            addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            statusBarColor = Color.TRANSPARENT
+            decorView.systemUiVisibility = decorView.systemUiVisibility or
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                    View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
     }
 
