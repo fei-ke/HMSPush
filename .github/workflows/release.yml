@@ -70,4 +70,22 @@ jobs:
         github-token: ${{ secrets.GH_TOKEN }}
         release-url: ${{ steps.create_release.outputs.upload_url }}
         pattern: "app/build/outputs/apk/release/*.apk"
+
+    - name: Release to XPosed Repo
+      id: create_xposed_release
+      uses: actions/create-release@v1
+      with:
+        repo: Xposed-Modules-Repo/one.yufz.hmspush
+        tag_name: ${{ github.ref }}
+        release_name: ${{ github.ref }}
+        body: ${{ steps.tag-data.outputs.git-tag-annotation }} &#x20;
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+    - name: Upload APK
+      uses: csexton/release-asset-action@v2
+      with:
+        github-token: ${{ secrets.GH_TOKEN }}
+        release-url: ${{ steps.create_xposed_release.outputs.upload_url }}
+        pattern: "app/build/outputs/apk/release/*.apk"
         asset_content_type: application/zip
