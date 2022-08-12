@@ -15,7 +15,7 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        archivesBaseName = "${rootProject.name}-${versionName}-${versionCode}"
+        archivesBaseName = "${rootProject.name}-v${versionName}-${versionCode}"
     }
 
     signingConfigs {

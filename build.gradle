@@ -36,7 +36,13 @@ def getVersionName = { ->
             commandLine 'git', 'describe', '--tags', '--dirty'
             standardOutput = stdout
         }
-        return stdout.toString().trim()
+
+        def versionName = stdout.toString().trim()
+        if (versionName.startsWith("v")) {
+            return versionName.substring(1)
+        } else {
+            return versionName
+        }
     } catch (ignored) {
         return null;
     }
