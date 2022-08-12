@@ -5,6 +5,7 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.content.Context
 import one.yufz.hmspush.IS_SYSTEM_HOOK_READY
+import one.yufz.hmspush.PushHistory
 import one.yufz.hmspush.READY
 import one.yufz.hmspush.XLog
 
@@ -39,6 +40,8 @@ object NotificationManagerEx {
     fun notify(context: Context, packageName: String, id: Int, notification: Notification) {
         XLog.d(TAG, "notify() called with: context = $context, packageName = $packageName, id = $id, notification = $notification")
         notificationManager.notify(context, packageName, id, notification)
+
+        PushHistory.record(packageName)
     }
 
     fun createNotificationChannels(packageName: String, userId: Int, channels: List<NotificationChannel>) {
