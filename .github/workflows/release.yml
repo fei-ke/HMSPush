@@ -75,7 +75,8 @@ jobs:
       id: create_xposed_release
       uses: actions/create-release@v1
       with:
-        repo: Xposed-Modules-Repo/one.yufz.hmspush
+        owner: Xposed-Modules-Repo
+        repo: one.yufz.hmspush
         tag_name: ${{ github.ref }}
         release_name: ${{ github.ref }}
         body: ${{ steps.tag-data.outputs.git-tag-annotation }} &#x20;
