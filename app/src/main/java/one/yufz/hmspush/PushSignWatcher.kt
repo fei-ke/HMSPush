@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.runBlocking
+import java.io.File
 
 
 object PushSignWatcher : SharedPreferences.OnSharedPreferenceChangeListener {
@@ -15,13 +16,20 @@ object PushSignWatcher : SharedPreferences.OnSharedPreferenceChangeListener {
     var lastRegistered: Set<String> = emptySet()
         private set
 
-    private val pushSignFlow = MutableStateFlow(getRegisteredPackageSet())
+    private val usePushSign by lazy {
+        AndroidAppHelper.currentApplication().createDeviceProtectedStorageContext().let {
+            File(it.dataDir, "shared_prefs/PushSign.xml").exists()
+        }
+    }
+
+    private val pushSignFlow = MutableStateFlow<Set<String>>(emptySet())
 
     fun watch() {
-        XLog.d(TAG, "watch() called")
+        XLog.d(TAG, "watch() called, usePushSign = $usePushSign")
 
-        val pushSignPref = AndroidAppHelper.currentApplication().createDeviceProtectedStorageContext()
-            .getSharedPreferences("PushSign", Context.MODE_PRIVATE)
+        val context = AndroidAppHelper.currentApplication().createDeviceProtectedStorageContext()
+        val pushSignPrefName = if (usePushSign) "PushSign" else "pclient_info_v2"
+        val pushSignPref = context.getSharedPreferences(pushSignPrefName, Context.MODE_PRIVATE)
 
         logPushSign(pushSignPref)
 
@@ -59,9 +67,13 @@ object PushSignWatcher : SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     private fun getRegisteredPackageSet(): Set<String> {
-        return lastRegistered
-            .map { it.split("/")[0] }
-            .toSet()
+        return if (usePushSign) {
+            lastRegistered
+                .map { it.split("/")[0] }
+                .toSet()
+        } else {
+            lastRegistered
+        }
     }
 
     fun observe(): Flow<Set<String>> = pushSignFlow.asStateFlow()
