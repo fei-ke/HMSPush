@@ -1,12 +1,16 @@
 package one.yufz.hmspush
 
-import android.content.ComponentName
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Binder
 import android.os.Parcel
 import de.robv.android.xposed.XposedHelpers
 
 class HookSystemService() {
+    companion object{
+        private const val TAG = "HookSystemService"
+    }
+
     fun hook(classLoader: ClassLoader) {
         val classNotificationManagerService = XposedHelpers.findClass("com.android.server.notification.NotificationManagerService", classLoader)
         classNotificationManagerService.hookConstructor(Context::class.java) {
@@ -37,22 +41,12 @@ class HookSystemService() {
         }
     }
 
-    private fun hookStub(stub: Any) {
-        stub.javaClass.hookMethod("isNotificationListenerAccessGranted", ComponentName::class.java) {
-            doBefore {
-                val componentName = args[0] as ComponentName
-                if (componentName.packageName == HMS_PACKAGE_NAME && componentName.className == IS_SYSTEM_HOOK_READY) {
-                    result = true
-                }
-            }
-        }
-    }
-
     private fun hookPermission(context: Context) {
-        fun isHms(): Boolean {
-            val callingUid = Binder.getCallingUid()
-            val hmsUid = context.packageManager.getPackageUid(HMS_PACKAGE_NAME, 0)
-            return callingUid == hmsUid
+        fun isHms() = try {
+            Binder.getCallingUid() == context.packageManager.getPackageUid(HMS_PACKAGE_NAME, 0)
+        } catch (e: PackageManager.NameNotFoundException) {
+            XLog.d(TAG, "isHms() called, NameNotFoundException caught")
+            false
         }
 
         XposedHelpers.findClass("android.app.INotificationManager\$Stub", null)
