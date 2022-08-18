@@ -13,7 +13,7 @@ object XLog {
         XposedBridge.log("[HMSPush]  $tag  $message")
     }
 
-    fun e(tag: String, message: String?, throwable: Throwable) {
+    fun e(tag: String, message: String?, throwable: Throwable?) {
         i(tag, message)
         XposedBridge.log(throwable)
     }
