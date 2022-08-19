@@ -6,24 +6,21 @@ import android.os.Binder
 import android.os.Parcel
 import de.robv.android.xposed.XposedHelpers
 
-class HookSystemService() {
-    companion object{
+class HookSystemService {
+    companion object {
         private const val TAG = "HookSystemService"
     }
 
     fun hook(classLoader: ClassLoader) {
         val classNotificationManagerService = XposedHelpers.findClass("com.android.server.notification.NotificationManagerService", classLoader)
-        classNotificationManagerService.hookConstructor(Context::class.java) {
-            doAfter {
-                hookPermission(args[0] as Context)
-            }
-        }
 
         classNotificationManagerService.hookMethod("onBootPhase", Int::class.java) {
             doAfter {
                 //com.android.server.SystemService#PHASE_BOOT_COMPLETED
                 if (args[0] == 1000) {
-                    KeepHmsAlive(thisObject.callMethod("getContext") as Context).start()
+                    val context = thisObject.callMethod("getContext") as Context
+                    KeepHmsAlive(context).start()
+                    hookPermission(context)
                 }
             }
         }
@@ -42,6 +39,8 @@ class HookSystemService() {
     }
 
     private fun hookPermission(context: Context) {
+        XLog.d(TAG, "hookPermission() called")
+
         fun isHms() = try {
             Binder.getCallingUid() == context.packageManager.getPackageUid(HMS_PACKAGE_NAME, 0)
         } catch (e: PackageManager.NameNotFoundException) {
@@ -56,8 +55,8 @@ class HookSystemService() {
                     if (isHms()) {
                         token = Binder.clearCallingIdentity()
                     }
-
                 }
+
                 doAfter {
                     if (token != 0L) {
                         Binder.restoreCallingIdentity(token)
