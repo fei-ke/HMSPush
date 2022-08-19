@@ -21,18 +21,17 @@ class HookSystemService {
                     val context = thisObject.callMethod("getContext") as Context
                     KeepHmsAlive(context).start()
                     hookPermission(context)
+                    hookSystemReadyFlag(thisObject.get<Any>("mService").javaClass)
                 }
             }
         }
-
-        hookPackageManager(classLoader)
     }
 
-    private fun hookPackageManager(classLoader: ClassLoader) {
-        classLoader.findClass("com.android.server.pm.PackageManagerService").hookMethod("getInstallerPackageName", String::class.java) {
+    private fun hookSystemReadyFlag(stubClass: Class<Any>) {
+        stubClass.hookMethod("isSystemConditionProviderEnabled", String::class.java) {
             doBefore {
                 if (args[0] == IS_SYSTEM_HOOK_READY) {
-                    result = READY
+                    result = true
                 }
             }
         }
