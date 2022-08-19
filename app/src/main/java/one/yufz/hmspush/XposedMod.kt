@@ -13,8 +13,10 @@ class XposedMod : IXposedHookLoadPackage {
     override fun handleLoadPackage(lpparam: LoadPackageParam) {
         XLog.d(TAG, "Loaded app: " + lpparam.packageName + " process:" + lpparam.processName)
 
-        if (lpparam.packageName == ANDROID_PACKAGE_NAME) {
-            HookSystemService().hook(lpparam.classLoader)
+        if (lpparam.processName == ANDROID_PACKAGE_NAME) {
+            if (lpparam.packageName == ANDROID_PACKAGE_NAME) {
+                HookSystemService().hook(lpparam.classLoader)
+            }
             return
         }
 
