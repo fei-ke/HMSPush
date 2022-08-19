@@ -77,7 +77,7 @@ jobs:
       with:
         owner: Xposed-Modules-Repo
         repo: one.yufz.hmspush
-        tag_name: ${{ github.ref }}
+        tag_name: release
         release_name: ${{ github.ref }}
         body: ${{ steps.tag-data.outputs.git-tag-annotation }} &#x20;
       env:
