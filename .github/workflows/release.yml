@@ -70,7 +70,9 @@ jobs:
       with:
         github-token: ${{ secrets.GH_TOKEN }}
         release-url: ${{ steps.create_release.outputs.upload_url }}
-        pattern: "app/build/outputs/apk/release/*.apk|app/build/outputs/mapping/release/mapping.txt"
+        files: |
+          app/build/outputs/mapping/release/mapping.txt
+        pattern: "app/build/outputs/apk/release/*.apk"
 
     - name: Release to XPosed Repo
       id: create_xposed_release
@@ -78,8 +80,9 @@ jobs:
       with:
         owner: Xposed-Modules-Repo
         repo: one.yufz.hmspush
-        tag_name: refs/tags/release
+        tag_name: ${{ github.ref }}
         release_name: ${{ github.ref }}
+        commitish: 4085e424bb9a4d2f79441c6cfc1f7718fab00163
         body: ${{ steps.tag-data.outputs.git-tag-annotation }} &#x20;
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -90,4 +93,3 @@ jobs:
         github-token: ${{ secrets.GH_TOKEN }}
         release-url: ${{ steps.create_xposed_release.outputs.upload_url }}
         pattern: "app/build/outputs/apk/release/*.apk"
-        asset_content_type: application/zip
