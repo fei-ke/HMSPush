@@ -3,6 +3,8 @@ package one.yufz.hmspush
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.database.CursorWindow
+import android.os.Build
 import com.huawei.android.app.NotificationManagerEx
 import dalvik.system.DexClassLoader
 import de.robv.android.xposed.callbacks.XC_LoadPackage
@@ -51,6 +53,10 @@ class HookHMS {
         }
 
         HookSettings().hook(lpparam.classLoader)
+
+        if (Build.VERSION.SDK_INT >= 33) {
+            CursorWindow::class.java["sCursorWindowSize"] = 1024 * 1024 * 8
+        }
     }
 
 
