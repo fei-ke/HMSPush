@@ -21,7 +21,9 @@ jobs:
 
     - name: Get Tag
       id: var
-      run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+      run: |
+        echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+        echo ::set-output name=version::${GITHUB_REF#refs/*/v}
 
     - name: set up JDK 11
       uses: actions/setup-java@v2
@@ -80,7 +82,7 @@ jobs:
       with:
         owner: Xposed-Modules-Repo
         repo: one.yufz.hmspush
-        tag_name: ${{ github.ref }}
+        tag_name: ${{ steps.var.outputs.version }}
         release_name: ${{ github.ref }}
         commitish: 4085e424bb9a4d2f79441c6cfc1f7718fab00163
         body: ${{ steps.tag-data.outputs.git-tag-annotation }} &#x20;
