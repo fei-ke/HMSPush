@@ -48,7 +48,8 @@ class SystemNotificationManager : INotificationManager {
     override fun notify(context: Context, packageName: String, id: Int, notification: Notification) {
         //enqueueNotificationWithTag(String pkg, String opPkg, String tag, int id, Notification notification, int userId)
         val methodEnqueueNotificationWithTag = XposedHelpers.findMethodExact(notificationManager.javaClass, "enqueueNotificationWithTag", String::class.java, String::class.java, String::class.java, Int::class.java, Notification::class.java, Int::class.java)
-        methodEnqueueNotificationWithTag.invoke(notificationManager, packageName, ANDROID_PACKAGE_NAME, null, id, notification, getUserId(context))
+        val opPkg = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) ANDROID_PACKAGE_NAME else packageName
+        methodEnqueueNotificationWithTag.invoke(notificationManager, packageName, opPkg, null, id, notification, getUserId(context))
     }
 
     override fun createNotificationChannels(packageName: String, userId: Int, channels: List<NotificationChannel>) {
