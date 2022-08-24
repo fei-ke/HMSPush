@@ -26,7 +26,7 @@ class SystemNotificationManager : INotificationManager {
     }
 
     private fun getUserId(context: Context): Int {
-        return context.callMethod("getUser")?.callMethod("getIdentifier") as Int? ?: 0
+        return context.callMethod("getUserId") as Int? ?: 0
     }
 
     override fun areNotificationsEnabled(packageName: String, userId: Int): Boolean {
