@@ -10,7 +10,7 @@ class Common : IFakeDevice {
 
         private val FAKE_PROPERTIES = mapOf(
             "ro.build.hw_emui_api_level" to "21",
-            "ro.build.version.emui" to "EmotionUI",
+            "ro.build.version.emui" to "EmotionUI_8.0.0",
             "ro.product.brand" to "HUAWEI",
             "ro.product.manufacturer" to "HUAWEI",
             "ro.miui.ui.version.name" to "",
