@@ -9,10 +9,18 @@ object FakeDevice {
     private val Default = arrayOf(Common::class.java)
     private val FakeDeviceConfig: Map<String, Array<Class<out IFakeDevice>>> = mapOf(
         "com.coolapk.market" to arrayOf(CoolApk::class.java),
+        "com.tencent.mobileqq" to arrayOf(QQ::class.java),
+        "com.tencent.tim" to arrayOf(QQ::class.java),
     )
 
     fun fake(lpparam: XC_LoadPackage.LoadPackageParam) {
         XLog.d(TAG, "fake() called with: packageName = ${lpparam.packageName}, processName = ${lpparam.processName}")
+
+        if (lpparam.packageName == "com.google.android.webview") {
+            XLog.d(TAG, "fake() called, ignore ${lpparam.packageName}")
+            return
+        }
+
         val fakes = FakeDeviceConfig[lpparam.packageName] ?: Default
         fakes.forEach { it.newInstance().fake(lpparam) }
     }

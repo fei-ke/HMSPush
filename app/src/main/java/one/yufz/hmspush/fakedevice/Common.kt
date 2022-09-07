@@ -4,7 +4,7 @@ import android.os.Build
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import one.yufz.hmspush.*
 
-class Common : IFakeDevice {
+open class Common : IFakeDevice {
     companion object {
         private const val TAG = "Common"
 
