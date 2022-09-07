@@ -11,11 +11,13 @@ object FakeDevice {
         "com.coolapk.market" to arrayOf(CoolApk::class.java),
         "com.tencent.mobileqq" to arrayOf(QQ::class.java),
         "com.tencent.tim" to arrayOf(QQ::class.java),
+        "com.sankuai.meituan" to arrayOf(FakeEmuiOnly::class.java),
+        "com.sankuai.meituan.takeoutnew" to arrayOf(FakeEmuiOnly::class.java),
+        "com.dianping.v1" to arrayOf(FakeEmuiOnly::class.java),
     )
 
     fun fake(lpparam: XC_LoadPackage.LoadPackageParam) {
         XLog.d(TAG, "fake() called with: packageName = ${lpparam.packageName}, processName = ${lpparam.processName}")
-
         if (lpparam.packageName == "com.google.android.webview") {
             XLog.d(TAG, "fake() called, ignore ${lpparam.packageName}")
             return
