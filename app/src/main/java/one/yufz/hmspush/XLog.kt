@@ -1,5 +1,6 @@
 package one.yufz.hmspush
 
+import android.util.Log
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge
 import java.lang.reflect.Method
@@ -18,11 +19,13 @@ object XLog {
         XposedBridge.log(throwable)
     }
 
-    fun XC_MethodHook.MethodHookParam.logMethod(tag: String) {
+    fun XC_MethodHook.MethodHookParam.logMethod(tag: String, stackTrace: Boolean = false) {
         d(tag, "╔═══════════════════════════════════════════════════════")
         d(tag, method.toString())
         d(tag, "${method.name} called with ${args.contentDeepToString()}")
-
+        if (stackTrace) {
+            d(tag, Log.getStackTraceString(Throwable()))
+        }
         if (hasThrowable()) {
             e(tag, "${method.name} thrown", throwable)
         } else if (method is Method && (method as Method).returnType != Void.TYPE) {
