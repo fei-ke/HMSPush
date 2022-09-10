@@ -41,7 +41,6 @@ fun fakeProperties(vararg properties: Pair<String, String>) {
         doBefore {
             val key = args[0] as String
             propertiesMap[key]?.let {
-                XLog.d(TAG, "hook SystemProperties $key")
                 result = it
             }
         }
