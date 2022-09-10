@@ -41,7 +41,7 @@ fun hookMethod(className: String, classLoader: ClassLoader, methodName: String, 
 fun hookConstructor(className: String, classLoader: ClassLoader, methodName: String, vararg parameterTypes: Class<*>, callback: HookCallback) =
     XposedHelpers.findAndHookConstructor(className, classLoader, methodName, *parameterTypes, MethodHook(callback))
 
-fun Method.hookPush(callback: HookCallback) = XposedBridge.hookMethod(this, MethodHook(callback))
+fun Method.hook(callback: HookCallback) = XposedBridge.hookMethod(this, MethodHook(callback))
 
 fun Class<*>.hookAllMethods(methodName: String, callback: HookCallback) =
     XposedBridge.hookAllMethods(this, methodName, MethodHook(callback))
