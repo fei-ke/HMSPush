@@ -208,9 +208,15 @@ class IconCache private constructor() {
 	fun getAppColor(ctx:Context, pkg:String):Int? = get(pkg, {
 		it.color != null
 	}, {
-		it.color = getIconForeground(ctx, pkg)?.majorColor()
-				?: getIconBackground(ctx, pkg)?.majorColor()
-				?: Color.BLACK
+		val icon = ctx.getPackageManager().getApplicationIcon(pkg)
+		if (icon is AdaptiveIconDrawable) {
+			val fore = renderForeground(icon)
+			val back = renderBackground(icon)
+			it.color = fore.majorColor(Alphaize.colorful) ?: back.majorColor(Alphaize.colorful) ?: Color.BLACK
+		} else {
+			val bitmap = render(icon)
+			it.color = bitmap.majorColor(Alphaize.colorful) ?: Color.BLACK
+		}
 	}).color
 
 	private object Holder {
