@@ -55,7 +55,7 @@ class AppListViewModel(val context: Context) {
             PackageManager.MATCH_DISABLED_UNTIL_USED_COMPONENTS or
                     PackageManager.MATCH_DISABLED_COMPONENTS
         )
-        XLog.d(TAG, "loadAppList() called, list = $list")
+        XLog.d(TAG, "loadAppList() called, list = ${list.size}")
         list.map { it.serviceInfo.packageName }
             .let { appListFlow.emit(it) }
     }
