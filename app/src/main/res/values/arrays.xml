@@ -3,5 +3,6 @@
     <string-array name="xposed_scope">
         <item>com.huawei.hwid</item>
         <item>android</item>
+        <item>com.android.systemui</item>
     </string-array>
 </resources>
