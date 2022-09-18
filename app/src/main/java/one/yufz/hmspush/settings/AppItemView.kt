@@ -6,7 +6,10 @@ import android.text.TextUtils
 import android.text.format.DateUtils
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.PopupMenu
 import android.widget.TextView
+import one.yufz.hmspush.PushHistory
+import one.yufz.hmspush.PushSignWatcher
 
 class AppItemView(context: Context) : LinearLayout(context) {
     companion object {
@@ -79,10 +82,25 @@ class AppItemView(context: Context) : LinearLayout(context) {
         }
 
         with(status) {
-            text = if (item.registered) "已注册" else "未注册"
+            text = if (item.registered) "已注册>" else "未注册"
             setTextColor(if (item.registered) COLOR_GREEN else COLOR_GRAY)
+            setupPopup(this, item)
         }
+    }
 
-
+    private fun setupPopup(textView: TextView, item: AppInfo) {
+        if (item.registered) {
+            status.setOnClickListener {
+                val popupMenu = PopupMenu(context, status)
+                popupMenu.menu.add("取消注册").setOnMenuItemClickListener {
+                    PushSignWatcher.unregisterSign(item.packageName)
+                    PushHistory.remove(item.packageName)
+                    true
+                }
+                popupMenu.show()
+            }
+        } else {
+            status.setOnClickListener(null)
+        }
     }
 }

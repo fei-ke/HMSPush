@@ -48,6 +48,8 @@ class HookHMS {
                     } else if (version <= 60300301) {
                         hookLegacyPush(classLoader)
                     }
+                } else if (dexPath.contains("com.huawei.hms.runtimekit")) {
+                    RuntimeKitHook.hook(thisObject as ClassLoader)
                 }
             }
         }
