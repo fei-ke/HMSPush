@@ -3,13 +3,20 @@ package one.yufz.hmspush
 import android.app.AndroidAppHelper
 import android.app.Notification
 import android.app.NotificationChannel
-import android.content.Context
-import android.content.SharedPreferences
 import com.huawei.android.app.NotificationManagerEx
-import java.util.prefs.PreferenceChangeListener
+import de.robv.android.xposed.XposedHelpers.ClassNotFoundError
 
 object HookPushNC {
     private const val TAG = "HookPushNC"
+
+    fun canHook(classLoader: ClassLoader): Boolean {
+        return try {
+            classLoader.findClass("com.huawei.hsf.notification.HwNotificationManager")
+            true
+        } catch (e: ClassNotFoundError) {
+            false
+        }
+    }
 
     fun hook(classLoader: ClassLoader) {
         XLog.d(TAG, "hookPushNC() called with: classLoader = $classLoader")

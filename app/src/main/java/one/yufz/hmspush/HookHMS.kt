@@ -7,6 +7,7 @@ import android.database.CursorWindow
 import android.os.Build
 import com.huawei.android.app.NotificationManagerEx
 import dalvik.system.DexClassLoader
+import de.robv.android.xposed.XposedHelpers.ClassNotFoundError
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import one.yufz.hmspush.settings.HookSettings
 
@@ -29,7 +30,7 @@ class HookHMS {
         DexClassLoader::class.java.hookAllConstructor {
             doAfter {
                 val dexPath = args[0] as String
-                if (dexPath.contains("push")) {
+                if (dexPath.contains("com.huawei.hms.push")) {
                     XLog.d(TAG, "load push related dex path: $dexPath")
 
                     val paths = dexPath.split("/")
@@ -39,13 +40,9 @@ class HookHMS {
 
                     val classLoader = thisObject as ClassLoader
 
-                    if (dexPath.endsWith(HMS_PUSH_NC)) {
-                        if (version >= 60600300) {
-                            HookPushNC.hook(classLoader)
-                        } else {
-                            hookLegacyPush(classLoader)
-                        }
-                    } else if (version <= 60300301) {
+                    if (HookPushNC.canHook(classLoader)) {
+                        HookPushNC.hook(classLoader)
+                    } else {
                         hookLegacyPush(classLoader)
                     }
                 } else if (dexPath.contains("com.huawei.hms.runtimekit")) {
@@ -64,6 +61,13 @@ class HookHMS {
 
     private fun hookLegacyPush(classLoader: ClassLoader) {
         XLog.d(TAG, "hookLegacyPush() called with: classLoader = $classLoader")
+
+        try {
+            classLoader.findClass("com.huawei.hms.pushnc.entity.PushSelfShowMessage")
+        } catch (e: ClassNotFoundError) {
+            XLog.d(TAG, "PushSelfShowMessage not Found, stop hook")
+            return
+        }
 
         PushSignWatcher.watch()
 
