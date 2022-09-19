@@ -64,7 +64,7 @@ class AppListViewModel(val context: Context) {
     fun observeAppList(): Flow<List<AppInfo>> {
         return combine(appListFlow, PushSignWatcher.observe(), PushHistory.observe()) { appList, registered, history ->
             appList.map { AppInfo(it, registered.contains(it), history[it]) }
-                .sortedWith(compareBy({ Long.MAX_VALUE - (it.lastPushTime ?: 0L) }, { !it.registered }))
+                .sortedWith(compareBy({ !it.registered }, { Long.MAX_VALUE - (it.lastPushTime ?: 0L) }))
         }
     }
 
