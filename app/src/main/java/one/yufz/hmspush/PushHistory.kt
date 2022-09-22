@@ -21,6 +21,16 @@ object PushHistory {
         }
     }
 
+    fun remove(packageName: String) {
+        store.edit()
+            .remove(packageName)
+            .apply()
+
+        runBlocking {
+            historyFlow.emit(getAll())
+        }
+    }
+
     private fun getAll(): Map<String, Long> {
         return store.all.map { it.key to it.value as Long }.toMap()
     }

@@ -65,4 +65,8 @@ object PushSignWatcher : SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     fun observe(): Flow<Set<String>> = pushSignFlow.asStateFlow()
+
+    fun unregisterSign(packageName: String) {
+        RuntimeKitHook.sendFakePackageRemoveBroadcast(packageName)
+    }
 }

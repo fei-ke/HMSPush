@@ -28,7 +28,8 @@ class HookSettings {
             doBefore {
                 XLog.d(TAG, "onCreate doBefore() called")
                 XposedHelpers.setAdditionalInstanceField(thisObject, KEY_IGNORE_FIRST_FINISH, true)
-
+                val activity = thisObject as Activity
+                activity.setTheme(android.R.style.Theme_Material_Light_NoActionBar)
                 if (args[0] != null) {
                     args[0] = null
                 }

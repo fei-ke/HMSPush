@@ -9,9 +9,19 @@ import android.content.SharedPreferences
 import com.huawei.android.app.NotificationManagerEx
 import com.huawei.android.app.SmallIconGenerator
 import java.util.prefs.PreferenceChangeListener
+import de.robv.android.xposed.XposedHelpers.ClassNotFoundError
 
 object HookPushNC {
     private const val TAG = "HookPushNC"
+
+    fun canHook(classLoader: ClassLoader): Boolean {
+        return try {
+            classLoader.findClass("com.huawei.hsf.notification.HwNotificationManager")
+            true
+        } catch (e: ClassNotFoundError) {
+            false
+        }
+    }
 
     fun hook(classLoader: ClassLoader) {
         XLog.d(TAG, "hookPushNC() called with: classLoader = $classLoader")
