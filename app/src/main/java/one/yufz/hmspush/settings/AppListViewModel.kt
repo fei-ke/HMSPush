@@ -24,6 +24,8 @@ class AppListViewModel(val context: Context) {
 
     private val appListFlow = MutableStateFlow<List<String>>(emptyList())
 
+    private val filterKeywords = MutableStateFlow<String>("")
+
     private val packageReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.action) {
@@ -62,9 +64,34 @@ class AppListViewModel(val context: Context) {
 
 
     fun observeAppList(): Flow<List<AppInfo>> {
-        return combine(appListFlow, PushSignWatcher.observe(), PushHistory.observe()) { appList, registered, history ->
-            appList.map { AppInfo(it, registered.contains(it), history[it]) }
-                .sortedWith(compareBy({ !it.registered }, { Long.MAX_VALUE - (it.lastPushTime ?: 0L) }))
+        return combine(appListFlow, PushSignWatcher.observe(), PushHistory.observe(), ::mergeSource)
+            .combine(filterKeywords, ::filterAppList)
+    }
+
+    private fun filterAppList(list: List<AppInfo>, keywords: String): List<AppInfo> {
+        if (keywords.isEmpty()) return list
+
+        return list.filter {
+            it.name.contains(keywords, true) || it.packageName.contains(keywords, true)
+        }
+    }
+
+    private fun mergeSource(appList: List<String>, registered: Set<String>, history: Map<String, Long>): List<AppInfo> {
+        val pm = context.packageManager
+        return appList.map { packageName ->
+            AppInfo(
+                packageName = packageName,
+                name = pm.getApplicationInfo(packageName, 0).loadLabel(pm).toString(),
+                registered = registered.contains(packageName),
+                lastPushTime = history[packageName]
+            )
+        }
+            .sortedWith(compareBy({ !it.registered }, { Long.MAX_VALUE - (it.lastPushTime ?: 0L) }))
+    }
+
+    fun filter(keywords: String) {
+        mainScope.launch {
+            filterKeywords.emit(keywords)
         }
     }
 

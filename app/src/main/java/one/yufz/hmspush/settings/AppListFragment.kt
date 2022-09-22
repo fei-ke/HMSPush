@@ -4,10 +4,14 @@ import android.app.ListFragment
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AbsListView
 import android.widget.FrameLayout
+import android.widget.SearchView
 import android.widget.Toolbar
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
@@ -54,6 +58,10 @@ class AppListFragment : ListFragment() {
             }
             insets
         }
+
+        activity.setActionBar(toolbar)
+        setHasOptionsMenu(true)
+
         listView.setOnScrollListener(object : AbsListView.OnScrollListener {
             override fun onScrollStateChanged(view: AbsListView, scrollState: Int) {
             }
@@ -73,6 +81,33 @@ class AppListFragment : ListFragment() {
         viewModel.observeAppList().onEach {
             (listAdapter as AppListAdapter).updateData(it)
         }.launchIn(mainScope)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        setupSearchMenu(menu)
+    }
+
+    private fun setupSearchMenu(menu: Menu) {
+        val searchView = SearchView(context)
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                viewModel.filter(query ?: "")
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                viewModel.filter(newText ?: "")
+                return true
+            }
+
+        })
+
+        menu.add("搜索")
+            .setIcon(android.R.drawable.ic_menu_search)
+            .setActionView(searchView)
+            .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW or MenuItem.SHOW_AS_ACTION_ALWAYS)
     }
 
     override fun onDestroy() {

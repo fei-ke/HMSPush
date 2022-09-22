@@ -88,7 +88,7 @@ class AppItemView(context: Context) : LinearLayout(context) {
         icon.setImageDrawable(info.loadIcon(pm))
 
         with(title) {
-            text = info.loadLabel(pm)
+            text = item.name
             setTextColor(if (item.registered) COLOR_GREEN else Color.BLACK)
         }
 
