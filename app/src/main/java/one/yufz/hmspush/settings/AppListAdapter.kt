@@ -23,7 +23,7 @@ class AppListAdapter : BaseAdapter() {
         val itemView = if (convertView is AppItemView) {
             convertView
         } else {
-            AppItemView(parent.context)
+            AppItemView(parent.context.createModuleContext())
         }
 
         itemView.bind(getItem(position))

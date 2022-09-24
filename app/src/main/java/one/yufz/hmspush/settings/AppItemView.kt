@@ -13,23 +13,12 @@ import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.TextView
 import one.yufz.hmspush.HMS_PACKAGE_NAME
+import one.yufz.hmspush.R
 
 class AppItemView(context: Context) : LinearLayout(context) {
     companion object {
         private val COLOR_GREEN = Color.parseColor("#4CAF50")
         private val COLOR_GRAY = Color.parseColor("#808080")
-
-        private var ID_MORE_ICON: Int = 0
-
-        @SuppressLint("DiscouragedApi")
-        fun getMoreIconId(context: Context): Int {
-            if (ID_MORE_ICON != 0) return ID_MORE_ICON
-
-            ID_MORE_ICON = context.resources.getIdentifier("common_appbar_more", "mipmap", HMS_PACKAGE_NAME)
-                .takeIf { it != 0 } ?: android.R.drawable.ic_menu_more
-
-            return ID_MORE_ICON
-        }
     }
 
     private val Number.dp: Int
@@ -76,7 +65,7 @@ class AppItemView(context: Context) : LinearLayout(context) {
 
         more = child {
             setPadding(4.dp, 4.dp, 4.dp, 4.dp)
-            setImageResource(getMoreIconId(context))
+            setImageResource(R.drawable.ic_more)
             imageTintList = ColorStateList.valueOf(COLOR_GRAY)
         }
     }
