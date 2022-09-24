@@ -1,6 +1,7 @@
 package one.yufz.hmspush.settings
 
 import android.app.Activity
+import android.content.pm.PackageManager.NameNotFoundException
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -82,6 +83,17 @@ class HookSettings {
 
     private fun addHmsPushSetting(activity: Activity) {
         XLog.d(TAG, "addHmsPushSetting() called")
+
+        try {
+            activity.applicationContext.createModuleContext()
+        } catch (e: NameNotFoundException) {
+            XLog.e(TAG, "addHmsPushSetting abort", e)
+            activity.fragmentManager.beginTransaction()
+                .add(Window.ID_ANDROID_CONTENT, RestrictedFragment(), "restricted")
+                .commitNowAllowingStateLoss()
+            return
+        }
+
         activity.fragmentManager.beginTransaction()
             .add(Window.ID_ANDROID_CONTENT, AppListFragment(), "hms_push_setting")
             .commitNowAllowingStateLoss()
