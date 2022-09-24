@@ -65,7 +65,7 @@ class AppItemView(context: Context) : LinearLayout(context) {
 
         more = child {
             setPadding(4.dp, 4.dp, 4.dp, 4.dp)
-            setImageResource(R.drawable.ic_more)
+            setImageDrawable(context.createModuleContext().getDrawable(R.drawable.ic_more))
             imageTintList = ColorStateList.valueOf(COLOR_GRAY)
         }
     }
