@@ -30,9 +30,7 @@ object HookPushNC {
 
         //change default priority of notification
         classLoader.findClass("com.huawei.hms.pushnc.entity.PushSelfShowMessage").hookMethod("getPriority") {
-            doAfter {
-                if (result == 2) result = 1
-            }
+            replace { 1 }
         }
 
         classHwNotificationManager.hookMethod("isSupportHmsNc", classHsfApi) {
