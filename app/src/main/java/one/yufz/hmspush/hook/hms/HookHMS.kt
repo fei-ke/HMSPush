@@ -9,9 +9,9 @@ import com.huawei.android.app.NotificationManagerEx
 import dalvik.system.DexClassLoader
 import de.robv.android.xposed.XposedHelpers.ClassNotFoundError
 import de.robv.android.xposed.callbacks.XC_LoadPackage
+import one.yufz.hmspush.hook.Prefs
 import one.yufz.hmspush.hook.XLog
 import one.yufz.hmspush.hook.bridge.HookContentProvider
-import one.yufz.hmspush.hook.system.HookSystemService
 import one.yufz.xposed.*
 
 class HookHMS {
@@ -87,7 +87,7 @@ class HookHMS {
         lpparam.classLoader.findClass("com.huawei.hms.auth.api.CheckFingerprintRequest")
             .hookMethod("parseEntity", String::class.java) {
                 doBefore {
-                    if (!HookSystemService.isSystemHookReady) {
+                    if (Prefs.isDisableSignature()) {
                         val request = args[0] as String
                         if (request.contains("auth.checkFingerprint")) {
                             val response = """{"header":{"auth_rtnCode":"0"},"body":{}}"""

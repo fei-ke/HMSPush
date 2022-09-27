@@ -2,5 +2,9 @@
     <string name="app_name">HMSPush</string>
     <string name="xposedDescription">启用 HMSCore 系统级推送、伪装华为设备</string>
     <string name="hms_core_not_found">HMS Core 未安装或没有权限访问</string>
-    <string name="module_not_activated">HMSPush 模块未激活或需要重启 HMS Core</string>
+    <string name="hms_not_activated">HMSPush 模块未激活或需要重启 HMS Core</string>
+    <string name="settings">设置</string>
+    <string name="disable_signature">禁用签名检查</string>
+    <string name="disable_signature_summary">LSPatch 或者修改版应用需要禁用签名检查</string>
+    <string name="module_not_activated">模块未启用或者需要重启应用</string>
 </resources>

@@ -29,7 +29,7 @@ class AppItemView(context: Context) : LinearLayout(context) {
     private lateinit var more: ImageView
 
     init {
-        setPadding(16.dp, 8.dp, 8.dp, 16.dp)
+        setPadding(16.dp, 8.dp, 4.dp, 8.dp)
 
         icon = child(48.dp, 48.dp)
 
@@ -61,8 +61,8 @@ class AppItemView(context: Context) : LinearLayout(context) {
             }
         }
 
-        more = child {
-            setPadding(4.dp, 4.dp, 4.dp, 4.dp)
+        more = child(36.dp, 36.dp) {
+            scaleType = ImageView.ScaleType.CENTER
             setImageDrawable(IconUtil.getMoreIcon(context))
             imageTintList = ColorStateList.valueOf(COLOR_GRAY)
         }

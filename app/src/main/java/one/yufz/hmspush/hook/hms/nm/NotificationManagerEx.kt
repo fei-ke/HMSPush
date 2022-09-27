@@ -10,7 +10,7 @@ import one.yufz.hmspush.hook.hms.PushHistory
 import one.yufz.hmspush.hook.hms.nm.INotificationManager
 import one.yufz.hmspush.hook.hms.nm.SelfNotificationManager
 import one.yufz.hmspush.hook.hms.nm.SystemNotificationManager
-import one.yufz.hmspush.hook.system.HookSystemService.Companion.isSystemHookReady
+import one.yufz.hmspush.hook.system.HookSystemService
 import java.lang.reflect.InvocationTargetException
 
 object NotificationManagerEx {
@@ -22,7 +22,7 @@ object NotificationManagerEx {
     private val notificationManager: INotificationManager = createNotificationManager()
 
     private fun createNotificationManager(): INotificationManager {
-        return if (isSystemHookReady) {
+        return if (HookSystemService.isSystemHookReady) {
             XLog.d(TAG, "use SystemNotificationManager")
             SystemNotificationManager()
         } else {
