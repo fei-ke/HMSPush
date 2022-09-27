@@ -53,6 +53,10 @@ class SystemNotificationManager : INotificationManager {
     }
 
     override fun createNotificationChannels(packageName: String, userId: Int, channels: List<NotificationChannel>) {
+        //append [HMS] to channel name
+        channels.forEach {
+            it.name = "[HMS]${it.name}"
+        }
         val channelsList = XposedHelpers.findConstructorExact("android.content.pm.ParceledListSlice", null, List::class.java)
             .newInstance(channels)
         notificationManager.callMethod("createNotificationChannelsForPackage", packageName, getUid(packageName), channelsList)
