@@ -51,12 +51,6 @@ object NotificationManagerEx {
 
     fun createNotificationChannels(packageName: String, userId: Int, channels: List<NotificationChannel>) {
         XLog.d(TAG, "createNotificationChannels() called with: packageName = $packageName, userId = $userId, channels = $channels")
-
-        //append [HMS] to channel name
-        channels.forEach {
-            it.name = "[HMS]${it.name}"
-        }
-
         tryInvoke { notificationManager.createNotificationChannels(packageName, userId, channels) }
     }
 

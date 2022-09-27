@@ -22,6 +22,10 @@ class SelfNotificationManager : INotificationManager {
     }
 
     override fun createNotificationChannels(packageName: String, userId: Int, channels: List<NotificationChannel>) {
+        //append [HMS] to channel name
+        channels.forEach {
+            it.name = "[HMS]${it.name}"
+        }
         notificationManager.createNotificationChannels(channels)
     }
 
