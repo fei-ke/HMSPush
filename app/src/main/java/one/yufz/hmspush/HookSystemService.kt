@@ -1,6 +1,7 @@
 package one.yufz.hmspush
 
 import android.content.Context
+import android.os.Binder
 import de.robv.android.xposed.XposedHelpers
 
 class HookSystemService {
@@ -20,6 +21,16 @@ class HookSystemService {
                     val stubClass = thisObject.get<Any>("mService").javaClass
                     hookPermission(stubClass)
                     hookSystemReadyFlag(stubClass)
+                }
+            }
+        }
+
+        //private boolean isPackageSuspendedForUser(String pkg, int uid)
+        classNotificationManagerService.hookMethod("isPackageSuspendedForUser", String::class.java, Int::class.java) {
+            doBefore {
+                if (Binder.getCallingUid() == 1000) {
+                    //suspend app can not show notification, fake its state
+                    result = false
                 }
             }
         }
