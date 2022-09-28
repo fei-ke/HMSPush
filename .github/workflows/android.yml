@@ -39,7 +39,7 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew assemble
 
-    - name Collect artifcat name
+    - name: Collect artifcat name
       run: |
         echo "debug_artifact=$(basename -s .apk app/build/outputs/apk/debug/*.apk)" >> $GITHUB_ENV
         echo "release_artifact=$(basename -s .apk app/build/outputs/apk/release/*.apk)" >> $GITHUB_ENV
