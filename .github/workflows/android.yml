@@ -39,9 +39,19 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew assemble
 
-    - name: Upload a Build Artifact
+    - name Collect artifcat name
+      run: |
+        echo "debug_artifact=$(basename -s .apk app/build/outputs/apk/debug/*.apk)" >> $GITHUB_ENV
+        echo "release_artifact=$(basename -s .apk app/build/outputs/apk/release/*.apk)" >> $GITHUB_ENV
+
+    - name: Upload Debug
       uses: actions/upload-artifact@v3
       with:
-        path: |
-          app/build/outputs/apk/release/*.apk
-          app/build/outputs/apk/debug/*.apk
+        name: ${{ env.debug_artifact }}
+        path: app/build/outputs/apk/debug/*.apk
+
+    - name: Upload Release
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ env.release_artifact }}
+        path: app/build/outputs/apk/release/*.apk
