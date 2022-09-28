@@ -12,8 +12,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.TextView
-import one.yufz.hmspush.HMS_PACKAGE_NAME
-import one.yufz.hmspush.R
 
 class AppItemView(context: Context) : LinearLayout(context) {
     companion object {
@@ -65,7 +63,7 @@ class AppItemView(context: Context) : LinearLayout(context) {
 
         more = child {
             setPadding(4.dp, 4.dp, 4.dp, 4.dp)
-            setImageDrawable(context.createModuleContext().getDrawable(R.drawable.ic_more))
+            setImageDrawable(IconUtil.getMoreIcon(context))
             imageTintList = ColorStateList.valueOf(COLOR_GRAY)
         }
     }

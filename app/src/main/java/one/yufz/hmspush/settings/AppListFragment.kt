@@ -17,7 +17,6 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import one.yufz.hmspush.R
 
 class AppListFragment : ListFragment() {
     companion object {
@@ -106,7 +105,7 @@ class AppListFragment : ListFragment() {
         })
 
         menu.add("搜索")
-            .setIcon(context.createModuleContext().getDrawable(R.drawable.ic_search))
+            .setIcon(IconUtil.getSearchIcon(requireNotNull(context)))
             .setActionView(searchView)
             .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW or MenuItem.SHOW_AS_ACTION_ALWAYS)
     }
