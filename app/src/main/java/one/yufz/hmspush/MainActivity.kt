@@ -7,6 +7,9 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
+import one.yufz.hmspush.common.FLAG_HMS_PUSH_SETTINGS
+import one.yufz.hmspush.common.HMS_CORE_DUMMY_SETTINGS_ACTIVITY
+import one.yufz.hmspush.common.HMS_PACKAGE_NAME
 
 class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
