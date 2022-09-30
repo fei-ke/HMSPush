@@ -3,7 +3,12 @@ package one.yufz.hmspush
 import android.app.AndroidAppHelper
 import android.app.Notification
 import android.app.NotificationChannel
+import android.content.Context
+import android.content.SharedPreferences
+
 import com.huawei.android.app.NotificationManagerEx
+import com.huawei.android.app.SmallIconGenerator
+import java.util.prefs.PreferenceChangeListener
 import de.robv.android.xposed.XposedHelpers.ClassNotFoundError
 
 object HookPushNC {
@@ -73,7 +78,12 @@ object HookPushNC {
         //boolean notify(HsfApi hsfApi, String packageName, int id, int userId, Notification notification)
         classHwNotificationManager.hookMethod("notify", classHsfApi, String::class.java, Int::class.java, Int::class.java, Notification::class.java) {
             replace {
-                NotificationManagerEx.notify(AndroidAppHelper.currentApplication(), args[1] as String, args[2] as Int, args[4] as Notification)
+                val context = AndroidAppHelper.currentApplication()
+                val packageName = args[1] as String
+                val notification = args[4] as Notification
+
+                SmallIconGenerator.generate(context, packageName, notification)
+                NotificationManagerEx.notify(context, packageName, args[2] as Int, notification)
                 return@replace true
             }
         }
