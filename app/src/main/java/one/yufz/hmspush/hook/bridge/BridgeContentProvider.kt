@@ -5,6 +5,9 @@ import android.database.Cursor
 import android.database.MatrixCursor
 import android.net.Uri
 import android.os.Bundle
+import one.yufz.hmspush.BuildConfig
+import one.yufz.hmspush.common.AUTHORITIES
+import one.yufz.hmspush.common.BridgeUri
 import one.yufz.hmspush.hook.hms.PushHistory
 import one.yufz.hmspush.hook.hms.PushSignWatcher
 
@@ -32,9 +35,16 @@ class BridgeContentProvider {
                 BridgeUri.PUSH_REGISTERED -> queryRegistered()
                 BridgeUri.PUSH_HISTORY -> queryPushHistory()
                 BridgeUri.PUSH_UNREGISTER -> unregister(uri)
+                BridgeUri.MODULE_VERSION -> queryModuleVersion()
             }
         } else {
             null
+        }
+    }
+
+    private fun queryModuleVersion(): Cursor? {
+        return MatrixCursor(arrayOf("versionName", "versionCode")).apply {
+            addRow(arrayOf(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE))
         }
     }
 

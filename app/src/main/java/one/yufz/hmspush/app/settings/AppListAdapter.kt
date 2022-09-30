@@ -1,4 +1,4 @@
-package one.yufz.hmspush.hook.hms.settings
+package one.yufz.hmspush.app.settings
 
 import android.view.View
 import android.view.ViewGroup

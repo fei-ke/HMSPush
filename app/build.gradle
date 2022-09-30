@@ -9,7 +9,7 @@ android {
     defaultConfig {
         applicationId "one.yufz.hmspush"
         minSdk 26
-        targetSdk 31
+        targetSdk 33
         versionCode gitVersionCode
         versionName gitVersionName
 

@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">HMSPush</string>
     <string name="xposedDescription">启用 HMSCore 系统级推送、伪装华为设备</string>
+    <string name="hms_core_not_found">HMS Core 未安装或没有权限访问</string>
+    <string name="module_not_activated">HMSPush 模块未激活或需要重启 HMS Core</string>
 </resources>

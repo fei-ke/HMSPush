@@ -3,10 +3,7 @@ package one.yufz.hmspush.hook.hms
 import android.app.AndroidAppHelper
 import android.content.Context
 import android.content.SharedPreferences
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.runBlocking
+import one.yufz.hmspush.common.BridgeUri
 import one.yufz.hmspush.hook.XLog
 
 
@@ -15,8 +12,6 @@ object PushSignWatcher : SharedPreferences.OnSharedPreferenceChangeListener {
 
     var lastRegistered: Set<String> = emptySet()
         private set
-
-    private val pushSignFlow = MutableStateFlow(getRegisteredPackageSet())
 
     fun watch() {
         XLog.d(TAG, "watch() called")
@@ -50,9 +45,11 @@ object PushSignWatcher : SharedPreferences.OnSharedPreferenceChangeListener {
 
         lastRegistered = newList
 
-        runBlocking {
-            pushSignFlow.emit(getRegisteredPackageSet())
-        }
+        notifyChange()
+    }
+
+    private fun notifyChange() {
+        AndroidAppHelper.currentApplication().contentResolver.notifyChange(BridgeUri.PUSH_REGISTERED.toUri(), null, false)
     }
 
     private fun getAllPackages(perf: SharedPreferences): Set<String> {
@@ -64,8 +61,6 @@ object PushSignWatcher : SharedPreferences.OnSharedPreferenceChangeListener {
             .map { it.split("/")[0] }
             .toSet()
     }
-
-    fun observe(): Flow<Set<String>> = pushSignFlow.asStateFlow()
 
     fun unregisterSign(packageName: String) {
         RuntimeKitHook.sendFakePackageRemoveBroadcast(packageName)

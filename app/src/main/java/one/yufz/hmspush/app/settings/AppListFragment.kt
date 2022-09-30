@@ -1,4 +1,4 @@
-package one.yufz.hmspush.hook.hms.settings
+package one.yufz.hmspush.app.settings
 
 import android.app.ListFragment
 import android.graphics.Color
@@ -50,7 +50,7 @@ class AppListFragment : ListFragment() {
         }
 
         toolbar.setOnApplyWindowInsetsListener { v, insets ->
-            val toolBarHeight = context.dp2px(48) + insets.systemWindowInsetTop
+            val toolBarHeight = context.dp2px(56) + insets.systemWindowInsetTop
             toolbar.layoutParams.height = toolBarHeight
             toolbar.setPadding(0, insets.systemWindowInsetTop, 0, 0)
             listView.layoutParams = (listView.layoutParams as ViewGroup.MarginLayoutParams).apply {
@@ -58,7 +58,7 @@ class AppListFragment : ListFragment() {
             }
             insets
         }
-
+        toolbar.requestApplyInsets()
         activity.setActionBar(toolbar)
         setHasOptionsMenu(true)
 

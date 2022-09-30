@@ -1,4 +1,4 @@
-package one.yufz.hmspush.hook.hms.settings
+package one.yufz.hmspush.app.settings
 
 class AppInfo(
     val packageName: String,

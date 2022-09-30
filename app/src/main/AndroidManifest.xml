@@ -4,16 +4,19 @@
     package="one.yufz.hmspush"
     >
 
-<!--    <queries>-->
-<!--        <package android:name="com.huawei.hwid" />-->
-<!--    </queries>-->
+    <queries>
+        <package android:name="com.huawei.hwid" />
+        <intent>
+            <action android:name="com.huawei.push.msg.NOTIFY_MSG" />
+        </intent>
+    </queries>
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@android:style/Theme.DeviceDefault"
+        android:theme="@android:style/Theme.Material.Light.NoActionBar"
         >
         <meta-data
             android:name="xposedmodule"
@@ -35,7 +38,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

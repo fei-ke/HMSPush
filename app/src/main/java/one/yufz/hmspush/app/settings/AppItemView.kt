@@ -1,4 +1,4 @@
-package one.yufz.hmspush.hook.hms.settings
+package one.yufz.hmspush.app.settings
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
