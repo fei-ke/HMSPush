@@ -9,7 +9,16 @@ import one.yufz.hmspush.hook.system.HookSystemService
 import one.yufz.xposed.*
 
 object FakeHmsSignature {
+    private const val TAG = "FakeHmsSignature"
+
     fun hook(lpparam: XC_LoadPackage.LoadPackageParam) {
+        try {
+            lpparam.classLoader.findClass("com.huawei.hms.utils.ReadApkFileUtil")
+                .hookMethod("verifyApkHash", String::class.java) { replace { true } }
+        } catch (e: Throwable) {
+            //ignored
+        }
+
         val classApplicationPackageManager = lpparam.classLoader.findClass("android.app.ApplicationPackageManager")
         classApplicationPackageManager.hookMethod("getPackageInfo", String::class.java, Int::class.java) {
             doAfter {
