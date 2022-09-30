@@ -9,6 +9,7 @@ import com.huawei.android.app.NotificationManagerEx
 import dalvik.system.DexClassLoader
 import de.robv.android.xposed.XposedHelpers.ClassNotFoundError
 import de.robv.android.xposed.callbacks.XC_LoadPackage
+import one.yufz.hmspush.hook.bridge.HookContentProvider
 import one.yufz.hmspush.hook.XLog
 import one.yufz.hmspush.hook.hms.settings.HookSettings
 import one.yufz.xposed.*
@@ -58,6 +59,8 @@ class HookHMS {
         if (Build.VERSION.SDK_INT >= 33) {
             CursorWindow::class.java["sCursorWindowSize"] = 1024 * 1024 * 8
         }
+
+        HookContentProvider().hook(lpparam.classLoader)
     }
 
 

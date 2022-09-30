@@ -31,7 +31,7 @@ object PushHistory {
         }
     }
 
-    private fun getAll(): Map<String, Long> {
+    fun getAll(): Map<String, Long> {
         return store.all.map { it.key to it.value as Long }.toMap()
     }
 
