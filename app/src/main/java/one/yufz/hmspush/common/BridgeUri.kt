@@ -7,8 +7,8 @@ const val AUTHORITIES = "com.huawei.hms"
 enum class BridgeUri(val path: String) {
     PUSH_REGISTERED("hmspush/registered"),
     PUSH_HISTORY("hmspush/history"),
-    PUSH_UNREGISTER("hmspush/unregister"),
-    MODULE_VERSION("hmspush/moduleVersion");
+    MODULE_VERSION("hmspush/moduleVersion"),
+    DISABLE_SIGNATURE("hmspush/disableSignature");
 
     override fun toString(): String {
         return "content://$AUTHORITIES/$path"

@@ -7,12 +7,13 @@ import android.content.pm.PackageManager.NameNotFoundException
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toolbar
-import one.yufz.hmspush.app.bridge.BridgeWrap
 import one.yufz.hmspush.app.settings.AppListFragment
+import one.yufz.hmspush.common.BridgeWrap
 import one.yufz.hmspush.common.HMS_PACKAGE_NAME
 
 class MainActivity : Activity() {
@@ -105,5 +106,13 @@ class MainActivity : Activity() {
 
     fun popupFragment() {
         fragmentManager.popBackStack()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            onBackPressed()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

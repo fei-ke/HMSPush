@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import one.yufz.hmspush.app.bridge.BridgeWrap
+import one.yufz.hmspush.common.BridgeWrap
 import one.yufz.hmspush.common.BridgeUri
 
 class AppListViewModel(val context: Context) {

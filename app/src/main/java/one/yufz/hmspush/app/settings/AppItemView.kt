@@ -120,7 +120,7 @@ class AppItemView(context: Context) : LinearLayout(context) {
     private fun showUnregisterDialog(item: AppInfo) {
         AlertDialog.Builder(context)
             .setTitle("确定取消注册")
-            .setPositiveButton("确定") { _, _ -> Util.unregisterPush(item.packageName) }
+            .setPositiveButton("确定") { _, _ -> Util.unregisterPush(context, item.packageName) }
             .setNegativeButton("取消", null)
             .show()
     }

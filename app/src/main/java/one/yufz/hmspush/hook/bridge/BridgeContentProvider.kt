@@ -1,13 +1,15 @@
 package one.yufz.hmspush.hook.bridge
 
+import android.content.ContentValues
 import android.content.UriMatcher
 import android.database.Cursor
 import android.database.MatrixCursor
 import android.net.Uri
-import android.os.Bundle
 import one.yufz.hmspush.BuildConfig
 import one.yufz.hmspush.common.AUTHORITIES
 import one.yufz.hmspush.common.BridgeUri
+import one.yufz.hmspush.hook.XLog
+import one.yufz.hmspush.hook.hms.Prefs
 import one.yufz.hmspush.hook.hms.PushHistory
 import one.yufz.hmspush.hook.hms.PushSignWatcher
 
@@ -24,21 +26,68 @@ class BridgeContentProvider {
         }
     }
 
-    fun call(method: String, arg: String?, extras: Bundle?): Bundle? {
-        return null
-    }
-
     fun query(uri: Uri, projection: Array<out String>?, selection: String?, selectionArgs: Array<out String>?, sortOrder: String?): Cursor? {
+        XLog.d(TAG, "query() called with: uri = $uri, projection = $projection, selection = $selection, selectionArgs = $selectionArgs, sortOrder = $sortOrder")
+
         val code = uriMatcher.match(uri)
         return if (code != -1) {
             when (BridgeUri.values()[code]) {
                 BridgeUri.PUSH_REGISTERED -> queryRegistered()
                 BridgeUri.PUSH_HISTORY -> queryPushHistory()
-                BridgeUri.PUSH_UNREGISTER -> unregister(uri)
                 BridgeUri.MODULE_VERSION -> queryModuleVersion()
+                BridgeUri.DISABLE_SIGNATURE -> queryIsDisableSignature()
             }
         } else {
             null
+        }
+    }
+
+    fun update(uri: Uri, values: ContentValues?, selection: String?, selectionArgs: Array<out String>?): Int {
+        XLog.d(TAG, "update() called with: uri = $uri, values = $values, selection = $selection, selectionArgs = $selectionArgs")
+
+        val code = uriMatcher.match(uri)
+        if (code != -1) {
+            return when (BridgeUri.values()[code]) {
+                BridgeUri.DISABLE_SIGNATURE -> setDisableSignature(values)
+                else -> {
+                    0
+                }
+            }
+        } else {
+            return 0
+        }
+    }
+
+    fun delete(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
+        XLog.d(TAG, "delete() called with: uri = $uri, selection = $selection, selectionArgs = $selectionArgs")
+
+        val code = uriMatcher.match(uri)
+        if (code != -1) {
+            return when (BridgeUri.values()[code]) {
+                BridgeUri.PUSH_REGISTERED -> unregister(selectionArgs)
+                else -> {
+                    0
+                }
+            }
+        } else {
+            return 0
+        }
+
+    }
+
+    private fun setDisableSignature(values: ContentValues?): Int {
+        values ?: return 0
+
+        val disableSignature = values.getAsBoolean("disableSignature") ?: return 0
+
+        Prefs.setDisableSignature(disableSignature)
+
+        return 1
+    }
+
+    private fun queryIsDisableSignature(): Cursor? {
+        return MatrixCursor(arrayOf("disableSignature")).apply {
+            addRow(arrayOf(if (Prefs.isDisableSignature()) 1 else 0))
         }
     }
 
@@ -66,12 +115,11 @@ class BridgeContentProvider {
         return cursor
     }
 
-    private fun unregister(uri: Uri): Cursor? {
-        val packageName = uri.getQueryParameter("packageName")
-        if (packageName != null) {
-            PushSignWatcher.unregisterSign(packageName)
-            return MatrixCursor(emptyArray())
+    private fun unregister(args: Array<String>?): Int {
+        args?.forEach {
+            PushSignWatcher.unregisterSign(it)
+            PushHistory.remove(it)
         }
-        return null
+        return 1
     }
 }

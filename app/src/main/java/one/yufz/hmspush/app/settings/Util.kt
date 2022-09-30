@@ -6,8 +6,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
 import one.yufz.hmspush.BuildConfig
-import one.yufz.hmspush.hook.hms.PushHistory
-import one.yufz.hmspush.hook.hms.PushSignWatcher
+import one.yufz.hmspush.common.BridgeWrap
 
 fun Context.dp2px(dp: Number): Int = (dp.toFloat() * resources.displayMetrics.density + 0.5f).toInt()
 
@@ -31,8 +30,7 @@ object Util {
         context.startActivity(intent)
     }
 
-    fun unregisterPush(packageName: String) {
-        PushSignWatcher.unregisterSign(packageName)
-        PushHistory.remove(packageName)
+    fun unregisterPush(context: Context, packageName: String) {
+        BridgeWrap.unregisterPush(context, packageName)
     }
 }

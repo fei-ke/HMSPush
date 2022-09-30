@@ -1,9 +1,9 @@
-package one.yufz.hmspush.app.bridge
+package one.yufz.hmspush.common
 
+import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
-import one.yufz.hmspush.common.BridgeUri
 
 object BridgeWrap {
     private fun query(context: Context, uri: Uri): Cursor? {
@@ -12,6 +12,24 @@ object BridgeWrap {
         } catch (e: SecurityException) {
             e.printStackTrace()
             null
+        }
+    }
+
+    private fun update(context: Context, uri: Uri, values: ContentValues): Int {
+        try {
+            return context.contentResolver.update(uri, values, null, null)
+        } catch (e: SecurityException) {
+            e.printStackTrace()
+            return 0
+        }
+    }
+
+    private fun delete(context: Context, uri: Uri, args: Array<String>?): Int {
+        try {
+            return context.contentResolver.delete(uri, null, args)
+        } catch (e: SecurityException) {
+            e.printStackTrace()
+            return 0
         }
     }
 
@@ -62,4 +80,26 @@ object BridgeWrap {
         return null
     }
 
+    fun isDisableSignature(context: Context): Boolean {
+        query(context, BridgeUri.DISABLE_SIGNATURE.toUri())?.use {
+            val indexDisableSignature = it.getColumnIndex("disableSignature")
+
+            if (it.moveToNext()) {
+                return it.getInt(indexDisableSignature) == 1
+            }
+        }
+        return false
+    }
+
+    fun setDisableSignature(context: Context, disableSignature: Boolean): Boolean {
+        val values = ContentValues().apply {
+            put("disableSignature", disableSignature)
+        }
+
+        return update(context, BridgeUri.DISABLE_SIGNATURE.toUri(), values) > 0
+    }
+
+    fun unregisterPush(context: Context, packageName: String) {
+        delete(context, BridgeUri.PUSH_REGISTERED.toUri(), arrayOf(packageName))
+    }
 }

@@ -1,8 +1,9 @@
 package one.yufz.hmspush.hook.fakedevice
 
 import android.app.Application
+import android.content.Context
 import de.robv.android.xposed.callbacks.XC_LoadPackage
-import one.yufz.hmspush.hook.Prefs
+import one.yufz.hmspush.common.BridgeWrap
 import one.yufz.hmspush.hook.XLog
 import one.yufz.xposed.hookMethod
 
@@ -30,9 +31,11 @@ object FakeDevice {
         val fakes = FakeDeviceConfig[lpparam.packageName] ?: Default
         fakes.forEach { it.newInstance().fake(lpparam) }
 
-        if (Prefs.isDisableSignature()) {
-            Application::class.java.hookMethod("onCreate") {
-                doAfter { FakeHmsSignature.hook(lpparam) }
+        Application::class.java.hookMethod("onCreate") {
+            doBefore {
+                if (BridgeWrap.isDisableSignature(thisObject as Context)) {
+                    FakeHmsSignature.hook(lpparam)
+                }
             }
         }
     }
