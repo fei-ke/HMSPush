@@ -14,7 +14,7 @@ class SettingsFragment : PreferenceFragment() {
         super.onCreate(savedInstanceState)
 
         activity.actionBar?.apply {
-            setTitle(R.string.settings)
+            setTitle(R.string.menu_settings)
             setDisplayHomeAsUpEnabled(true)
         }
 

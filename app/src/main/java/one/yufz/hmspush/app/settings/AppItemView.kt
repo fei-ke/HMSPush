@@ -1,6 +1,5 @@
 package one.yufz.hmspush.app.settings
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.res.ColorStateList
@@ -12,6 +11,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.TextView
+import one.yufz.hmspush.R
 
 class AppItemView(context: Context) : LinearLayout(context) {
     companion object {
@@ -63,12 +63,11 @@ class AppItemView(context: Context) : LinearLayout(context) {
 
         more = child(36.dp, 36.dp) {
             scaleType = ImageView.ScaleType.CENTER
-            setImageDrawable(IconUtil.getMoreIcon(context))
+            setImageResource(R.drawable.ic_more)
             imageTintList = ColorStateList.valueOf(COLOR_GRAY)
         }
     }
 
-    @SuppressLint("SetTextI18n")
     fun bind(item: AppInfo) {
         val pm = context.packageManager
         val info = pm.getApplicationInfo(item.packageName, 0)
@@ -84,8 +83,8 @@ class AppItemView(context: Context) : LinearLayout(context) {
         }
 
         with(status) {
-            val registerInfo = if (item.registered) "已注册" else "未注册"
-            val lastPushInfo = item.lastPushTime?.let { "  •  最近推送：${DateUtils.getRelativeTimeSpanString(it)}" } ?: ""
+            val registerInfo = if (item.registered) context.getString(R.string.registered) else context.getString(R.string.unregistered)
+            val lastPushInfo = item.lastPushTime?.let { context.getString(R.string.latest_push, DateUtils.getRelativeTimeSpanString(it)) } ?: ""
             text = registerInfo + lastPushInfo
             setTextColor(if (item.registered) COLOR_GREEN else COLOR_GRAY)
         }
@@ -99,18 +98,18 @@ class AppItemView(context: Context) : LinearLayout(context) {
         val popupMenu = PopupMenu(context, more)
         val menu = popupMenu.menu
         if (item.registered) {
-            menu.add("取消注册").setOnMenuItemClickListener {
+            menu.add(R.string.menu_unregister).setOnMenuItemClickListener {
                 showUnregisterDialog(item)
                 true
             }
         }
 
-        menu.add("启动").setOnMenuItemClickListener {
+        menu.add(R.string.menu_launch).setOnMenuItemClickListener {
             Util.launchApp(context, item.packageName)
             true
         }
 
-        menu.add("应用信息").setOnMenuItemClickListener {
+        menu.add(R.string.menu_app_info).setOnMenuItemClickListener {
             Util.launchAppInfo(context, item.packageName)
             true
         }
@@ -119,9 +118,9 @@ class AppItemView(context: Context) : LinearLayout(context) {
 
     private fun showUnregisterDialog(item: AppInfo) {
         AlertDialog.Builder(context)
-            .setTitle("确定取消注册")
-            .setPositiveButton("确定") { _, _ -> Util.unregisterPush(context, item.packageName) }
-            .setNegativeButton("取消", null)
+            .setTitle(R.string.dialog_confirm_unregister)
+            .setPositiveButton(R.string.dialog_confirm) { _, _ -> Util.unregisterPush(context, item.packageName) }
+            .setNegativeButton(R.string.dialog_cancel, null)
             .show()
     }
 }

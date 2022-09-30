@@ -2,16 +2,11 @@ package one.yufz.hmspush.app.settings
 
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
-import one.yufz.hmspush.BuildConfig
 import one.yufz.hmspush.common.BridgeWrap
 
 fun Context.dp2px(dp: Number): Int = (dp.toFloat() * resources.displayMetrics.density + 0.5f).toInt()
-
-@Throws(PackageManager.NameNotFoundException::class, SecurityException::class)
-fun Context.createModuleContext() = createPackageContext(BuildConfig.APPLICATION_ID, 0)
 
 object Util {
     fun launchApp(context: Context, packageName: String) {

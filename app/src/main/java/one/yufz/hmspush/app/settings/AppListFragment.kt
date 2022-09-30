@@ -84,12 +84,12 @@ class AppListFragment : ListFragment() {
 
         })
 
-        menu.add("搜索")
-            .setIcon(IconUtil.getSearchIcon(requireNotNull(context)))
+        menu.add(R.string.menu_search)
+            .setIcon(R.drawable.ic_search)
             .setActionView(searchView)
             .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW or MenuItem.SHOW_AS_ACTION_ALWAYS)
 
-        menu.add("设置")
+        menu.add(R.string.menu_settings)
             .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER)
             .setOnMenuItemClickListener {
                 (activity as MainActivity).pushFragment(SettingsFragment(), "settings")
