@@ -84,7 +84,7 @@ jobs:
         repo: one.yufz.hmspush
         tag_name: ${{ steps.var.outputs.version }}
         release_name: ${{ github.ref }}
-        commitish: 4085e424bb9a4d2f79441c6cfc1f7718fab00163
+        commitish: 301297d3142baf38abc7b5f9a6077f440a3f8392
         body: ${{ steps.tag-data.outputs.git-tag-annotation }} &#x20;
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
