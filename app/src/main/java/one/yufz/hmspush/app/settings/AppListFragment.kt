@@ -1,9 +1,11 @@
 package one.yufz.hmspush.app.settings
 
+import android.app.Activity
 import android.app.ListFragment
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -16,6 +18,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import one.yufz.hmspush.MainActivity
 import one.yufz.hmspush.R
+
 
 class AppListFragment : ListFragment() {
     companion object {
@@ -84,8 +87,12 @@ class AppListFragment : ListFragment() {
 
         })
 
+        val typedValue = TypedValue()
+        context.theme.resolveAttribute(android.R.attr.textColorSecondary, typedValue, true)
+
         menu.add(R.string.menu_search)
             .setIcon(R.drawable.ic_search)
+            .setIconTintList(context.getColorStateList(typedValue.resourceId))
             .setActionView(searchView)
             .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW or MenuItem.SHOW_AS_ACTION_ALWAYS)
 
