@@ -8,15 +8,14 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.widget.AbsListView
-import android.widget.FrameLayout
 import android.widget.SearchView
-import android.widget.Toolbar
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import one.yufz.hmspush.MainActivity
+import one.yufz.hmspush.R
 
 class AppListFragment : ListFragment() {
     companion object {
@@ -35,33 +34,14 @@ class AppListFragment : ListFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.setBackgroundColor(Color.WHITE)
         val context = requireNotNull(context)
 
-        val listContainer = listView.parent as FrameLayout
-        val toolbar = listContainer.child<Toolbar>(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT) {
-            setNavigationOnClickListener {
-                activity?.onBackPressed()
-            }
-            title = "HMS Push"
-            setTitleTextColor(context.getColor(android.R.color.primary_text_light))
-            setBackgroundColor(Color.WHITE)
-            fitsSystemWindows = true
-        }
-
-        toolbar.setOnApplyWindowInsetsListener { v, insets ->
-            val toolBarHeight = context.dp2px(56) + insets.systemWindowInsetTop
-            toolbar.layoutParams.height = toolBarHeight
-            toolbar.setPadding(0, insets.systemWindowInsetTop, 0, 0)
-            listView.layoutParams = (listView.layoutParams as ViewGroup.MarginLayoutParams).apply {
-                topMargin = toolBarHeight
-            }
-            insets
-        }
-        toolbar.requestApplyInsets()
-        activity.setActionBar(toolbar)
         setHasOptionsMenu(true)
-
+        activity.actionBar?.apply {
+            setTitle(R.string.app_name)
+            setDisplayHomeAsUpEnabled(false)
+            setDisplayUseLogoEnabled(true)
+        }
         listView.setOnScrollListener(object : AbsListView.OnScrollListener {
             override fun onScrollStateChanged(view: AbsListView, scrollState: Int) {
             }
@@ -69,9 +49,9 @@ class AppListFragment : ListFragment() {
             override fun onScroll(view: AbsListView, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
                 val firstChild = view.getChildAt(0)
                 if (firstVisibleItem == 0 && firstChild != null && firstChild.top == 0) {
-                    toolbar.elevation = 0f
+                    activity.actionBar?.elevation = 0f
                 } else {
-                    toolbar.elevation = context.dp2px(2).toFloat()
+                    activity.actionBar?.elevation = context.dp2px(2).toFloat()
                 }
             }
         })
@@ -108,6 +88,13 @@ class AppListFragment : ListFragment() {
             .setIcon(IconUtil.getSearchIcon(requireNotNull(context)))
             .setActionView(searchView)
             .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW or MenuItem.SHOW_AS_ACTION_ALWAYS)
+
+        menu.add("设置")
+            .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER)
+            .setOnMenuItemClickListener {
+                (activity as MainActivity).pushFragment(SettingsFragment(), "settings")
+                true
+            }
     }
 
     override fun onDestroy() {
