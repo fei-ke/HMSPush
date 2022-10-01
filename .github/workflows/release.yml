@@ -48,11 +48,15 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew assembleRelease
 
+    - name: Collect artifcat name
+      run: |
+        echo "release_artifact=$(basename -s .apk app/build/outputs/apk/release/*.apk)" >> $GITHUB_ENV
+
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3
       with:
-        path: |
-          app/build/outputs/apk/release/*.apk
+        name: ${{ env.release_artifact }}
+        path: app/build/outputs/apk/release/*.apk
 
     - uses: ericcornelissen/git-tag-annotation-action@v2
       id: tag-data
