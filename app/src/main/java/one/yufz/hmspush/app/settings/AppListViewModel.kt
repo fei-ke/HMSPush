@@ -1,5 +1,6 @@
 package one.yufz.hmspush.app.settings
 
+import android.app.Application
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -7,21 +8,19 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.database.ContentObserver
 import android.util.Log
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import one.yufz.hmspush.common.BridgeWrap
 import one.yufz.hmspush.common.BridgeUri
+import one.yufz.hmspush.common.BridgeWrap
 
-class AppListViewModel(val context: Context) {
+class AppListViewModel(val context: Application) : AndroidViewModel(context) {
     companion object {
         private const val TAG = "AppListViewModel"
     }
-
-    private val mainScope = MainScope()
 
     private val supportedAppListFlow = MutableStateFlow<List<String>>(emptyList())
 
@@ -33,7 +32,7 @@ class AppListViewModel(val context: Context) {
             when (intent.action) {
                 Intent.ACTION_PACKAGE_ADDED,
                 Intent.ACTION_PACKAGE_REMOVED,
-                Intent.ACTION_PACKAGE_CHANGED -> mainScope.launch { loadSupportedAppList() }
+                Intent.ACTION_PACKAGE_CHANGED -> viewModelScope.launch { loadSupportedAppList() }
             }
         }
     }
@@ -54,7 +53,7 @@ class AppListViewModel(val context: Context) {
         }
     }
 
-    fun onCreate() {
+    init {
         val intentFilter = IntentFilter().apply {
             addAction(Intent.ACTION_PACKAGE_ADDED)
             addAction(Intent.ACTION_PACKAGE_CHANGED)
@@ -63,7 +62,7 @@ class AppListViewModel(val context: Context) {
         }
         context.registerReceiver(packageReceiver, intentFilter)
 
-        mainScope.launch {
+        viewModelScope.launch {
             loadSupportedAppList()
             loadRegisteredList()
             loadPushHistory()
@@ -85,14 +84,14 @@ class AppListViewModel(val context: Context) {
     }
 
     private fun loadRegisteredList() {
-        mainScope.launch {
+        viewModelScope.launch {
             val registered = BridgeWrap.getRegistered(context)
             registeredListFlow.emit(registered)
         }
     }
 
     private fun loadPushHistory() {
-        mainScope.launch {
+        viewModelScope.launch {
             val history = BridgeWrap.getPushHistory(context)
             historyListFlow.emit(history)
         }
@@ -125,15 +124,15 @@ class AppListViewModel(val context: Context) {
     }
 
     fun filter(keywords: String) {
-        mainScope.launch {
+        viewModelScope.launch {
             filterKeywords.emit(keywords)
         }
     }
 
-    fun onDestroy() {
+    override fun onCleared() {
+        super.onCleared()
         context.unregisterReceiver(packageReceiver)
         context.contentResolver.unregisterContentObserver(pushRegisterObserver)
         context.contentResolver.unregisterContentObserver(pushHistoryObserver)
-        mainScope.cancel()
     }
 }

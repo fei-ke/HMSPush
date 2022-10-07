@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.application'
+    id 'kotlin-android'
 }
-apply plugin: 'kotlin-android'
 
 android {
     compileSdk 33
@@ -47,11 +47,22 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 }
+def lifecycle_version = "2.2.0"
+def activity_version = "1.6.0"
+def fragment_version = "1.5.3"
+def preference_version = "1.2.0"
+
 
 dependencies {
     compileOnly 'de.robv.android.xposed:api:82'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
+
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation "androidx.activity:activity-ktx:$activity_version"
+    implementation "androidx.fragment:fragment-ktx:$fragment_version"
+    implementation "androidx.preference:preference-ktx:$preference_version"
+
 
     implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
 }

@@ -1,8 +1,5 @@
 package one.yufz.hmspush
 
-import android.app.Activity
-import android.app.Fragment
-import android.app.FragmentManager
 import android.content.pm.PackageManager.NameNotFoundException
 import android.graphics.Color
 import android.os.Bundle
@@ -12,11 +9,14 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toolbar
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import one.yufz.hmspush.app.settings.AppListFragment
 import one.yufz.hmspush.common.BridgeWrap
 import one.yufz.hmspush.common.HMS_PACKAGE_NAME
 
-class MainActivity : Activity() {
+class MainActivity : FragmentActivity() {
     companion object {
         private const val TAG = "MainActivity"
     }
@@ -47,17 +47,17 @@ class MainActivity : Activity() {
     }
 
     private fun addAppListFragment() {
-        if (fragmentManager.findFragmentByTag("app_list") != null) return
+        if (supportFragmentManager.findFragmentByTag("app_list") != null) return
 
         Log.d(TAG, "addAppListFragment")
 
-        fragmentManager.beginTransaction()
+        supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, AppListFragment(), "app_list")
             .commit()
     }
 
     private fun removeAllFragment() {
-        fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        supportFragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
 
     private fun checkHmsCoreAndShowTips(): Boolean {
@@ -97,7 +97,7 @@ class MainActivity : Activity() {
     }
 
     fun pushFragment(fragment: Fragment, tag: String) {
-        fragmentManager.beginTransaction()
+        supportFragmentManager.beginTransaction()
             .setCustomAnimations(R.animator.fragment_fade_enter, R.animator.fragment_fade_exit, R.animator.fragment_fade_enter, R.animator.fragment_fade_exit)
             .replace(R.id.fragment_container, fragment, tag)
             .addToBackStack(tag)
@@ -105,7 +105,7 @@ class MainActivity : Activity() {
     }
 
     fun popupFragment() {
-        fragmentManager.popBackStack()
+        supportFragmentManager.popBackStack()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

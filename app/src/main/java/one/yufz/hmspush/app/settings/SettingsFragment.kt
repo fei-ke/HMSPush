@@ -2,18 +2,16 @@ package one.yufz.hmspush.app.settings
 
 import android.graphics.Color
 import android.os.Bundle
-import android.preference.PreferenceFragment
-import android.preference.SwitchPreference
 import android.view.View
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreference
 import one.yufz.hmspush.R
 import one.yufz.hmspush.common.BridgeWrap
 import one.yufz.hmspush.common.HMSPUSH_PREF_NAME
 
-class SettingsFragment : PreferenceFragment() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        activity.actionBar?.apply {
+class SettingsFragment : PreferenceFragmentCompat() {
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        requireActivity().actionBar?.apply {
             setTitle(R.string.menu_settings)
             setDisplayHomeAsUpEnabled(true)
         }
@@ -21,9 +19,10 @@ class SettingsFragment : PreferenceFragment() {
         preferenceManager.apply {
             sharedPreferencesName = HMSPUSH_PREF_NAME
         }
-        preferenceScreen = preferenceManager.createPreferenceScreen(context)
+        preferenceScreen = preferenceManager.createPreferenceScreen(requireContext())
 
-        val disableSignature = SwitchPreference(context).apply {
+        val disableSignature = SwitchPreference(requireContext()).apply {
+            setIcon(R.drawable.ic_verified)
             key = "disable_signature"
             setTitle(R.string.disable_signature)
             setSummary(R.string.disable_signature_summary)
@@ -40,4 +39,5 @@ class SettingsFragment : PreferenceFragment() {
         super.onViewCreated(view, savedInstanceState)
         view.setBackgroundColor(Color.WHITE)
     }
+
 }
