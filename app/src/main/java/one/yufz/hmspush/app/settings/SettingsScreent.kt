@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Verified
+import androidx.compose.material.icons.outlined.RemoveModerator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -69,7 +69,7 @@ fun SettingsScreen() {
                             Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                         ) {
                             Icon(
-                                imageVector = Icons.Filled.Verified,
+                                imageVector = Icons.Outlined.RemoveModerator,
                                 contentDescription = null,
                                 modifier = Modifier.align(alignment = Alignment.CenterVertically)
                             )
