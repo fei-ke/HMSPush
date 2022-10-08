@@ -25,18 +25,7 @@ class SelfNotificationManager : INotificationManager {
     }
 
     override fun notify(context: Context, packageName: String, id: Int, notification: Notification) {
-        notification["mGroupKey"] = packageName
         notificationManager.notify(id, notification)
-        updateGroupSummary(packageName, notification)
-    }
-
-    private fun updateGroupSummary(packageName: String, notification: Notification) {
-        val group = notification.clone().apply {
-            this.flags = flags.or(Notification.FLAG_GROUP_SUMMARY)
-            this["mGroupAlertBehavior"] = Notification.GROUP_ALERT_CHILDREN
-        }
-
-        notificationManager.notify(packageName.hashCode(), group)
     }
 
     override fun createNotificationChannels(packageName: String, userId: Int, channels: List<NotificationChannel>) {

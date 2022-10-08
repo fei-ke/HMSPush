@@ -10,6 +10,7 @@ import one.yufz.hmspush.hook.hms.PushHistory
 import one.yufz.hmspush.hook.hms.nm.INotificationManager
 import one.yufz.hmspush.hook.hms.nm.SelfNotificationManager
 import one.yufz.hmspush.hook.hms.nm.SystemNotificationManager
+import one.yufz.hmspush.hook.hms.nm.handler.NotificationHandlers
 import one.yufz.hmspush.hook.system.HookSystemService
 import java.lang.reflect.InvocationTargetException
 
@@ -44,7 +45,9 @@ object NotificationManagerEx {
     fun notify(context: Context, packageName: String, id: Int, notification: Notification) {
         XLog.d(TAG, "notify() called with: context = $context, packageName = $packageName, id = $id, notification = $notification")
 
-        tryInvoke { notificationManager.notify(context, packageName, id, notification) }
+        tryInvoke {
+            NotificationHandlers.handle(notificationManager, context, packageName, id, notification)
+        }
 
         PushHistory.record(packageName)
     }
