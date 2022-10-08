@@ -1,6 +1,6 @@
-package one.yufz.hmspush.app.settings
+package one.yufz.hmspush.app.home
 
-class AppInfo(
+data class AppInfo(
     val packageName: String,
     val name: String,
     var registered: Boolean = false,

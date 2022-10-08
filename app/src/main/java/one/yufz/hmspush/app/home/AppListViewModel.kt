@@ -1,4 +1,4 @@
-package one.yufz.hmspush.app.settings
+package one.yufz.hmspush.app.home
 
 import android.app.Application
 import android.content.BroadcastReceiver
@@ -127,6 +127,10 @@ class AppListViewModel(val context: Application) : AndroidViewModel(context) {
         viewModelScope.launch {
             filterKeywords.emit(keywords)
         }
+    }
+
+    fun unregisterPush(packageName: String) {
+        Util.unregisterPush(context, packageName)
     }
 
     override fun onCleared() {
