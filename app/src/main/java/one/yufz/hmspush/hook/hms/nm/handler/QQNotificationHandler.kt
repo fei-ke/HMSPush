@@ -1,11 +1,16 @@
 package one.yufz.hmspush.hook.hms.nm.handler
 
 import android.app.Notification
+import android.app.Notification.InboxStyle
 import android.content.Context
 import one.yufz.hmspush.hook.XLog
 import one.yufz.hmspush.hook.hms.nm.INotificationManager
 import one.yufz.hmspush.hook.hms.nm.SystemNotificationManager
-import one.yufz.xposed.set
+import one.yufz.hmspush.hook.util.getInboxLines
+import one.yufz.hmspush.hook.util.getText
+import one.yufz.hmspush.hook.util.getTitle
+import one.yufz.hmspush.hook.util.getUserId
+import one.yufz.hmspush.hook.util.newBuilder
 
 class QQNotificationHandler : NotificationHandler {
     companion object {
@@ -13,25 +18,32 @@ class QQNotificationHandler : NotificationHandler {
     }
 
     override fun careAbout(manager: INotificationManager, context: Context, packageName: String, id: Int, notification: Notification): Boolean {
-        return packageName == "com.tencent.mobileqq"
+        return manager is SystemNotificationManager && packageName == "com.tencent.mobileqq"
     }
 
     override fun handle(chain: NotificationHandler.Chain, manager: INotificationManager, context: Context, packageName: String, id: Int, notification: Notification) {
         XLog.d(TAG, "handle() called with: packageName = $packageName, id = $id, notification = $notification")
 
-        notification["mGroupKey"] = id.toString()
+        val activeNotification = manager.getActiveNotifications(packageName, context.getUserId())
+            .find { it.id == id }
 
-        val uniqueId = System.currentTimeMillis().toInt()
-        super.handle(chain, manager, context, packageName, uniqueId, notification)
+        if (activeNotification != null) {
+            val current = activeNotification.notification
 
-        // GroupNotificationHandler will group notification for SelfNotificationManager
-        if (manager is SystemNotificationManager) {
-            val groupNotification = notification.clone().apply {
-                this.flags = flags.or(Notification.FLAG_GROUP_SUMMARY)
-                this["mGroupAlertBehavior"] = Notification.GROUP_ALERT_CHILDREN
-            }
+            val lines = current.getInboxLines() ?: arrayOf(current.getText())
 
-            manager.notify(context, packageName, id, groupNotification)
+            val inboxStyle = InboxStyle()
+                .setBigContentTitle(notification.getTitle())
+                .setSummaryText("${lines.size + 1} 条消息")
+                .addLine(notification.getText())
+            lines.forEach(inboxStyle::addLine)
+
+            val newNotification = notification.newBuilder(context)
+                .setStyle(inboxStyle)
+                .build()
+
+            super.handle(chain, manager, context, packageName, id, newNotification)
         }
+        super.handle(chain, manager, context, packageName, id, notification)
     }
 }

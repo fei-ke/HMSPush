@@ -5,6 +5,7 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.service.notification.StatusBarNotification
 import one.yufz.hmspush.hook.XLog
 import one.yufz.xposed.set
 
@@ -52,5 +53,9 @@ class SelfNotificationManager : INotificationManager {
 
     override fun deleteNotificationChannel(packageName: String, channelId: String) {
         notificationManager.deleteNotificationChannel(channelId)
+    }
+
+    override fun getActiveNotifications(packageName: String, userId: Int): Array<StatusBarNotification> {
+        return notificationManager.activeNotifications
     }
 }

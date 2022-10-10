@@ -101,11 +101,13 @@ fun Class<*>.newInstance(parameterTypes: Array<Class<*>>, vararg args: Any): Any
 
 fun ClassLoader.findClass(className: String): Class<*> = XposedHelpers.findClass(className, this)
 
-inline operator fun <reified T> Any.get(name: String): T = getField(name, T::class.java)
+inline fun <reified T> Any.getOrNull(name: String): T? = getField(name, T::class.java)
+
+inline operator fun <reified T> Any.get(name: String): T = getField(name, T::class.java)!!
 
 inline operator fun <reified T> Any.set(name: String, value: T?) = setField(name, value, T::class.java)
 
-fun <T> Any.getField(name: String, fieldClazz: Class<T>): T {
+fun <T> Any.getField(name: String, fieldClazz: Class<T>): T? {
     val obj = if (this is Class<*>) null else this
     val thisClass = if (this is Class<*>) this else this.javaClass
     val field = findField(thisClass, name)
@@ -121,7 +123,7 @@ fun <T> Any.getField(name: String, fieldClazz: Class<T>): T {
         Short::class.java -> field.getShort(obj)
         else -> field.get(obj)
     }
-    return value as T
+    return value as? T?
 }
 
 fun <T> Any.setField(name: String, value: T?, fieldClass: Class<T>) {
