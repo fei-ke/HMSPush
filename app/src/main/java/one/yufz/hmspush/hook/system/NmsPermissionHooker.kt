@@ -77,5 +77,9 @@ object NmsPermissionHooker {
         //void deleteNotificationChannel(String pkg, String channelId);
         findMethodExact(classINotificationManager, "deleteNotificationChannel", String::class.java, String::class.java)
             .hook(hookPermission(0))
+
+        //ParceledListSlice getAppActiveNotifications(String callingPkg, int userId);
+        findMethodExact(classINotificationManager, "getAppActiveNotifications", String::class.java, Int::class.java)
+            .hook(hookPermission(0))
     }
 }

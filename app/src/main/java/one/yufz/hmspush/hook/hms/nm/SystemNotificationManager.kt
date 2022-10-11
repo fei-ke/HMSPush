@@ -6,6 +6,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import android.service.notification.StatusBarNotification
 import de.robv.android.xposed.XposedHelpers
 import one.yufz.hmspush.common.ANDROID_PACKAGE_NAME
 import one.yufz.xposed.callMethod
@@ -78,4 +79,9 @@ class SystemNotificationManager : INotificationManager {
         notificationManager.callMethod("deleteNotificationChannel", packageName, channelId)
     }
 
+    override fun getActiveNotifications(packageName: String, userId: Int): Array<StatusBarNotification> {
+        val parceledListSlice = notificationManager.callMethod("getAppActiveNotifications", packageName, userId)
+        val list = parceledListSlice?.callMethod("getList") as List<StatusBarNotification>
+        return list.toTypedArray()
+    }
 }
