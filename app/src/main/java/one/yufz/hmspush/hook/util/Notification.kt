@@ -19,3 +19,7 @@ fun Notification.getTitle(): String? {
 fun Notification.getInboxLines(): Array<CharSequence>? {
     return extras.getCharSequenceArray(Notification.EXTRA_TEXT_LINES)
 }
+
+fun Notification.getSummaryText(): CharSequence? {
+    return extras.getCharSequence(Notification.EXTRA_SUMMARY_TEXT)
+}

@@ -7,6 +7,7 @@ import one.yufz.hmspush.hook.XLog
 import one.yufz.hmspush.hook.hms.nm.INotificationManager
 import one.yufz.hmspush.hook.hms.nm.SystemNotificationManager
 import one.yufz.hmspush.hook.util.getInboxLines
+import one.yufz.hmspush.hook.util.getSummaryText
 import one.yufz.hmspush.hook.util.getText
 import one.yufz.hmspush.hook.util.getTitle
 import one.yufz.hmspush.hook.util.getUserId
@@ -30,11 +31,11 @@ class QQNotificationHandler : NotificationHandler {
         if (activeNotification != null) {
             val current = activeNotification.notification
 
-            val lines = current.getInboxLines() ?: arrayOf(current.getText())
+            val lines = current.getInboxLines()?.take(25) ?: listOf(current.getText())
 
             val inboxStyle = InboxStyle()
                 .setBigContentTitle(notification.getTitle())
-                .setSummaryText("${lines.size + 1} 条消息")
+                .setSummaryText(generateSummary(current.getSummaryText()))
                 .addLine(notification.getText())
             lines.forEach(inboxStyle::addLine)
 
@@ -46,5 +47,10 @@ class QQNotificationHandler : NotificationHandler {
         } else {
             super.handle(chain, manager, context, packageName, id, notification)
         }
+    }
+
+    private fun generateSummary(current: CharSequence?): CharSequence {
+        val currentCount = current?.split(" ")?.firstOrNull()?.toInt() ?: 1
+        return "${currentCount + 1} 条消息"
     }
 }
