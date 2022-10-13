@@ -43,7 +43,8 @@ class QQNotificationHandler : NotificationHandler {
                 .build()
 
             super.handle(chain, manager, context, packageName, id, newNotification)
+        } else {
+            super.handle(chain, manager, context, packageName, id, notification)
         }
-        super.handle(chain, manager, context, packageName, id, notification)
     }
 }
