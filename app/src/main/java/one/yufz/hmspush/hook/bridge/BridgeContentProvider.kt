@@ -8,6 +8,9 @@ import android.net.Uri
 import one.yufz.hmspush.BuildConfig
 import one.yufz.hmspush.common.AUTHORITIES
 import one.yufz.hmspush.common.BridgeUri
+import one.yufz.hmspush.common.PrefsModel
+import one.yufz.hmspush.common.content.toContent
+import one.yufz.hmspush.common.content.toCursor
 import one.yufz.hmspush.hook.XLog
 import one.yufz.hmspush.hook.hms.Prefs
 import one.yufz.hmspush.hook.hms.PushHistory
@@ -36,10 +39,15 @@ class BridgeContentProvider {
                 BridgeUri.PUSH_HISTORY -> queryPushHistory()
                 BridgeUri.MODULE_VERSION -> queryModuleVersion()
                 BridgeUri.DISABLE_SIGNATURE -> queryIsDisableSignature()
+                BridgeUri.PREFERENCES -> queryPreferences()
             }
         } else {
             null
         }
+    }
+
+    private fun queryPreferences(): Cursor {
+        return Prefs.prefModel.toCursor()
     }
 
     fun update(uri: Uri, values: ContentValues?, selection: String?, selectionArgs: Array<out String>?): Int {
@@ -48,7 +56,7 @@ class BridgeContentProvider {
         val code = uriMatcher.match(uri)
         if (code != -1) {
             return when (BridgeUri.values()[code]) {
-                BridgeUri.DISABLE_SIGNATURE -> setDisableSignature(values)
+                BridgeUri.PREFERENCES -> updatePreference(values)
                 else -> {
                     0
                 }
@@ -75,21 +83,22 @@ class BridgeContentProvider {
 
     }
 
-    private fun setDisableSignature(values: ContentValues?): Int {
-        values ?: return 0
-
-        val disableSignature = values.getAsBoolean("disableSignature") ?: return 0
-
-        Prefs.setDisableSignature(disableSignature)
-
-        return 1
-    }
-
     private fun queryIsDisableSignature(): Cursor? {
         return MatrixCursor(arrayOf("disableSignature")).apply {
             addRow(arrayOf(if (Prefs.isDisableSignature()) 1 else 0))
         }
     }
+
+    private fun updatePreference(values: ContentValues?): Int {
+        values ?: return 0
+
+        values.toContent<PrefsModel>().let {
+            Prefs.updatePreference(it)
+        }
+
+        return 1
+    }
+
 
     private fun queryModuleVersion(): Cursor? {
         return MatrixCursor(arrayOf("versionName", "versionCode")).apply {

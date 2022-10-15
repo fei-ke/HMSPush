@@ -8,7 +8,8 @@ enum class BridgeUri(val path: String) {
     PUSH_REGISTERED("hmspush/registered"),
     PUSH_HISTORY("hmspush/history"),
     MODULE_VERSION("hmspush/moduleVersion"),
-    DISABLE_SIGNATURE("hmspush/disableSignature");
+    DISABLE_SIGNATURE("hmspush/disableSignature"),
+    PREFERENCES("hmspush/preferences");
 
     override fun toString(): String {
         return "content://$AUTHORITIES/$path"

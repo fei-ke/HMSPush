@@ -21,4 +21,12 @@
     <string name="dialog_confirm_unregister">确定取消注册</string>
     <string name="dialog_confirm">确定</string>
     <string name="dialog_cancel">取消</string>
+
+    <string name="keep_history_message">保留历史消息</string>
+    <string name="keep_history_message_summary">一些应用，比如 QQ 默认只显示最新一条消息，开启此开关可保留历史消息</string>
+
+    <string name="notification_icon">自定义通知图标</string>
+    <string name="importing">正在导入…</string>
+    <string name="import_complete">导入完成</string>
+    <string name="import_dialog_title">输入图标库地址</string>
 </resources>

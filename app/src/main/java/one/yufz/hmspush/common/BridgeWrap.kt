@@ -4,6 +4,9 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
+import one.yufz.hmspush.common.content.ContentModel
+import one.yufz.hmspush.common.content.toContent
+import one.yufz.hmspush.common.content.toContentValues
 
 object BridgeWrap {
     private fun query(context: Context, uri: Uri): Cursor? {
@@ -101,5 +104,21 @@ object BridgeWrap {
 
     fun unregisterPush(context: Context, packageName: String) {
         delete(context, BridgeUri.PUSH_REGISTERED.toUri(), arrayOf(packageName))
+    }
+
+    fun queryPreference(context: Context): PrefsModel {
+        return queryModel(context, BridgeUri.PREFERENCES.toUri()) ?: PrefsModel()
+    }
+
+    private inline fun <reified T : ContentModel> queryModel(context: Context, uri: Uri): T? {
+        return query(context, uri)?.use(Cursor::toContent)
+    }
+
+    private fun <T : ContentModel> updateModel(context: Context, uri: Uri, content: T): Int {
+        return update(context, uri, content.toContentValues())
+    }
+
+    fun updatePreference(context: Context, model: PrefsModel) {
+        updateModel(context, BridgeUri.PREFERENCES.toUri(), model)
     }
 }

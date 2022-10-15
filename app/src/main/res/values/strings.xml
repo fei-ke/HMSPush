@@ -21,4 +21,12 @@
     <string name="dialog_confirm_unregister">Confirm Unregister</string>
     <string name="dialog_confirm">Confirm</string>
     <string name="dialog_cancel">Cancel</string>
+
+    <string name="keep_history_message">Keep History Messages</string>
+    <string name="keep_history_message_summary">Some Apps like QQ only show the latest message, turn on this switch to keep the history</string>
+
+    <string name="notification_icon">Custom Notification Icon</string>
+    <string name="importing">Importing…</string>
+    <string name="import_complete">Import Complete</string>
+    <string name="import_dialog_title">Input Icon Library Url</string>
 </resources>

@@ -4,6 +4,7 @@ import android.app.Notification
 import android.app.Notification.InboxStyle
 import android.content.Context
 import one.yufz.hmspush.hook.XLog
+import one.yufz.hmspush.hook.hms.Prefs
 import one.yufz.hmspush.hook.hms.nm.INotificationManager
 import one.yufz.hmspush.hook.hms.nm.SystemNotificationManager
 import one.yufz.hmspush.hook.util.getInboxLines
@@ -13,13 +14,13 @@ import one.yufz.hmspush.hook.util.getTitle
 import one.yufz.hmspush.hook.util.getUserId
 import one.yufz.hmspush.hook.util.newBuilder
 
-class QQNotificationHandler : NotificationHandler {
+class GroupByIdHandler : NotificationHandler {
     companion object {
-        private const val TAG = "QQNotificationHandler"
+        private const val TAG = "GroupByIdHandler"
     }
 
     override fun careAbout(manager: INotificationManager, context: Context, packageName: String, id: Int, notification: Notification): Boolean {
-        return manager is SystemNotificationManager && packageName == "com.tencent.mobileqq"
+        return manager is SystemNotificationManager && Prefs.prefModel.groupMessageById
     }
 
     override fun handle(chain: NotificationHandler.Chain, manager: INotificationManager, context: Context, packageName: String, id: Int, notification: Notification) {

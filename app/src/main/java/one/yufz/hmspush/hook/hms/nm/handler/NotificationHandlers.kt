@@ -7,7 +7,7 @@ import java.util.*
 
 object NotificationHandlers {
     private val handlers = listOf(
-        QQNotificationHandler(),
+        GroupByIdHandler(),
         GroupNotificationHandler(),
         FinalHandler()
     )
