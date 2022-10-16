@@ -8,9 +8,10 @@ import android.net.Uri
 import one.yufz.hmspush.BuildConfig
 import one.yufz.hmspush.common.AUTHORITIES
 import one.yufz.hmspush.common.BridgeUri
-import one.yufz.hmspush.common.PrefsModel
 import one.yufz.hmspush.common.content.toContent
 import one.yufz.hmspush.common.content.toCursor
+import one.yufz.hmspush.common.model.ModuleVersionModel
+import one.yufz.hmspush.common.model.PrefsModel
 import one.yufz.hmspush.hook.XLog
 import one.yufz.hmspush.hook.hms.Prefs
 import one.yufz.hmspush.hook.hms.PushHistory
@@ -35,9 +36,9 @@ class BridgeContentProvider {
         val code = uriMatcher.match(uri)
         return if (code != -1) {
             when (BridgeUri.values()[code]) {
-                BridgeUri.PUSH_REGISTERED -> queryRegistered()
-                BridgeUri.PUSH_HISTORY -> queryPushHistory()
-                BridgeUri.MODULE_VERSION -> queryModuleVersion()
+                BridgeUri.PUSH_REGISTERED -> PushSignWatcher.getRegisterPackages().toCursor()
+                BridgeUri.PUSH_HISTORY -> PushHistory.getAll().toCursor()
+                BridgeUri.MODULE_VERSION -> ModuleVersionModel(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE).toCursor()
                 BridgeUri.DISABLE_SIGNATURE -> queryIsDisableSignature()
                 BridgeUri.PREFERENCES -> queryPreferences()
             }
@@ -97,31 +98,6 @@ class BridgeContentProvider {
         }
 
         return 1
-    }
-
-
-    private fun queryModuleVersion(): Cursor? {
-        return MatrixCursor(arrayOf("versionName", "versionCode")).apply {
-            addRow(arrayOf(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE))
-        }
-    }
-
-
-    private fun queryRegistered(): Cursor? {
-        val cursor = MatrixCursor(arrayOf("packageName"))
-        PushSignWatcher.lastRegistered.forEach {
-            val split = it.split("/")
-            cursor.addRow(arrayOf(split[0]))
-        }
-        return cursor
-    }
-
-    private fun queryPushHistory(): Cursor? {
-        val cursor = MatrixCursor(arrayOf("packageName", "time"))
-        PushHistory.getAll().forEach {
-            cursor.addRow(arrayOf(it.key, it.value))
-        }
-        return cursor
     }
 
     private fun unregister(args: Array<String>?): Int {

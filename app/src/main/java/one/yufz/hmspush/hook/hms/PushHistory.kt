@@ -3,6 +3,7 @@ package one.yufz.hmspush.hook.hms
 import android.app.AndroidAppHelper
 import android.content.Context
 import one.yufz.hmspush.common.BridgeUri
+import one.yufz.hmspush.common.model.PushHistoryModel
 
 object PushHistory {
     private val store by lazy { AndroidAppHelper.currentApplication().getSharedPreferences("push_history", Context.MODE_PRIVATE) }
@@ -23,8 +24,8 @@ object PushHistory {
         notifyChange()
     }
 
-    fun getAll(): Map<String, Long> {
-        return store.all.map { it.key to it.value as Long }.toMap()
+    fun getAll(): List<PushHistoryModel> {
+        return store.all.map { PushHistoryModel(it.key, it.value as Long) }
     }
 
     private fun notifyChange() {

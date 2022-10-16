@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import one.yufz.hmspush.R
 import one.yufz.hmspush.app.LocalNavHostController
-import one.yufz.hmspush.common.PrefsModel
+import one.yufz.hmspush.common.model.PrefsModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -1,4 +1,4 @@
-package one.yufz.hmspush.common
+package one.yufz.hmspush.common.model
 
 import one.yufz.hmspush.common.content.ContentModel
 import one.yufz.hmspush.common.content.ContentProperties

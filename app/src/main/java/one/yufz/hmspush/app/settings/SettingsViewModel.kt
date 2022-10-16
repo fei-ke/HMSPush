@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import one.yufz.hmspush.common.BridgeWrap
-import one.yufz.hmspush.common.PrefsModel
+import one.yufz.hmspush.common.model.PrefsModel
 
 class SettingsViewModel(val context: Application) : AndroidViewModel(context) {
     private val _preferences = MutableStateFlow(PrefsModel())

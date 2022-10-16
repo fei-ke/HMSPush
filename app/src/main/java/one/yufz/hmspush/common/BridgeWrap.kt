@@ -6,7 +6,13 @@ import android.database.Cursor
 import android.net.Uri
 import one.yufz.hmspush.common.content.ContentModel
 import one.yufz.hmspush.common.content.toContent
+import one.yufz.hmspush.common.content.toContentList
+import one.yufz.hmspush.common.content.toContentSet
 import one.yufz.hmspush.common.content.toContentValues
+import one.yufz.hmspush.common.model.ModuleVersionModel
+import one.yufz.hmspush.common.model.PrefsModel
+import one.yufz.hmspush.common.model.PushHistoryModel
+import one.yufz.hmspush.common.model.PushSignModel
 
 object BridgeWrap {
     private fun query(context: Context, uri: Uri): Cursor? {
@@ -36,51 +42,16 @@ object BridgeWrap {
         }
     }
 
-    fun getRegistered(context: Context): Set<String> {
-        query(context, BridgeUri.PUSH_REGISTERED.toUri())?.use {
-            val set = HashSet<String>()
-
-            val indexPackageName = it.getColumnIndex("packageName")
-
-            while (it.moveToNext()) {
-                val packageName = it.getString(indexPackageName)
-                set.add(packageName)
-            }
-            return set
-        }
-
-        return emptySet()
+    fun getRegistered(context: Context): Set<PushSignModel> {
+        return queryModelSet(context, BridgeUri.PUSH_REGISTERED.toUri()) ?: emptySet()
     }
 
-    fun getPushHistory(context: Context): Map<String, Long> {
-        query(context, BridgeUri.PUSH_HISTORY.toUri())?.use {
-            val map = HashMap<String, Long>()
-
-            val indexPackageName = it.getColumnIndex("packageName")
-            val indexTime = it.getColumnIndex("time")
-
-            while (it.moveToNext()) {
-                val packageName = it.getString(indexPackageName)
-                val time = it.getLong(indexTime)
-                map[packageName] = time
-            }
-            return map
-        }
-
-        return emptyMap()
+    fun getPushHistory(context: Context): Set<PushHistoryModel> {
+        return queryModelSet(context, BridgeUri.PUSH_HISTORY.toUri()) ?: emptySet()
     }
 
-    fun getModuleVersion(context: Context): Pair<String, Int>? {
-        query(context, BridgeUri.MODULE_VERSION.toUri())?.use {
-            val indexVersionName = it.getColumnIndex("versionName")
-            val indexVersionCode = it.getColumnIndex("versionCode")
-
-            if (it.moveToNext()) {
-                return it.getString(indexVersionName) to it.getInt(indexVersionCode)
-            }
-        }
-
-        return null
+    fun getModuleVersion(context: Context): ModuleVersionModel? {
+        return queryModel(context, BridgeUri.MODULE_VERSION.toUri())
     }
 
     fun isDisableSignature(context: Context): Boolean {
@@ -94,14 +65,6 @@ object BridgeWrap {
         return false
     }
 
-    fun setDisableSignature(context: Context, disableSignature: Boolean): Boolean {
-        val values = ContentValues().apply {
-            put("disableSignature", disableSignature)
-        }
-
-        return update(context, BridgeUri.DISABLE_SIGNATURE.toUri(), values) > 0
-    }
-
     fun unregisterPush(context: Context, packageName: String) {
         delete(context, BridgeUri.PUSH_REGISTERED.toUri(), arrayOf(packageName))
     }
@@ -112,6 +75,14 @@ object BridgeWrap {
 
     private inline fun <reified T : ContentModel> queryModel(context: Context, uri: Uri): T? {
         return query(context, uri)?.use(Cursor::toContent)
+    }
+
+    private inline fun <reified T : ContentModel> queryModelList(context: Context, uri: Uri): List<T>? {
+        return query(context, uri)?.use(Cursor::toContentList)
+    }
+
+    private inline fun <reified T : ContentModel> queryModelSet(context: Context, uri: Uri): Set<T>? {
+        return query(context, uri)?.use(Cursor::toContentSet)
     }
 
     private fun <T : ContentModel> updateModel(context: Context, uri: Uri, content: T): Int {

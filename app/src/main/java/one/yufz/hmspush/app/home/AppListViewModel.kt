@@ -16,6 +16,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import one.yufz.hmspush.common.BridgeUri
 import one.yufz.hmspush.common.BridgeWrap
+import one.yufz.hmspush.common.model.PushHistoryModel
+import one.yufz.hmspush.common.model.PushSignModel
 
 class AppListViewModel(val context: Application) : AndroidViewModel(context) {
     companion object {
@@ -37,7 +39,7 @@ class AppListViewModel(val context: Application) : AndroidViewModel(context) {
         }
     }
 
-    private val registeredListFlow = MutableStateFlow<Set<String>>(emptySet())
+    private val registeredListFlow = MutableStateFlow<Set<PushSignModel>>(emptySet())
     private val pushRegisterObserver = object : ContentObserver(null) {
         override fun onChange(selfChange: Boolean) {
             Log.d(TAG, "pushRegisterObserver onChange() called with: selfChange = $selfChange")
@@ -45,7 +47,7 @@ class AppListViewModel(val context: Application) : AndroidViewModel(context) {
         }
     }
 
-    private val historyListFlow = MutableStateFlow<Map<String, Long>>(emptyMap())
+    private val historyListFlow = MutableStateFlow<Set<PushHistoryModel>>(emptySet())
     private val pushHistoryObserver = object : ContentObserver(null) {
         override fun onChange(selfChange: Boolean) {
             Log.d(TAG, "pushHistoryObserver onChange() called with: selfChange = $selfChange")
@@ -110,14 +112,16 @@ class AppListViewModel(val context: Application) : AndroidViewModel(context) {
         }
     }
 
-    private fun mergeSource(appList: List<String>, registered: Set<String>, history: Map<String, Long>): List<AppInfo> {
+    private fun mergeSource(appList: List<String>, registered: Set<PushSignModel>, history: Set<PushHistoryModel>): List<AppInfo> {
         val pm = context.packageManager
+        val registeredSet = registered.map { it.packageName }
+        val historyMap = history.associateBy { it.packageName }
         return appList.map { packageName ->
             AppInfo(
                 packageName = packageName,
                 name = pm.getApplicationInfo(packageName, 0).loadLabel(pm).toString(),
-                registered = registered.contains(packageName),
-                lastPushTime = history[packageName]
+                registered = registeredSet.contains(packageName),
+                lastPushTime = historyMap[packageName]?.pushTime
             )
         }
             .sortedWith(compareBy({ !it.registered }, { Long.MAX_VALUE - (it.lastPushTime ?: 0L) }))

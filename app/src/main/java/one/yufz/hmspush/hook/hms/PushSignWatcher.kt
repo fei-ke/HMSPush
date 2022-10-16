@@ -4,14 +4,14 @@ import android.app.AndroidAppHelper
 import android.content.Context
 import android.content.SharedPreferences
 import one.yufz.hmspush.common.BridgeUri
+import one.yufz.hmspush.common.model.PushSignModel
 import one.yufz.hmspush.hook.XLog
 
 
 object PushSignWatcher : SharedPreferences.OnSharedPreferenceChangeListener {
     private const val TAG = "PushSignWatcher"
 
-    var lastRegistered: Set<String> = emptySet()
-        private set
+    private var lastRegistered: Set<String> = emptySet()
 
     fun watch() {
         XLog.d(TAG, "watch() called")
@@ -56,10 +56,10 @@ object PushSignWatcher : SharedPreferences.OnSharedPreferenceChangeListener {
         return perf.all.keys.toSet()
     }
 
-    private fun getRegisteredPackageSet(): Set<String> {
+    fun getRegisterPackages(): List<PushSignModel> {
         return lastRegistered
-            .map { it.split("/")[0] }
-            .toSet()
+            .map { it.split("/") }
+            .map { PushSignModel(it[0], it[1].toIntOrNull() ?: 0) }
     }
 
     fun unregisterSign(packageName: String) {

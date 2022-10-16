@@ -38,7 +38,7 @@ class HomeViewModel(val app: Application) : AndroidViewModel(app) {
             return
         }
 
-        if (moduleVersion.first != BuildConfig.VERSION_NAME) {
+        if (moduleVersion.versionName != BuildConfig.VERSION_NAME) {
             _uiState.value = UiState(false, app.getString(R.string.hms_not_activated), Reason.HmsPushVersionNotMatch)
             return
         }
