@@ -4,9 +4,9 @@ import android.app.AndroidAppHelper
 import android.content.Context
 import one.yufz.hmspush.common.HMSPUSH_PREF_NAME
 import one.yufz.hmspush.common.PREF_KEY_DISABLE_SIGNATURE
-import one.yufz.hmspush.common.PrefsModel
 import one.yufz.hmspush.common.content.storeToSharedPreference
 import one.yufz.hmspush.common.content.toContent
+import one.yufz.hmspush.common.model.PrefsModel
 
 object Prefs {
     private val pref = AndroidAppHelper.currentApplication().getSharedPreferences(HMSPUSH_PREF_NAME, Context.MODE_PRIVATE)
