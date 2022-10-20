@@ -2,14 +2,13 @@ package one.yufz.hmspush.app.home
 
 import android.app.Application
 import android.content.pm.PackageManager
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import one.yufz.hmspush.BuildConfig
 import one.yufz.hmspush.R
-import one.yufz.hmspush.common.BridgeWrap
+import one.yufz.hmspush.app.HmsPushClient
 import one.yufz.hmspush.common.HMS_PACKAGE_NAME
 
 class HomeViewModel(val app: Application) : AndroidViewModel(app) {
@@ -32,10 +31,6 @@ class HomeViewModel(val app: Application) : AndroidViewModel(app) {
     private var _searchText = MutableStateFlow("")
     val searchText: Flow<String> = _searchText
 
-    init {
-        Log.d("HomeViewModel", "init() called")
-    }
-
     fun setSearching(searching: Boolean) {
         _searchState.value = searching
     }
@@ -48,7 +43,7 @@ class HomeViewModel(val app: Application) : AndroidViewModel(app) {
             return
         }
 
-        val moduleVersion = BridgeWrap.getModuleVersion(app)
+        val moduleVersion = HmsPushClient.moduleVersion
         if (moduleVersion == null) {
             _uiState.value = UiState(false, app.getString(R.string.hms_not_activated), Reason.HmsCoreNotActivated)
             return

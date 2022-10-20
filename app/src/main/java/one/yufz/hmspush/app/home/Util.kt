@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
-import one.yufz.hmspush.common.BridgeWrap
 
 object Util {
     fun launchApp(context: Context, packageName: String) {
@@ -21,9 +20,5 @@ object Util {
             data = Uri.parse("package:${packageName}")
         }
         context.startActivity(intent)
-    }
-
-    fun unregisterPush(context: Context, packageName: String) {
-        BridgeWrap.unregisterPush(context, packageName)
     }
 }

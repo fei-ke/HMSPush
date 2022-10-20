@@ -49,7 +49,8 @@ object PushSignWatcher : SharedPreferences.OnSharedPreferenceChangeListener {
     }
 
     private fun notifyChange() {
-        AndroidAppHelper.currentApplication().contentResolver.notifyChange(BridgeUri.PUSH_REGISTERED.toUri(), null, false)
+        AndroidAppHelper.currentApplication().contentResolver.notifyChange(BridgeUri.PUSH_SIGN.toUri(), null, false)
+        HmsPushService.notifyPushSignChanged()
     }
 
     private fun getAllPackages(perf: SharedPreferences): Set<String> {

@@ -7,7 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import one.yufz.hmspush.common.BridgeWrap
+import one.yufz.hmspush.app.HmsPushClient
 import one.yufz.hmspush.common.model.PrefsModel
 
 class SettingsViewModel(val context: Application) : AndroidViewModel(context) {
@@ -21,22 +21,21 @@ class SettingsViewModel(val context: Application) : AndroidViewModel(context) {
 
     fun queryPreferences() {
         viewModelScope.launch(Dispatchers.IO) {
-            val model = BridgeWrap.queryPreference(context)
-            _preferences.emit(model)
+            _preferences.emit(HmsPushClient.preference)
         }
     }
 
     fun setDisableSignature(disableSignature: Boolean) {
         _preferences.value = _preferences.value.copy(disableSignature = disableSignature)
         viewModelScope.launch(Dispatchers.IO) {
-            BridgeWrap.updatePreference(context, _preferences.value)
+            HmsPushClient.updatePreference(_preferences.value)
         }
     }
 
     fun setGroupMessageById(enable: Boolean) {
         _preferences.value = _preferences.value.copy(groupMessageById = enable)
         viewModelScope.launch(Dispatchers.IO) {
-            BridgeWrap.updatePreference(context, _preferences.value)
+            HmsPushClient.updatePreference(_preferences.value)
         }
     }
 }

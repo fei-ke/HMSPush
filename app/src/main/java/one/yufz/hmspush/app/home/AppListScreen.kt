@@ -51,7 +51,7 @@ import one.yufz.hmspush.app.theme.customColors
 
 @Composable
 fun AppListScreen(searchText: String, appListViewModel: AppListViewModel = viewModel()) {
-    val appList: List<AppInfo> by appListViewModel.observeAppList().collectAsState(initial = emptyList())
+    val appList: List<AppInfo> by appListViewModel.appListFlow.collectAsState(initial = emptyList(), Dispatchers.IO)
 
     appListViewModel.filter(searchText)
 

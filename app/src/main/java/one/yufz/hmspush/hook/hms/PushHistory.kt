@@ -2,7 +2,6 @@ package one.yufz.hmspush.hook.hms
 
 import android.app.AndroidAppHelper
 import android.content.Context
-import one.yufz.hmspush.common.BridgeUri
 import one.yufz.hmspush.common.model.PushHistoryModel
 
 object PushHistory {
@@ -29,6 +28,6 @@ object PushHistory {
     }
 
     private fun notifyChange() {
-        AndroidAppHelper.currentApplication().contentResolver.notifyChange(BridgeUri.PUSH_HISTORY.toUri(), null, false)
+        HmsPushService.notifyPushHistoryChanged()
     }
 }
