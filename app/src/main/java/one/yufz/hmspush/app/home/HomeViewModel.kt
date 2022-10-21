@@ -2,7 +2,9 @@ package one.yufz.hmspush.app.home
 
 import android.app.Application
 import android.content.pm.PackageManager
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import one.yufz.hmspush.BuildConfig
@@ -24,6 +26,20 @@ class HomeViewModel(val app: Application) : AndroidViewModel(app) {
     private val _uiState = MutableStateFlow(UiState(false, "", Reason.Checking))
     val uiState: StateFlow<UiState> = _uiState
 
+    private var _searchState = MutableStateFlow(false)
+    val searchState: Flow<Boolean> = _searchState
+
+    private var _searchText = MutableStateFlow("")
+    val searchText: Flow<String> = _searchText
+
+    init {
+        Log.d("HomeViewModel", "init() called")
+    }
+
+    fun setSearching(searching: Boolean) {
+        _searchState.value = searching
+    }
+
     fun checkHmsCore() {
         try {
             app.packageManager.getApplicationInfo(HMS_PACKAGE_NAME, 0)
@@ -44,5 +60,9 @@ class HomeViewModel(val app: Application) : AndroidViewModel(app) {
         }
 
         _uiState.value = UiState(true, "", Reason.None)
+    }
+
+    fun setSearchText(text: String) {
+        _searchText.value = text
     }
 }

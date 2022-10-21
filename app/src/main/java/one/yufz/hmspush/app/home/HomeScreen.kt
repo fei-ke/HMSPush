@@ -53,10 +53,21 @@ fun HomeScreen(homeViewModel: HomeViewModel = viewModel()) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val uiState by homeViewModel.uiState.collectAsState()
 
-    var searchText by remember { mutableStateOf("") }
+    val searchText by homeViewModel.searchText.collectAsState("")
+
+    val searchState: Boolean by homeViewModel.searchState.collectAsState(false)
 
     Scaffold(
-        topBar = { AppBar(scrollBehavior, uiState.usable, onSearchTextChanged = { searchText = it }) },
+        topBar = {
+            AppBar(
+                scrollBehavior,
+                withSearch = uiState.usable,
+                searching = searchState,
+                searchText = searchText,
+                requestSearching = { homeViewModel.setSearching(it) },
+                onSearchTextChanged = { homeViewModel.setSearchText(it) }
+            )
+        },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
@@ -74,8 +85,14 @@ fun HomeScreen(homeViewModel: HomeViewModel = viewModel()) {
 }
 
 @Composable
-private fun AppBar(scrollBehavior: TopAppBarScrollBehavior, withSearch: Boolean, onSearchTextChanged: (String) -> Unit) {
-    var searching by remember { mutableStateOf(false) }
+private fun AppBar(
+    scrollBehavior: TopAppBarScrollBehavior,
+    withSearch: Boolean,
+    searching: Boolean,
+    searchText: String,
+    requestSearching: (Boolean) -> Unit,
+    onSearchTextChanged: (String) -> Unit
+) {
     TopAppBar(
         title = { Text(text = stringResource(id = R.string.app_name)) },
         scrollBehavior = scrollBehavior,
@@ -83,13 +100,14 @@ private fun AppBar(scrollBehavior: TopAppBarScrollBehavior, withSearch: Boolean,
             //Search
             if (withSearch) {
                 if (!searching) {
-                    IconButton(onClick = { searching = true }) {
+                    IconButton(onClick = { requestSearching(true) }) {
                         Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
                     }
                 } else {
                     SearchBar(
+                        searchText = searchText,
                         placeholderText = stringResource(id = R.string.menu_search),
-                        onNavigateBack = { searching = false },
+                        onNavigateBack = { requestSearching(false) },
                         onSearchTextChanged = onSearchTextChanged
                     )
                 }
