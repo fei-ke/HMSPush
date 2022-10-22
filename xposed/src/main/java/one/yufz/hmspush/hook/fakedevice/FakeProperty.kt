@@ -9,7 +9,7 @@ private const val TAG = "FakeProperties"
 enum class Property(val entry: Pair<String, String>) {
     EMUI_API("ro.build.hw_emui_api_level" to "21"),
     EMUI_VERSION("ro.build.version.emui" to "EmotionUI_8.0.0"),
-    BRAND("ro.product.brand" to "HUAWEI"),
+    BRAND("ro.product.brand" to "Huawei"),
     MANUFACTURER("ro.product.manufacturer" to "HUAWEI"),
     MIUI_VERSION("ro.miui.ui.version.name" to "");
 
