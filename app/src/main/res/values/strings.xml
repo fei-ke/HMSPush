@@ -30,4 +30,6 @@
     <string name="importing">Importing…</string>
     <string name="import_complete">Import Complete</string>
     <string name="import_dialog_title">Input Icon Library Url</string>
+    <string name="import_from_url">Import from URL</string>
+    <string name="clear_icons">Clear All Icon</string>
 </resources>

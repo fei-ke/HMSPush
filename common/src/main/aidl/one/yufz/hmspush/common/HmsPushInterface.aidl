@@ -10,4 +10,8 @@ interface HmsPushInterface {
     List<PushHistoryModel> getPushHistoryList();
     PrefsModel getPreference();
     void updatePreference(in PrefsModel model);
+
+    List<IconModel> getAllIcon();
+    void saveIcon(in IconModel iconModel);
+    void deleteIcon(in String[] packageNames);
 }

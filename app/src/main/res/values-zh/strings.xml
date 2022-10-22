@@ -30,4 +30,6 @@
     <string name="importing">正在导入…</string>
     <string name="import_complete">导入完成</string>
     <string name="import_dialog_title">输入图标库地址</string>
+    <string name="import_from_url">从 URL 导入</string>
+    <string name="clear_icons">清空图标</string>
 </resources>

@@ -9,14 +9,17 @@ import one.yufz.hmspush.common.content.ContentProperties
 data class PrefsModel constructor(
     var disableSignature: Boolean,
     var groupMessageById: Boolean,
+    var useCustomIcon: Boolean
 ) : ContentModel, Parcelable {
-    constructor() : this(false, true)
+
+    constructor() : this(false, true, false)
 
     companion object {
         @JvmField
         val PROPERTIES = ContentProperties.Builder<PrefsModel>()
             .property("disableSignature", PrefsModel::disableSignature)
             .property("groupMessageById", PrefsModel::groupMessageById)
+            .property("useCustomIcon", PrefsModel::useCustomIcon)
             .build()
     }
 }

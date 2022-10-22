@@ -25,15 +25,10 @@ class SettingsViewModel(val context: Application) : AndroidViewModel(context) {
         }
     }
 
-    fun setDisableSignature(disableSignature: Boolean) {
-        _preferences.value = _preferences.value.copy(disableSignature = disableSignature)
-        viewModelScope.launch(Dispatchers.IO) {
-            HmsPushClient.updatePreference(_preferences.value)
-        }
-    }
-
-    fun setGroupMessageById(enable: Boolean) {
-        _preferences.value = _preferences.value.copy(groupMessageById = enable)
+    fun updatePreference(updateAction: PrefsModel. () -> Unit) {
+        val copy = _preferences.value.copy()
+        updateAction(copy)
+        _preferences.value = copy
         viewModelScope.launch(Dispatchers.IO) {
             HmsPushClient.updatePreference(_preferences.value)
         }
