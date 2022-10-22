@@ -65,6 +65,9 @@ dependencies {
     api project(":common")
     api project(":xposed")
 
+    //remove this line will cause proguard to remove code from library module
+    compileOnly 'de.robv.android.xposed:api:82'
+
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.activity:activity-ktx:$activity_version"
 

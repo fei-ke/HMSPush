@@ -19,17 +19,3 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
-
-# Proguard for Xposed.
--keep class * implements de.robv.android.xposed.IXposedHookZygoteInit
--keep class * implements de.robv.android.xposed.IXposedHookLoadPackage
--keep class * implements de.robv.android.xposed.IXposedHookInitPackageResources
-
--keep class com.huawei.android.app.NotificationManagerEx{
-    *;
-}
-
--keepclassmembers class * implements one.yufz.hmspush.common.content.ContentModel {
-  public <init>();
-  public static final one.yufz.hmspush.common.content.ContentProperties PROPERTIES;
-}
