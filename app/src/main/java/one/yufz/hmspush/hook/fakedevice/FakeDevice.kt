@@ -33,8 +33,12 @@ object FakeDevice {
 
         Application::class.java.hookMethod("onCreate") {
             doBefore {
-                if (BridgeWrap.isDisableSignature(thisObject as Context)) {
-                    FakeHmsSignature.hook(lpparam)
+                try {
+                    if (BridgeWrap.isDisableSignature(thisObject as Context)) {
+                        FakeHmsSignature.hook(lpparam)
+                    }
+                } catch (t: Throwable) {
+                    XLog.e(TAG, "disable signature error", t)
                 }
             }
         }
