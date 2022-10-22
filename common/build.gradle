@@ -1,18 +1,23 @@
 plugins {
     id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-android'
+    id 'kotlin-parcelize'
 }
 
 android {
     namespace 'one.yufz.hmspush.common'
-    compileSdk 33
+    compileSdk COMPILE_SDK
 
     defaultConfig {
-        minSdk 26
-        targetSdk 33
+        minSdk MIN_SDK
+        targetSdk TARGET_SDK
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+
+        buildConfigField("String", "APPLICATION_ID", "\"$APPLICATION_ID\"")
+        buildConfigField("String", "VERSION_NAME", "\"$gitVersionName\"")
+        buildConfigField("int", "VERSION_CODE", "$gitVersionCode")
     }
 
     buildTypes {
@@ -31,4 +36,5 @@ android {
 }
 
 dependencies {
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
 }

@@ -51,4 +51,9 @@ def getVersionName = { ->
 ext {
     gitVersionCode = getVersionCode()
     gitVersionName = getVersionName()
+    APPLICATION_ID = "one.yufz.hmspush"
+
+    COMPILE_SDK = 33
+    MIN_SDK = 26
+    TARGET_SDK = 33
 }

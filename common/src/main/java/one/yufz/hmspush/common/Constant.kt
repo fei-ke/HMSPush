@@ -2,6 +2,10 @@ package one.yufz.hmspush.common
 
 private const val TAG = "Constant"
 
+const val APPLICATION_ID = BuildConfig.APPLICATION_ID
+const val VERSION_NAME = BuildConfig.VERSION_NAME
+const val VERSION_CODE = BuildConfig.VERSION_CODE
+
 const val ANDROID_PACKAGE_NAME = "android"
 
 const val HMS_PACKAGE_NAME = "com.huawei.hwid"

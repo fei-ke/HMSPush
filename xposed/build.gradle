@@ -1,15 +1,15 @@
 plugins {
     id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-android'
 }
 
 android {
     namespace 'one.yufz.hmspush.xposed'
-    compileSdk 33
+    compileSdk COMPILE_SDK
 
     defaultConfig {
-        minSdk 26
-        targetSdk 33
+        minSdk MIN_SDK
+        targetSdk TARGET_SDK
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -31,4 +31,7 @@ android {
 }
 
 dependencies {
+    implementation project(":common")
+    compileOnly 'de.robv.android.xposed:api:82'
+    implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
 }

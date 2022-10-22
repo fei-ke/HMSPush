@@ -1,9 +1,10 @@
 package one.yufz.hmspush.hook.hms
 
 import android.app.AndroidAppHelper
-import one.yufz.hmspush.BuildConfig
 import one.yufz.hmspush.common.BridgeUri
 import one.yufz.hmspush.common.HmsPushInterface
+import one.yufz.hmspush.common.VERSION_CODE
+import one.yufz.hmspush.common.VERSION_NAME
 import one.yufz.hmspush.common.model.ModuleVersionModel
 import one.yufz.hmspush.common.model.PrefsModel
 import one.yufz.hmspush.common.model.PushHistoryModel
@@ -21,7 +22,7 @@ object HmsPushService : HmsPushInterface.Stub() {
     }
 
     override fun getModuleVersion(): ModuleVersionModel {
-        return ModuleVersionModel(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
+        return ModuleVersionModel(VERSION_NAME, VERSION_CODE)
     }
 
     override fun getPushSignList(): List<PushSignModel> {

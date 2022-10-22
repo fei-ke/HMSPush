@@ -3,7 +3,7 @@ package one.yufz.hmspush.hook.bridge
 import android.app.AndroidAppHelper
 import android.net.Uri
 import android.os.Binder
-import one.yufz.hmspush.BuildConfig
+import one.yufz.hmspush.common.APPLICATION_ID
 import one.yufz.xposed.findClass
 import one.yufz.xposed.hookMethod
 
@@ -24,7 +24,7 @@ class HookContentProvider {
 
     private fun fromHmsPush() = try {
         val callingUid = Binder.getCallingUid()
-        callingUid == AndroidAppHelper.currentApplication().packageManager.getPackageUid(BuildConfig.APPLICATION_ID, 0)
+        callingUid == AndroidAppHelper.currentApplication().packageManager.getPackageUid(APPLICATION_ID, 0)
                 || callingUid == 2000 || callingUid == 0
     } catch (e: Throwable) {
         false
