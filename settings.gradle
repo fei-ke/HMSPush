@@ -15,3 +15,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "HMSPush"
 include ':app'
+include ':xposed'
+include ':common'
