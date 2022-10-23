@@ -17,9 +17,7 @@ class HookContentProvider {
         //            @Nullable String sortOrder);
         classModuleQueryProvider.hookMethod("query", Uri::class.java, Array<String>::class.java, String::class.java, Array<String>::class.java, String::class.java) {
             doBefore {
-                if (fromHmsPush()) {
-                    result = bridge.query(args[0] as Uri, args[1] as Array<String>?, args[2] as String?, args[3] as Array<String>?, args[4] as String?)
-                }
+                result = bridge.query(args[0] as Uri, args[1] as Array<String>?, args[2] as String?, args[3] as Array<String>?, args[4] as String?)
             }
         }
     }
