@@ -40,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -47,6 +48,7 @@ import one.yufz.hmspush.R
 import one.yufz.hmspush.app.LocalNavHostController
 import one.yufz.hmspush.app.widget.LifecycleAware
 import one.yufz.hmspush.app.widget.SearchBar
+import one.yufz.hmspush.common.HMS_PACKAGE_NAME
 
 @Composable
 fun HomeScreen(homeViewModel: HomeViewModel = viewModel()) {
@@ -137,6 +139,16 @@ private fun AppBarMoreMenu() {
                     },
                     onClick = {
                         navController.navigate("settings")
+                        openMoreMenu = false
+                    }
+                )
+                val context = LocalContext.current
+                DropdownMenuItem(
+                    text = {
+                        Text(text = stringResource(id = R.string.reboot_hms_core))
+                    },
+                    onClick = {
+                        Util.launchAppInfo(context, HMS_PACKAGE_NAME)
                         openMoreMenu = false
                     }
                 )

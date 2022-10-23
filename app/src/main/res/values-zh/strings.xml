@@ -10,6 +10,7 @@
     <string name="menu_search">搜索</string>
     <string name="menu_unregister">取消注册</string>
     <string name="menu_settings">设置</string>
+    <string name="reboot_hms_core">重启 HMS Core</string>
 
     <string name="disable_signature">禁用签名检查</string>
     <string name="disable_signature_summary">LSPatch 或者修改版应用需要禁用签名检查</string>
