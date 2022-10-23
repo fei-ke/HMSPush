@@ -6,7 +6,6 @@ import android.content.Context
 import one.yufz.hmspush.hook.XLog
 import one.yufz.hmspush.hook.hms.Prefs
 import one.yufz.hmspush.hook.hms.nm.INotificationManager
-import one.yufz.hmspush.hook.hms.nm.SystemNotificationManager
 import one.yufz.hmspush.hook.util.getInboxLines
 import one.yufz.hmspush.hook.util.getSummaryText
 import one.yufz.hmspush.hook.util.getText
@@ -20,7 +19,7 @@ class GroupByIdHandler : NotificationHandler {
     }
 
     override fun careAbout(manager: INotificationManager, context: Context, packageName: String, id: Int, notification: Notification): Boolean {
-        return manager is SystemNotificationManager && Prefs.prefModel.groupMessageById
+        return Prefs.prefModel.groupMessageById
     }
 
     override fun handle(chain: NotificationHandler.Chain, manager: INotificationManager, context: Context, packageName: String, id: Int, notification: Notification) {
