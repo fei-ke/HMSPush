@@ -24,6 +24,9 @@ object Prefs {
             updatePreference(
                 prefModel.copy(disableSignature = pref.getBoolean(PREF_KEY_DISABLE_SIGNATURE, false))
             )
+            pref.edit()
+                .remove(PREF_KEY_DISABLE_SIGNATURE)
+                .apply()
         }
     }
 
@@ -37,7 +40,7 @@ object Prefs {
     }
 
     fun isDisableSignature(): Boolean {
-        return pref.getBoolean(PREF_KEY_DISABLE_SIGNATURE, false)
+        return prefModel.disableSignature
     }
 
 }
