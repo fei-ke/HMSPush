@@ -6,10 +6,10 @@ import androidx.lifecycle.AndroidViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import one.yufz.hmspush.BuildConfig
 import one.yufz.hmspush.R
 import one.yufz.hmspush.app.HmsPushClient
 import one.yufz.hmspush.common.HMS_PACKAGE_NAME
+import one.yufz.hmspush.common.VERSION_NAME
 
 class HomeViewModel(val app: Application) : AndroidViewModel(app) {
     enum class Reason {
@@ -49,7 +49,7 @@ class HomeViewModel(val app: Application) : AndroidViewModel(app) {
             return
         }
 
-        if (moduleVersion.versionName != BuildConfig.VERSION_NAME) {
+        if (moduleVersion.versionName != VERSION_NAME) {
             _uiState.value = UiState(false, app.getString(R.string.hms_not_activated), Reason.HmsPushVersionNotMatch)
             return
         }
