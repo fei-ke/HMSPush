@@ -7,12 +7,14 @@
 package one.yufz.hmspush.app.icon
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -56,6 +58,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import one.yufz.hmspush.R
@@ -253,19 +256,28 @@ fun ImportFromUrlDialog(onConfirm: (String) -> Unit, onDismissRequest: () -> Uni
 
 @Composable
 fun LoadingDialog(onDismissRequest: () -> Unit) {
-    AlertDialog(
+    Dialog(
         onDismissRequest = onDismissRequest,
-        confirmButton = {},
-        modifier = Modifier.width(240.dp),
-        text = {
+        properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(160.dp)
+                .background(
+                    color = MaterialTheme.colorScheme.background,
+                    shape = MaterialTheme.shapes.extraLarge
+                )
+        ) {
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.Center),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 CircularProgressIndicator()
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(text = stringResource(R.string.importing))
             }
-        },
-        properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
-    )
+        }
+    }
 }
