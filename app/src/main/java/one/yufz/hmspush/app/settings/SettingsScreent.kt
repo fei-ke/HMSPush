@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.outlined.FormatColorFill
 import androidx.compose.material.icons.outlined.FormatListBulleted
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.RemoveModerator
@@ -95,6 +96,16 @@ fun SettingsScreen(viewModel: SettingsViewModel = viewModel()) {
                         navHostController.navigate("icon")
                     }
                 )
+                if (preferences.useCustomIcon) {
+                    SwitchPreference(
+                        title = stringResource(id = R.string.tint_notification_icon),
+                        icon = Icons.Outlined.FormatColorFill,
+                        checked = preferences.tintIconColor,
+                        onCheckedChange = {
+                            viewModel.updatePreference { tintIconColor = it }
+                        }
+                    )
+                }
             }
 
         }
