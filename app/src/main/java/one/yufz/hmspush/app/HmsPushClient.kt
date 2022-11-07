@@ -11,6 +11,8 @@ import one.yufz.hmspush.common.BinderCursor
 import one.yufz.hmspush.common.BridgeUri
 import one.yufz.hmspush.common.BridgeWrap
 import one.yufz.hmspush.common.HmsPushInterface
+import one.yufz.hmspush.common.IconData
+import one.yufz.hmspush.common.model.IconModel
 import one.yufz.hmspush.common.model.ModuleVersionModel
 import one.yufz.hmspush.common.model.PrefsModel
 import one.yufz.hmspush.common.model.PushHistoryModel
@@ -116,5 +118,21 @@ object HmsPushClient : HmsPushInterface.Stub() {
 
     override fun updatePreference(model: PrefsModel) {
         service.updatePreference(model)
+    }
+
+    override fun getAllIcon(): List<IconModel> {
+        return service.allIcon ?: emptyList()
+    }
+
+    override fun saveIcon(iconModel: IconModel?) {
+        service.saveIcon(iconModel)
+    }
+
+    override fun deleteIcon(vararg packageName: String) {
+        service.deleteIcon(packageName)
+    }
+
+    fun saveIcon(iconData: IconData) {
+        saveIcon(IconModel(iconData.packageName, iconData.toJson()))
     }
 }

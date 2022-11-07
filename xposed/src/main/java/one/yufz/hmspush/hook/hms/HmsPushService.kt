@@ -1,14 +1,17 @@
 package one.yufz.hmspush.hook.hms
 
 import android.app.AndroidAppHelper
+import kotlinx.coroutines.runBlocking
 import one.yufz.hmspush.common.BridgeUri
 import one.yufz.hmspush.common.HmsPushInterface
 import one.yufz.hmspush.common.VERSION_CODE
 import one.yufz.hmspush.common.VERSION_NAME
+import one.yufz.hmspush.common.model.IconModel
 import one.yufz.hmspush.common.model.ModuleVersionModel
 import one.yufz.hmspush.common.model.PrefsModel
 import one.yufz.hmspush.common.model.PushHistoryModel
 import one.yufz.hmspush.common.model.PushSignModel
+import one.yufz.hmspush.hook.hms.icon.IconManager
 
 object HmsPushService : HmsPushInterface.Stub() {
     private const val TAG = "HmsPushService"
@@ -43,5 +46,17 @@ object HmsPushService : HmsPushInterface.Stub() {
 
     override fun updatePreference(model: PrefsModel) {
         Prefs.updatePreference(model)
+    }
+
+    override fun getAllIcon(): List<IconModel> {
+        return runBlocking { IconManager.getAllIconModel() }
+    }
+
+    override fun saveIcon(iconModel: IconModel) {
+        runBlocking { IconManager.saveToLocal(iconModel.packageName, iconModel.iconData!!) }
+    }
+
+    override fun deleteIcon(packageNames: Array<String>) {
+        runBlocking { IconManager.deleteIcon(packageNames) }
     }
 }

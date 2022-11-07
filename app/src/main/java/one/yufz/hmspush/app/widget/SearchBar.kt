@@ -6,8 +6,10 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -67,6 +69,7 @@ fun SearchBar(
         back()
     }
     Row {
+        Spacer(modifier = Modifier.width(4.dp))
         IconButton(onClick = ::back, modifier = Modifier.align(alignment = Alignment.CenterVertically)) {
             Icon(
                 imageVector = Icons.Default.ArrowBack,

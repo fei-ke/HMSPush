@@ -13,7 +13,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.outlined.FormatColorFill
 import androidx.compose.material.icons.outlined.FormatListBulleted
+import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.RemoveModerator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -71,7 +73,7 @@ fun SettingsScreen(viewModel: SettingsViewModel = viewModel()) {
                     icon = Icons.Outlined.RemoveModerator,
                     checked = preferences.disableSignature,
                     onCheckedChange = {
-                        viewModel.setDisableSignature(it)
+                        viewModel.updatePreference { disableSignature = it }
                     }
                 )
                 SwitchPreference(
@@ -80,9 +82,30 @@ fun SettingsScreen(viewModel: SettingsViewModel = viewModel()) {
                     icon = Icons.Outlined.FormatListBulleted,
                     checked = preferences.groupMessageById,
                     onCheckedChange = {
-                        viewModel.setGroupMessageById(it)
+                        viewModel.updatePreference { groupMessageById = it }
                     }
                 )
+                SwitchPreference(
+                    title = stringResource(id = R.string.notification_icon),
+                    icon = Icons.Outlined.Palette,
+                    checked = preferences.useCustomIcon,
+                    onCheckedChange = {
+                        viewModel.updatePreference { useCustomIcon = it }
+                    },
+                    onClick = {
+                        navHostController.navigate("icon")
+                    }
+                )
+                if (preferences.useCustomIcon) {
+                    SwitchPreference(
+                        title = stringResource(id = R.string.tint_notification_icon),
+                        icon = Icons.Outlined.FormatColorFill,
+                        checked = preferences.tintIconColor,
+                        onCheckedChange = {
+                            viewModel.updatePreference { tintIconColor = it }
+                        }
+                    )
+                }
             }
 
         }
@@ -90,17 +113,33 @@ fun SettingsScreen(viewModel: SettingsViewModel = viewModel()) {
 }
 
 @Composable
-fun SwitchPreference(title: String, summary: String, icon: ImageVector?, checked: Boolean, onCheckedChange: (checked: Boolean) -> Unit) {
+fun SwitchPreference(
+    title: String, summary: String? = null, icon: ImageVector?, checked: Boolean,
+    onCheckedChange: (checked: Boolean) -> Unit,
+    onClick: () -> Unit = { onCheckedChange(!checked) }
+) {
+    Preference(
+        title = title,
+        summary = summary,
+        icon = icon,
+        action = {
+            Switch(checked = checked, onCheckedChange = onCheckedChange)
+        },
+        onClick = onClick
+    )
+}
+
+@Composable
+fun Preference(title: String, summary: String? = null, icon: ImageVector?, action: (@Composable () -> Unit)? = null, onClick: () -> Unit) {
     Surface(
         modifier = Modifier
-            .clickable {
-                onCheckedChange(!checked)
-            }
+            .clickable { onClick() }
     ) {
         Row(
             Modifier
                 .defaultMinSize(minHeight = 64.dp)
-                .padding(horizontal = 8.dp, vertical = 8.dp)
+                .padding(horizontal = 8.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
                 modifier = Modifier
@@ -118,14 +157,19 @@ fun SwitchPreference(title: String, summary: String, icon: ImageVector?, checked
             Spacer(modifier = Modifier.width(8.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(text = title, style = MaterialTheme.typography.titleMedium)
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = summary,
-                    style = MaterialTheme.typography.bodyMedium
-                )
+                if (summary != null) {
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = summary,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
             }
-            Spacer(modifier = Modifier.width(8.dp))
-            Switch(checked = checked, onCheckedChange = onCheckedChange)
+
+            if (action != null) {
+                Spacer(modifier = Modifier.width(8.dp))
+                action()
+            }
         }
     }
 }
