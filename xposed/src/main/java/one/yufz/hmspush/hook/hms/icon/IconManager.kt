@@ -1,11 +1,13 @@
 package one.yufz.hmspush.hook.hms.icon
 
 import android.app.AndroidAppHelper
+import android.content.Context
 import android.os.ParcelFileDescriptor
 import android.util.LruCache
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import one.yufz.hmspush.common.IconData
+import one.yufz.hmspush.common.IconData.Companion.scaleForNotification
 import one.yufz.hmspush.common.model.IconModel
 import java.io.File
 
@@ -33,7 +35,7 @@ object IconManager {
         }
     }
 
-    fun getIconData(packageName: String): IconData? {
+    fun getNotificationIconData(context: Context, packageName: String): IconData? {
         val cacheIconData = cache.get(packageName)
         if (cacheIconData != null) return cacheIconData
 
@@ -42,6 +44,7 @@ object IconManager {
         if (!iconDataFile.exists()) return null
 
         val iconData = IconData.fromJson(iconDataFile.readText())
+            .scaleForNotification(context)
 
         cache.put(packageName, iconData)
 

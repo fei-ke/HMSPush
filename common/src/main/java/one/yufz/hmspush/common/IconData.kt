@@ -1,11 +1,13 @@
 package one.yufz.hmspush.common
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.util.Base64
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
+import kotlin.math.max
 
 data class IconData(
     val appName: String,
@@ -26,6 +28,24 @@ data class IconData(
                 iconBitmap = parseBitmap(obj.getString("iconBitmap")),
                 iconColor = parseColor(obj.optString("iconColor")),
                 contributorName = obj.optString("contributorName")
+            )
+        }
+
+        fun IconData.scaleForNotification(context: Context): IconData {
+            val size = max(iconBitmap.width, iconBitmap.height)
+            val dp24 = (context.resources.displayMetrics.density * 24 + 0.5f).toInt()
+            if (size >= dp24) {
+                return this
+            }
+
+            val scale = dp24 / size.toFloat()
+            return this.copy(
+                iconBitmap = Bitmap.createScaledBitmap(
+                    iconBitmap,
+                    (iconBitmap.width * scale).toInt(),
+                    (iconBitmap.height * scale).toInt(),
+                    false
+                )
             )
         }
 
