@@ -28,6 +28,7 @@
 
     <string name="notification_icon">Custom Notification Icon</string>
     <string name="tint_notification_icon">Tint Icon Color On Notification Panel</string>
+    <string name="tint_notification_icon_summary">May not work on some device</string>
     <string name="importing">Importing…</string>
     <string name="import_complete">Import Complete</string>
     <string name="import_dialog_title">Input Icon Library Url</string>

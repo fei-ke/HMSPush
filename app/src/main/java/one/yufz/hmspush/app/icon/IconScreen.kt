@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -170,7 +171,7 @@ fun IconScreen(iconViewModel: IconViewModel = viewModel()) {
 fun MoreMenu(showMoreMenu: Boolean, onDismissRequest: () -> Unit) {
     var showImportDialog by remember { mutableStateOf(false) }
     val iconViewModel: IconViewModel = viewModel()
-    DropdownMenu(expanded = showMoreMenu, onDismissRequest = onDismissRequest) {
+    DropdownMenu(expanded = showMoreMenu, onDismissRequest = onDismissRequest, modifier = Modifier.defaultMinSize(minWidth = 160.dp)) {
         DropdownMenuItem(
             text = {
                 Text(text = stringResource(id = R.string.import_from_url))

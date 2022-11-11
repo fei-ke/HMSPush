@@ -1,5 +1,6 @@
 package one.yufz.hmspush.app.settings
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.filled.ArrowBack
@@ -17,6 +20,7 @@ import androidx.compose.material.icons.outlined.FormatColorFill
 import androidx.compose.material.icons.outlined.FormatListBulleted
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.RemoveModerator
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -35,6 +39,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import one.yufz.hmspush.R
 import one.yufz.hmspush.app.LocalNavHostController
@@ -66,7 +71,7 @@ fun SettingsScreen(viewModel: SettingsViewModel = viewModel()) {
         val preferences by viewModel.preferences.collectAsState(PrefsModel())
 
         Surface(modifier = Modifier.padding(paddingValues)) {
-            Column {
+            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                 SwitchPreference(
                     title = stringResource(id = R.string.disable_signature),
                     summary = stringResource(id = R.string.disable_signature_summary),
@@ -89,6 +94,7 @@ fun SettingsScreen(viewModel: SettingsViewModel = viewModel()) {
                     title = stringResource(id = R.string.notification_icon),
                     icon = Icons.Outlined.Palette,
                     checked = preferences.useCustomIcon,
+                    showDivider = true,
                     onCheckedChange = {
                         viewModel.updatePreference { useCustomIcon = it }
                     },
@@ -99,6 +105,7 @@ fun SettingsScreen(viewModel: SettingsViewModel = viewModel()) {
                 if (preferences.useCustomIcon) {
                     SwitchPreference(
                         title = stringResource(id = R.string.tint_notification_icon),
+                        summary = stringResource(id = R.string.tint_notification_icon_summary),
                         icon = Icons.Outlined.FormatColorFill,
                         checked = preferences.tintIconColor,
                         onCheckedChange = {
@@ -115,6 +122,7 @@ fun SettingsScreen(viewModel: SettingsViewModel = viewModel()) {
 @Composable
 fun SwitchPreference(
     title: String, summary: String? = null, icon: ImageVector?, checked: Boolean,
+    showDivider: Boolean = false,
     onCheckedChange: (checked: Boolean) -> Unit,
     onClick: () -> Unit = { onCheckedChange(!checked) }
 ) {
@@ -122,6 +130,7 @@ fun SwitchPreference(
         title = title,
         summary = summary,
         icon = icon,
+        showDivider = showDivider,
         action = {
             Switch(checked = checked, onCheckedChange = onCheckedChange)
         },
@@ -130,7 +139,7 @@ fun SwitchPreference(
 }
 
 @Composable
-fun Preference(title: String, summary: String? = null, icon: ImageVector?, action: (@Composable () -> Unit)? = null, onClick: () -> Unit) {
+fun Preference(title: String, summary: String? = null, icon: ImageVector?, showDivider: Boolean = false, action: (@Composable () -> Unit)? = null, onClick: () -> Unit) {
     Surface(
         modifier = Modifier
             .clickable { onClick() }
@@ -156,17 +165,33 @@ fun Preference(title: String, summary: String? = null, icon: ImageVector?, actio
             }
             Spacer(modifier = Modifier.width(8.dp))
             Column(modifier = Modifier.weight(1f)) {
-                Text(text = title, style = MaterialTheme.typography.titleMedium)
+                Text(
+                    text = title,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontSize = 18.sp,
+                    style = MaterialTheme.typography.titleLarge
+                )
                 if (summary != null) {
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = summary,
-                        style = MaterialTheme.typography.bodyMedium
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = 14.sp,
+                        style = MaterialTheme.typography.bodySmall,
                     )
                 }
             }
 
             if (action != null) {
+                if (showDivider) {
+                    Divider(
+                        Modifier
+                            .padding(horizontal = 8.dp)
+                            .width(1.dp)
+                            .height(32.dp)
+                            .background(MaterialTheme.colorScheme.outline)
+                    )
+                }
                 Spacer(modifier = Modifier.width(8.dp))
                 action()
             }
@@ -177,5 +202,10 @@ fun Preference(title: String, summary: String? = null, icon: ImageVector?, actio
 @Preview
 @Composable
 fun PreviewSettings() {
-    SwitchPreference("title", "summary", Icons.Filled.Android, false, {})
+    SwitchPreference("title", "summary",
+        Icons.Filled.Android,
+        checked = false,
+        showDivider = true,
+        onCheckedChange = {}
+    )
 }
