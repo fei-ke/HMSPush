@@ -31,8 +31,8 @@ object FakeDevice {
         val fakes = FakeDeviceConfig[lpparam.packageName] ?: Default
         fakes.forEach { it.newInstance().fake(lpparam) }
 
-        Application::class.java.hookMethod("onCreate") {
-            doBefore {
+        Application::class.java.hookMethod("attach", Context::class.java) {
+            doAfter {
                 try {
                     if (BridgeWrap.isDisableSignature(thisObject as Context)) {
                         FakeHmsSignature.hook(lpparam)
