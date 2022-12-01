@@ -3,6 +3,7 @@ package one.yufz.hmspush.hook.fakedevice
 import android.os.Build
 import one.yufz.hmspush.hook.XLog
 import one.yufz.xposed.*
+import java.util.concurrent.atomic.AtomicBoolean
 
 private const val TAG = "FakeProperties"
 
@@ -21,23 +22,40 @@ enum class Property(val entry: Pair<String, String>) {
 }
 
 
-fun fakeProperty(property: Property, overrideValue: String) = fakeProperties(Pair(property.key, overrideValue))
+fun fakeProperty(property: Property, overrideValue: String) = fakeProperty(Pair(property.key, overrideValue))
 
-fun fakeAllBuildInProperties() = fakeProperties(*Property.values().map { it.entry }.toTypedArray())
+fun fakeAllBuildInProperties() = fakeProperty(*Property.values().map { it.entry }.toTypedArray())
 
-fun fakeProperties(vararg properties: Property) {
-    fakeProperties(*properties.map { it.entry }.toTypedArray())
+fun fakeProperty(vararg properties: Property) {
+    fakeProperty(*properties.map { it.entry }.toTypedArray())
 }
 
-fun fakeProperties(vararg properties: Pair<String, String>) {
-    val classSystemProperties = Build::class.java.classLoader.findClass("android.os.SystemProperties")
+private val propertyMap: MutableMap<String, String> = HashMap()
+private val hooked = AtomicBoolean(false)
 
-    val propertiesMap: Map<String, String> = mapOf(*properties)
+fun fakeProperty(vararg properties: Pair<String, String>) {
+    propertyMap.putAll(properties)
+
+    if (propertyMap.containsKey(Property.BRAND.key)) {
+        Build::class.java["BRAND"] = propertyMap[Property.BRAND.key]
+    }
+
+    if (propertyMap.containsKey(Property.MANUFACTURER.key)) {
+        Build::class.java["MANUFACTURER"] = propertyMap[Property.MANUFACTURER.key]
+    }
+
+    if (propertyMap.containsKey("ro.product.model")) {
+        Build::class.java["MODEL"] = propertyMap["ro.product.model"]
+    }
+
+    if (hooked.getAndSet(true)) return
+
+    val classSystemProperties = Build::class.java.classLoader.findClass("android.os.SystemProperties")
 
     val callback: HookContext.() -> Unit = {
         doBefore {
             val key = args[0] as String
-            propertiesMap[key]?.let {
+            propertyMap[key]?.let {
                 result = it
             }
         }
@@ -46,20 +64,12 @@ fun fakeProperties(vararg properties: Pair<String, String>) {
     classSystemProperties.hookMethod("get", String::class.java, callback = callback)
     classSystemProperties.hookMethod("get", String::class.java, String::class.java, callback = callback)
 
-    if (propertiesMap.containsKey(Property.BRAND.key)) {
-        Build::class.java["BRAND"] = Property.BRAND.value
-    }
-
-    if (propertiesMap.containsKey(Property.MANUFACTURER.key)) {
-        Build::class.java["MANUFACTURER"] = Property.MANUFACTURER.value
-    }
-
     Runtime::class.java.hookMethod("exec", String::class.java) {
         doBefore {
             val cmd = args[0] as String
             if (cmd.startsWith("getprop")) {
                 val key = cmd.removePrefix("getprop").trim()
-                propertiesMap[key]?.let {
+                propertyMap[key]?.let {
                     XLog.d(TAG, "hook getprop $key")
                     args[0] = "echo $it"
                 }
