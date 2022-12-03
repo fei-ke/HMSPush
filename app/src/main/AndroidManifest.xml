@@ -11,6 +11,9 @@
         <intent>
             <action android:name="com.huawei.push.msg.NOTIFY_MSG" />
         </intent>
+        <intent>
+            <action android:name="com.huawei.android.push.intent.REGISTRATION" />
+        </intent>
     </queries>
 
     <application

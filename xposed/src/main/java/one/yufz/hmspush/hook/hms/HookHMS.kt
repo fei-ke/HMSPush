@@ -49,6 +49,7 @@ class HookHMS {
                     }
                 } else if (dexPath.contains("com.huawei.hms.runtimekit")) {
                     RuntimeKitHook.hook(thisObject as ClassLoader)
+                    HookLegacyTokenRequest.hook(thisObject as ClassLoader)
                 }
             }
         }
