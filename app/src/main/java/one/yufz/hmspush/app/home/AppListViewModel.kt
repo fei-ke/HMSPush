@@ -49,7 +49,7 @@ class AppListViewModel(val context: Application) : AndroidViewModel(context) {
                 intent,
                 PackageManager.MATCH_DISABLED_UNTIL_USED_COMPONENTS
                         or PackageManager.MATCH_DISABLED_COMPONENTS
-            ).map { it.activityInfo.packageName }
+            ).map { it.activityInfo.packageName }.distinct()
         }
     }
 
