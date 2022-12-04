@@ -1,5 +1,6 @@
 package one.yufz.hmspush.app.home
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -19,6 +20,10 @@ object Util {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             data = Uri.parse("package:${packageName}")
         }
-        context.startActivity(intent)
+        try {
+            context.startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            //ignore
+        }
     }
 }
