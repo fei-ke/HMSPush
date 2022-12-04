@@ -187,18 +187,20 @@ private fun MoreDropdownMenu(expanded: Boolean, info: AppInfo, onDismissRequest:
         )
 
         //Unregister
-        DropdownMenuItem(
-            text = {
-                Text(
-                    text = stringResource(id = R.string.menu_unregister),
-                    color = MaterialTheme.colorScheme.error
-                )
-            },
-            onClick = {
-                showUnregisterDialog = true
-                onDismissRequest()
-            }
-        )
+        if (info.registered) {
+            DropdownMenuItem(
+                text = {
+                    Text(
+                        text = stringResource(id = R.string.menu_unregister),
+                        color = MaterialTheme.colorScheme.error
+                    )
+                },
+                onClick = {
+                    showUnregisterDialog = true
+                    onDismissRequest()
+                }
+            )
+        }
     }
     if (showUnregisterDialog) {
         UnregisterDialog(
