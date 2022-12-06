@@ -48,6 +48,8 @@ import one.yufz.hmspush.BuildConfig
 import one.yufz.hmspush.R
 import one.yufz.hmspush.app.theme.AppTheme
 import one.yufz.hmspush.app.theme.customColors
+import one.yufz.hmspush.common.HMS_PACKAGE_NAME
+import one.yufz.hmspush.common.HmsCoreUtil
 
 @Composable
 fun AppListScreen(searchText: String, appListViewModel: AppListViewModel = viewModel()) {
@@ -168,7 +170,11 @@ private fun MoreDropdownMenu(expanded: Boolean, info: AppInfo, onDismissRequest:
                 )
             },
             onClick = {
-                Util.launchApp(context, info.packageName)
+                if (info.packageName == HMS_PACKAGE_NAME) {
+                    HmsCoreUtil.startHmsCoreDummyActivity(context)
+                } else {
+                    Util.launchApp(context, info.packageName)
+                }
                 onDismissRequest()
             }
         )

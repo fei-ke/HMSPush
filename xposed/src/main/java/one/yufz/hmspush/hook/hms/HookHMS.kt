@@ -11,6 +11,7 @@ import de.robv.android.xposed.XposedHelpers.ClassNotFoundError
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import one.yufz.hmspush.hook.XLog
 import one.yufz.hmspush.hook.bridge.HookContentProvider
+import one.yufz.hmspush.hook.hms.dummy.HookDummyActivity
 import one.yufz.xposed.*
 
 class HookHMS {
@@ -60,6 +61,10 @@ class HookHMS {
 
         HookContentProvider().hook(lpparam.classLoader)
         fakeFingerprint(lpparam)
+
+        HookForegroundService.hook(lpparam.classLoader)
+
+        HookDummyActivity.hook(lpparam.classLoader)
     }
 
     private fun hookLegacyPush(classLoader: ClassLoader) {
