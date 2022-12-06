@@ -13,11 +13,17 @@ object FakeHsf {
         XLog.d(TAG, "hook() called with: classLoader = $classLoader")
 
         classLoader.findClass("com.huawei.hsf.common.api.HsfAvailability").hookMethod("getInstance") {
-            doAfter { hookHsfAvailabilityImpl(result.javaClass) }
+            doAfter {
+                unhook()
+                hookHsfAvailabilityImpl(result.javaClass)
+            }
         }
 
         classLoader.findClass("com.huawei.hsf.common.api.HsfApi").hookAllMethods("newInstance") {
-            doAfter { hookHsfApiImpl(result.javaClass) }
+            doAfter {
+                unhook()
+                hookHsfApiImpl(result.javaClass)
+            }
         }
     }
 

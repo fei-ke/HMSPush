@@ -47,7 +47,7 @@ fun Class<*>.hookAllMethods(methodName: String, callback: HookCallback) =
     XposedBridge.hookAllMethods(this, methodName, MethodHook(callback))
 
 class MethodHook(callback: HookCallback) : XC_MethodHook() {
-    private val context = HookContext().apply(callback)
+    private val context = HookContext(this).apply(callback)
 
     override fun beforeHookedMethod(param: MethodHookParam) {
         super.beforeHookedMethod(param)
@@ -71,7 +71,7 @@ class MethodHook(callback: HookCallback) : XC_MethodHook() {
 
 }
 
-class HookContext() {
+class HookContext(private val methodHook: MethodHook) {
     internal var beforeAction: HookAction? = null
         private set
 
@@ -91,6 +91,10 @@ class HookContext() {
 
     fun replace(action: ReplaceAction) {
         this.replaceAction = action
+    }
+
+    fun XC_MethodHook.MethodHookParam.unhook() {
+        XposedBridge.unhookMethod(this.method, methodHook)
     }
 }
 

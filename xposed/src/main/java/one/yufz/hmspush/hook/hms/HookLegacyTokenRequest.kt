@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import de.robv.android.xposed.XposedHelpers
 import one.yufz.hmspush.common.HMS_CORE_PUSH_ACTION_REGISTRATION
+import one.yufz.hmspush.common.doOnce
 import one.yufz.hmspush.hook.XLog
 import one.yufz.xposed.callMethod
 import one.yufz.xposed.findClass
@@ -26,7 +27,9 @@ object HookLegacyTokenRequest {
             doBefore {
                 val uri = args[0] as String
                 if (uri == "push.gettoken") {
-                    hookGetTokenProcess(args[1] as Class<*>)
+                    doOnce(classKmsMessageCenter) {
+                        hookGetTokenProcess(args[1] as Class<*>)
+                    }
                 }
             }
         }
