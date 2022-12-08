@@ -21,6 +21,7 @@ object FakeDevice {
         "com.dianping.v1" to arrayOf(FakeEmuiOnly::class.java),
         "com.eg.android.AlipayGphone" to arrayOf(Alipay::class.java),
         "com.xunmeng.pinduoduo" to arrayOf(PinDuoDuo::class.java),
+        "com.ss.android.ugc.aweme" to arrayOf(DouYin::class.java),
     )
 
     fun fake(lpparam: XC_LoadPackage.LoadPackageParam) {

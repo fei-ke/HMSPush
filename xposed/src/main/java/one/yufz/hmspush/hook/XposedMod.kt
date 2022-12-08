@@ -5,6 +5,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
 import one.yufz.hmspush.common.ANDROID_PACKAGE_NAME
 import one.yufz.hmspush.common.HMS_CORE_PROCESS
 import one.yufz.hmspush.common.HMS_PACKAGE_NAME
+import one.yufz.hmspush.common.doOnce
 import one.yufz.hmspush.hook.fakedevice.FakeDevice
 import one.yufz.hmspush.hook.hms.HookHMS
 import one.yufz.hmspush.hook.system.HookSystemService
@@ -17,6 +18,12 @@ class XposedMod : IXposedHookLoadPackage {
 
     @Throws(Throwable::class)
     override fun handleLoadPackage(lpparam: LoadPackageParam) {
+        doOnce(lpparam.classLoader) {
+            hook(lpparam)
+        }
+    }
+
+    private fun hook(lpparam: LoadPackageParam) {
         XLog.d(TAG, "Loaded app: " + lpparam.packageName + " process:" + lpparam.processName)
 
         if (lpparam.processName == ANDROID_PACKAGE_NAME) {

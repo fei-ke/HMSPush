@@ -1,15 +1,23 @@
 package one.yufz.hmspush.common
 
-import java.util.concurrent.ConcurrentHashMap
+import java.util.*
 
-private val map: MutableMap<Any, Boolean> = ConcurrentHashMap()
+private val objMap: MutableMap<Any, HashMap<Any, Boolean>> = WeakHashMap()
 
-fun doOnce(key: Any, action: () -> Unit) {
-    synchronized(key) {
-        if (map.containsKey(key)) {
+fun Any.doOnce(action: () -> Unit) {
+    doOnce(this, action)
+}
+
+fun Any.doOnce(key: Any, action: () -> Unit) {
+    val keyMap = synchronized(objMap) {
+        objMap.getOrPut(this) { HashMap() }
+    }
+
+    synchronized(keyMap) {
+        if (keyMap.containsKey(key)) {
             return
         }
-        map[key] = true
+        keyMap[key] = true
     }
     action()
 }
