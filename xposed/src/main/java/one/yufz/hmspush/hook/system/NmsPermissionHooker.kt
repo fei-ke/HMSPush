@@ -66,7 +66,7 @@ object NmsPermissionHooker {
             //void cancelNotificationWithTag(String pkg, String opPkg, String tag, int id, int userId);
             findMethodExact(classINotificationManager, "cancelNotificationWithTag", String::class.java, String::class.java, String::class.java, Int::class.java, Int::class.java)
                 .hook(hookPermission(0) {
-                    args[2] = ANDROID_PACKAGE_NAME
+                    args[1] = ANDROID_PACKAGE_NAME
                 })
         } else {
             //void cancelNotificationWithTag(String pkg, String opPkg, String tag, int id, int userId);
