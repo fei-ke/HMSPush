@@ -48,6 +48,14 @@ fun fakeProperty(vararg properties: Pair<String, String>) {
         Build::class.java["MODEL"] = propertyMap["ro.product.model"]
     }
 
+    if (propertyMap.containsKey("ro.build.display.id")) {
+        Build::class.java["DISPLAY"] = propertyMap["ro.build.display.id"]
+    }
+
+    if (propertyMap.containsKey("ro.build.user")) {
+        Build::class.java["USER"] = propertyMap["ro.build.user"]
+    }
+
     if (hooked.getAndSet(true)) return
 
     val classSystemProperties = Build::class.java.classLoader.findClass("android.os.SystemProperties")
