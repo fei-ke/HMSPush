@@ -69,7 +69,11 @@ class AppListViewModel(val context: Application) : AndroidViewModel(context) {
         return appList.map { packageName ->
             AppInfo(
                 packageName = packageName,
-                name = pm.getApplicationInfo(packageName, 0).loadLabel(pm).toString(),
+                name = try {
+                    pm.getApplicationInfo(packageName, 0).loadLabel(pm).toString()
+                } catch (e: PackageManager.NameNotFoundException) {
+                    packageName
+                },
                 registered = registeredSet.contains(packageName),
                 lastPushTime = historyMap[packageName]?.pushTime
             )
