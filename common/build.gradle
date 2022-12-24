@@ -8,7 +8,6 @@ android {
     namespace 'one.yufz.hmspush.common'
     defaultConfig {
         consumerProguardFiles "consumer-rules.pro"
-
         buildConfigField("String", "APPLICATION_ID", "\"$APPLICATION_ID\"")
         buildConfigField("String", "VERSION_NAME", "\"$gitVersionName\"")
         buildConfigField("int", "VERSION_CODE", "$gitVersionCode")

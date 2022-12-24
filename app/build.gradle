@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId APPLICATION_ID
-        versionCode gitVersionCode
+        versionCode gitVersionCode.toInteger()
         versionName gitVersionName
 
         archivesBaseName = "${rootProject.name}-v${versionName}-${versionCode}"
