@@ -1,3 +1,6 @@
+import com.android.build.gradle.BasePlugin
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     id 'com.android.application' version '7.3.0' apply false
     id 'com.android.library' version '7.3.0' apply false
@@ -5,9 +8,29 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.parcelize' version '1.7.10' apply false
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+allprojects {
+    plugins.withType(BasePlugin).configureEach {
+        project.android {
+            compileSdk 33
+            defaultConfig {
+                minSdk 26
+                targetSdk 33
+                vectorDrawables.useSupportLibrary = true
+            }
+            compileOptions {
+                sourceCompatibility JavaVersion.VERSION_1_8
+                targetCompatibility JavaVersion.VERSION_1_8
+            }
+        }
+    }
+
+    tasks.withType(KotlinCompile).configureEach {
+        kotlinOptions {
+            jvmTarget = JavaVersion.VERSION_1_8
+        }
+    }
 }
+
 def getVersionCode = { ->
     try {
         def stdout = new ByteArrayOutputStream()
@@ -43,8 +66,8 @@ ext {
     gitVersionCode = getVersionCode()
     gitVersionName = getVersionName()
     APPLICATION_ID = "one.yufz.hmspush"
+}
 
-    COMPILE_SDK = 33
-    MIN_SDK = 26
-    TARGET_SDK = 33
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }

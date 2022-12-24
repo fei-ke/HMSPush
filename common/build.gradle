@@ -6,32 +6,12 @@ plugins {
 
 android {
     namespace 'one.yufz.hmspush.common'
-    compileSdk COMPILE_SDK
-
     defaultConfig {
-        minSdk MIN_SDK
-        targetSdk TARGET_SDK
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
 
         buildConfigField("String", "APPLICATION_ID", "\"$APPLICATION_ID\"")
         buildConfigField("String", "VERSION_NAME", "\"$gitVersionName\"")
         buildConfigField("int", "VERSION_CODE", "$gitVersionCode")
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = '1.8'
     }
 }
 

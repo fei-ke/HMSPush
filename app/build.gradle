@@ -5,16 +5,12 @@ plugins {
 }
 
 android {
-    compileSdk COMPILE_SDK
+    namespace APPLICATION_ID
 
     defaultConfig {
         applicationId APPLICATION_ID
-        minSdk MIN_SDK
-        targetSdk TARGET_SDK
         versionCode gitVersionCode
         versionName gitVersionName
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         archivesBaseName = "${rootProject.name}-v${versionName}-${versionCode}"
     }
@@ -41,13 +37,6 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
     }
     buildFeatures {
         compose true
