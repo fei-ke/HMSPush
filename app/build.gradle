@@ -19,25 +19,24 @@ android {
         archivesBaseName = "${rootProject.name}-v${versionName}-${versionCode}"
     }
 
-    signingConfigs {
-        release {
+    def releaseSigning
+    try {
+        releaseSigning = signingConfigs.create("release") {
             storeFile file(STORE_FILE_PATH)
             keyAlias KEY_ALIAS
             keyPassword KEY_PASSWORD
             storePassword STORE_PASSWORD
         }
+    } catch (Exception ignored) {
+        releaseSigning = signingConfigs.debug
     }
 
     buildTypes {
         debug {
-            if (signingConfigs.release.storeFile.exists()) {
-                signingConfig signingConfigs.release
-            }
+            signingConfig releaseSigning
         }
         release {
-            if (signingConfigs.release.storeFile.exists()) {
-                signingConfig signingConfigs.release
-            }
+            signingConfig releaseSigning
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
