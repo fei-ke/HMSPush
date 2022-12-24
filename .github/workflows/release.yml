@@ -25,12 +25,14 @@ jobs:
         echo ::set-output name=tag::${GITHUB_REF#refs/*/}
         echo ::set-output name=version::${GITHUB_REF#refs/*/v}
 
-    - name: set up JDK 11
-      uses: actions/setup-java@v2
+    - uses: actions/setup-java@v3
       with:
-        java-version: '11'
-        distribution: 'adopt'
-        cache: gradle
+        java-version: '17'
+        distribution: 'zulu'
+
+    - uses: gradle/gradle-build-action@v2
+      with:
+        gradle-home-cache-cleanup: true
 
     - name: Write key
       run: |
@@ -43,8 +45,6 @@ jobs:
           git update-index --assume-unchanged gradle.properties
         fi
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew assembleRelease
 
