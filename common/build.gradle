@@ -12,6 +12,10 @@ android {
         buildConfigField("String", "VERSION_NAME", "\"$gitVersionName\"")
         buildConfigField("int", "VERSION_CODE", "$gitVersionCode")
     }
+    buildFeatures {
+        aidl true
+        buildConfig true
+    }
 }
 
 dependencies {
