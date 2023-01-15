@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,6 +15,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import one.yufz.hmspush.app.HmsPushClient
 import one.yufz.hmspush.app.util.registerPackageChangeFlow
+import one.yufz.hmspush.common.HMS_CORE_PUSH_ACTION_NOTIFY_MSG
 import one.yufz.hmspush.common.HMS_CORE_PUSH_ACTION_REGISTRATION
 import one.yufz.hmspush.common.model.PushHistoryModel
 import one.yufz.hmspush.common.model.PushSignModel
@@ -43,13 +45,24 @@ class AppListViewModel(val context: Application) : AndroidViewModel(context) {
     }
 
     private suspend fun loadSupportedAppList(): List<String> {
-        return withContext(Dispatchers.IO) {
-            val intent = Intent(HMS_CORE_PUSH_ACTION_REGISTRATION)
-            context.packageManager.queryBroadcastReceivers(
-                intent,
-                PackageManager.MATCH_DISABLED_UNTIL_USED_COMPONENTS
-                        or PackageManager.MATCH_DISABLED_COMPONENTS
-            ).map { it.activityInfo.packageName }.distinct()
+        return withContext(Dispatchers.Default) {
+            val queryByReceiver = async(Dispatchers.IO) {
+                val intent = Intent(HMS_CORE_PUSH_ACTION_REGISTRATION)
+                context.packageManager.queryBroadcastReceivers(
+                    intent,
+                    PackageManager.MATCH_DISABLED_UNTIL_USED_COMPONENTS
+                            or PackageManager.MATCH_DISABLED_COMPONENTS
+                ).map { it.activityInfo.packageName }
+            }
+            val queryByService = async(Dispatchers.IO) {
+                val intent = Intent(HMS_CORE_PUSH_ACTION_NOTIFY_MSG)
+                context.packageManager.queryIntentServices(
+                    intent,
+                    PackageManager.MATCH_DISABLED_UNTIL_USED_COMPONENTS
+                            or PackageManager.MATCH_DISABLED_COMPONENTS
+                ).map { it.serviceInfo.packageName }
+            }
+            (queryByReceiver.await() + queryByService.await()).distinct()
         }
     }
 

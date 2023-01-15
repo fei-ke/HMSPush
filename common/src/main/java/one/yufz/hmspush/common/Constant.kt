@@ -13,6 +13,7 @@ const val HMS_CORE_PROCESS = "com.huawei.hwid.core"
 const val HMS_CORE_SERVICE = "com.huawei.hms.core.service.HMSCoreService"
 const val HMS_CORE_SERVICE_ACTION = "com.huawei.hms.core.aidlservice"
 const val HMS_CORE_PUSH_ACTION_REGISTRATION = "com.huawei.android.push.intent.REGISTRATION"
+const val HMS_CORE_PUSH_ACTION_NOTIFY_MSG = "com.huawei.push.msg.NOTIFY_MSG"
 const val HMS_CORE_DUMMY_SETTINGS_ACTIVITY = "com.huawei.hms.core.activity.JumpActivity"
 const val FLAG_HMS_PUSH_SETTINGS = "hms_push_settings"
 
