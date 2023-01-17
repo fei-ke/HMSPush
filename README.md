@@ -30,6 +30,13 @@ HMS Core 是华为提供的一套服务，其中包含了推送功能，可以�
 
 - 反馈问题请带上 LSP 日志，到 Github 提 [Issue](https://github.com/fei-ke/HMSPush/issues) 或者加入 [Telegram 群组](https://t.me/HMSPush)，或者发送至我的邮箱 [Email](mailto:hmspush@yufz.one)
 
+### 鸣谢
+包括但不限于：
+- [LSPosed](https://github.com/LSPosed/LSPosed) XPosed 框架
+- [XposedBridge](https://github.com/rovo89/XposedBridge) Xposed framework APIs
+- [LSPatch](https://github.com/LSPosed/LSPatch) 免 Root Xposed 框架
+- [AndroidNotifyIconAdapt](https://github.com/fankes/AndroidNotifyIconAdapt) 图标库
+
 ### 反馈
 [Github Issues](https://github.com/fei-ke/HMSPush/issues)、[Telegram Group](https://t.me/HMSPush)、[Email](mailto:hmspush@yufz.one)
 
