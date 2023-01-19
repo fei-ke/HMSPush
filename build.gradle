@@ -47,6 +47,6 @@ ext {
     APPLICATION_ID = "one.yufz.hmspush"
 }
 
-task clean(type: Delete) {
+tasks.register('clean') {
     delete rootProject.buildDir
 }
