@@ -48,8 +48,8 @@ android {
 }
 
 dependencies {
-    api project(":common")
-    api project(":xposed")
+    api projects.common
+    api projects.xposed
 
     //remove this line will cause proguard to remove code from library module
     compileOnly 'de.robv.android.xposed:api:82'
