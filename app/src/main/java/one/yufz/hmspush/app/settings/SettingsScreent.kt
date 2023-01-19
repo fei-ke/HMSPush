@@ -16,10 +16,13 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.outlined.ArrowUpward
+import androidx.compose.material.icons.outlined.Computer
 import androidx.compose.material.icons.outlined.FormatColorFill
 import androidx.compose.material.icons.outlined.FormatListBulleted
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.RemoveModerator
+import androidx.compose.material.icons.outlined.Upgrade
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -88,6 +91,16 @@ fun SettingsScreen(viewModel: SettingsViewModel = viewModel()) {
                     checked = preferences.groupMessageById,
                     onCheckedChange = {
                         viewModel.updatePreference { groupMessageById = it }
+                    }
+                )
+                SwitchPreference(
+                    title = stringResource(id = R.string.keep_alive),
+                    summary = stringResource(id = R.string.keep_alive_summary),
+                    icon = Icons.Outlined.Computer,
+                    checked = preferences.keepAlive,
+                    onCheckedChange = {
+                        viewModel.updatePreference { keepAlive = it }
+                        viewModel.setHmsCoreForeground(it)
                     }
                 )
                 SwitchPreference(

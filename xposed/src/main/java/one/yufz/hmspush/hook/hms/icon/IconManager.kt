@@ -1,6 +1,5 @@
 package one.yufz.hmspush.hook.hms.icon
 
-import android.app.AndroidAppHelper
 import android.content.Context
 import android.os.ParcelFileDescriptor
 import android.util.LruCache
@@ -9,12 +8,11 @@ import kotlinx.coroutines.withContext
 import one.yufz.hmspush.common.IconData
 import one.yufz.hmspush.common.IconData.Companion.scaleForNotification
 import one.yufz.hmspush.common.model.IconModel
+import one.yufz.hmspush.hook.hms.StorageContext
 import java.io.File
 
 object IconManager {
-    private val context = AndroidAppHelper.currentApplication()
-
-    private val iconDir = File(context.filesDir, "hms_push/icons")
+    private val iconDir = File(StorageContext.get().filesDir, "hms_push/icons")
 
     private val cache = LruCache<String, IconData>(20)
 

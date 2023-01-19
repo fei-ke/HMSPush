@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import one.yufz.hmspush.app.HmsPushClient
+import one.yufz.hmspush.common.HmsCoreUtil
 import one.yufz.hmspush.common.model.PrefsModel
 
 class SettingsViewModel(val context: Application) : AndroidViewModel(context) {
@@ -32,5 +33,9 @@ class SettingsViewModel(val context: Application) : AndroidViewModel(context) {
         viewModelScope.launch(Dispatchers.IO) {
             HmsPushClient.updatePreference(_preferences.value)
         }
+    }
+
+    fun setHmsCoreForeground(foreground: Boolean) {
+        HmsCoreUtil.startHmsCoreService(context, foreground)
     }
 }

@@ -17,7 +17,7 @@ fun SharedPreferences.getValue(key: String, type: KClass<*>): Any? {
     }
 }
 
-fun SharedPreferences.Editor.putValue(key: String, type: KClass<*>, value: Any?) {
+fun SharedPreferences.Editor.putValue(key: String, type: KClass<*>, value: Any?): SharedPreferences.Editor {
     when (type) {
         String::class -> putString(key, value as String?)
         Short::class -> putInt(key, value as Int)
@@ -27,4 +27,5 @@ fun SharedPreferences.Editor.putValue(key: String, type: KClass<*>, value: Any?)
         Boolean::class -> putBoolean(key, value as Boolean)
         else -> throw IllegalStateException("Unsupported type: $type")
     }
+    return this
 }

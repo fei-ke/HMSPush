@@ -5,7 +5,7 @@ import android.content.Context
 import one.yufz.hmspush.common.model.PushHistoryModel
 
 object PushHistory {
-    private val store by lazy { AndroidAppHelper.currentApplication().getSharedPreferences("push_history", Context.MODE_PRIVATE) }
+    private val store by lazy { StorageContext.get().getSharedPreferences("push_history", Context.MODE_PRIVATE) }
 
     fun record(packageName: String) {
         store.edit()

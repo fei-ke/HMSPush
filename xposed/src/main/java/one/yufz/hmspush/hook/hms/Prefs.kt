@@ -1,6 +1,5 @@
 package one.yufz.hmspush.hook.hms
 
-import android.app.AndroidAppHelper
 import android.content.Context
 import one.yufz.hmspush.common.HMSPUSH_PREF_NAME
 import one.yufz.hmspush.common.PREF_KEY_DISABLE_SIGNATURE
@@ -9,7 +8,7 @@ import one.yufz.hmspush.common.content.toContent
 import one.yufz.hmspush.common.model.PrefsModel
 
 object Prefs {
-    private val pref = AndroidAppHelper.currentApplication().getSharedPreferences(HMSPUSH_PREF_NAME, Context.MODE_PRIVATE)
+    private val pref = StorageContext.get().getSharedPreferences(HMSPUSH_PREF_NAME, Context.MODE_PRIVATE)
 
     var prefModel: PrefsModel
         private set
