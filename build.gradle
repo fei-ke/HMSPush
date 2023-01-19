@@ -1,11 +1,10 @@
 import com.android.build.gradle.BasePlugin
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id 'com.android.application' version '7.4.0' apply false
     id 'com.android.library' version '7.4.0' apply false
-    id 'org.jetbrains.kotlin.android' version '1.7.20' apply false
-    id 'org.jetbrains.kotlin.plugin.parcelize' version '1.7.20' apply false
+    id 'org.jetbrains.kotlin.android' version '1.8.0' apply false
+    id 'org.jetbrains.kotlin.plugin.parcelize' version '1.8.0' apply false
 }
 
 allprojects {
@@ -24,9 +23,11 @@ allprojects {
         }
     }
 
-    tasks.withType(KotlinCompile).configureEach {
-        kotlinOptions {
-            jvmTarget = JavaVersion.VERSION_1_8
+    // Configure Java to use our chosen language level. Kotlin will automatically pick this up.
+    // See https://kotlinlang.org/docs/gradle-configure-project.html#gradle-java-toolchains-support
+    plugins.withType(JavaBasePlugin).configureEach {
+        java.toolchain {
+            languageVersion.set(JavaLanguageVersion.of(8))
         }
     }
 }
