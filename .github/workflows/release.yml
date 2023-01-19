@@ -62,40 +62,21 @@ jobs:
       id: tag-data
 
     - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
+      uses: ncipollo/release-action@v1
       with:
-        tag_name: ${{ github.ref }}
-        release_name: ${{ github.ref }}
-        body: ${{ steps.tag-data.outputs.git-tag-annotation }} &#x20;
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-
-    - name: Upload APK
-      uses: csexton/release-asset-action@v2
-      with:
-        github-token: ${{ secrets.GH_TOKEN }}
-        release-url: ${{ steps.create_release.outputs.upload_url }}
-        files: |
-          app/build/outputs/mapping/release/mapping.txt
-        pattern: "app/build/outputs/apk/release/*.apk"
+        name: ${{ steps.var.outputs.tag }}
+        token: ${{ secrets.GH_TOKEN }}
+        body: ${{ steps.tag-data.outputs.git-tag-annotation }}
+        artifacts: "app/build/outputs/apk/release/*.apk,app/build/outputs/mapping/release/mapping.txt"
 
     - name: Release to XPosed Repo
-      id: create_xposed_release
-      uses: actions/create-release@v1
+      uses: ncipollo/release-action@v1
       with:
+        name: ${{ steps.var.outputs.tag }}
+        tag: ${{ steps.var.outputs.version }}
+        commit: main
         owner: Xposed-Modules-Repo
         repo: one.yufz.hmspush
-        tag_name: ${{ steps.var.outputs.version }}
-        release_name: ${{ github.ref }}
-        commitish: 301297d3142baf38abc7b5f9a6077f440a3f8392
-        body: ${{ steps.tag-data.outputs.git-tag-annotation }} &#x20;
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-
-    - name: Upload APK
-      uses: csexton/release-asset-action@v2
-      with:
-        github-token: ${{ secrets.GH_TOKEN }}
-        release-url: ${{ steps.create_xposed_release.outputs.upload_url }}
-        pattern: "app/build/outputs/apk/release/*.apk"
+        token: ${{ secrets.GH_TOKEN }}
+        body: ${{ steps.tag-data.outputs.git-tag-annotation }}
+        artifacts: "app/build/outputs/apk/release/*.apk"
