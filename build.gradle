@@ -16,9 +16,10 @@ allprojects {
                 targetSdk 33
                 vectorDrawables.useSupportLibrary = true
             }
+            // Can remove this once https://issuetracker.google.com/issues/260059413 is fixed.
             compileOptions {
-                sourceCompatibility JavaVersion.VERSION_1_8
-                targetCompatibility JavaVersion.VERSION_1_8
+                sourceCompatibility JavaVersion.VERSION_17
+                targetCompatibility JavaVersion.VERSION_17
             }
         }
     }
@@ -27,7 +28,7 @@ allprojects {
     // See https://kotlinlang.org/docs/gradle-configure-project.html#gradle-java-toolchains-support
     plugins.withType(JavaBasePlugin).configureEach {
         java.toolchain {
-            languageVersion.set(JavaLanguageVersion.of(8))
+            languageVersion.set(JavaLanguageVersion.of(17))
         }
     }
 }
