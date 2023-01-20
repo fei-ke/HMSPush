@@ -58,6 +58,12 @@ jobs:
         name: ${{ env.release_artifact }}
         path: app/build/outputs/apk/release/*.apk
 
+    - name: Upload Mapping
+      uses: actions/upload-artifact@v3
+      with:
+        name: mapping
+        path: app/build/outputs/mapping/release/mapping.txt
+        
     - uses: ericcornelissen/git-tag-annotation-action@v2
       id: tag-data
 
