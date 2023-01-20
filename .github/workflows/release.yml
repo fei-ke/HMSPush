@@ -64,10 +64,11 @@ jobs:
     - name: Create Release
       uses: ncipollo/release-action@v1
       with:
-        name: ${{ steps.var.outputs.tag }}
+        tag: ${{ steps.var.outputs.tag }}
         token: ${{ secrets.GH_TOKEN }}
         body: ${{ steps.tag-data.outputs.git-tag-annotation }}
         artifacts: "app/build/outputs/apk/release/*.apk,app/build/outputs/mapping/release/mapping.txt"
+        allowUpdates: true
 
     - name: Draft Release to XPosed Repo
       uses: ncipollo/release-action@v1
@@ -81,6 +82,7 @@ jobs:
         body: ${{ steps.tag-data.outputs.git-tag-annotation }}
         artifacts: "app/build/outputs/apk/release/*.apk"
         draft: true
+        allowUpdates: true
 
     - name: Release to XPosed Repo
       uses: ncipollo/release-action@v1
@@ -90,6 +92,5 @@ jobs:
         owner: Xposed-Modules-Repo
         repo: one.yufz.hmspush
         token: ${{ secrets.GH_TOKEN }}
-        updateOnlyUnreleased: true
         omitNameDuringUpdate: true
         omitBodyDuringUpdate: true
