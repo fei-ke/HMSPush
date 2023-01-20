@@ -69,6 +69,7 @@ jobs:
         body: ${{ steps.tag-data.outputs.git-tag-annotation }}
         artifacts: "app/build/outputs/apk/release/*.apk,app/build/outputs/mapping/release/mapping.txt"
         allowUpdates: true
+        removeArtifacts: true
 
     - name: Draft Release to XPosed Repo
       uses: ncipollo/release-action@v1
@@ -83,6 +84,7 @@ jobs:
         artifacts: "app/build/outputs/apk/release/*.apk"
         draft: true
         allowUpdates: true
+        removeArtifacts: true
 
     - name: Release to XPosed Repo
       uses: ncipollo/release-action@v1
