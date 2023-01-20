@@ -64,7 +64,7 @@ class IconViewModel(val app: Application) : AndroidViewModel(app) {
 
     fun loadIcon() {
         viewModelScope.launch(Dispatchers.IO) {
-            _iconsFlow.value = HmsPushClient.allIcon.map { it.toIconData() }
+            _iconsFlow.value = HmsPushClient.allIcon.mapNotNull { it.toIconData() }
         }
     }
 
