@@ -52,6 +52,10 @@ class HookSystemService {
                 }
             }
         }
+
+
+        val classShortcutService = XposedHelpers.findClass("com.android.server.pm.ShortcutService", classLoader)
+        ShortcutPermissionHooker.hook(classShortcutService)
     }
 
     private fun hookSystemReadyFlag(stubClass: Class<Any>) {
