@@ -37,8 +37,9 @@ object HookForegroundService {
                 //TODO remove this after 2023-03-01
                 val userManager = application.getSystemService(UserManager::class.java)
                 //SharedPreferences in credential encrypted storage are not available until after user is unlocked
-                if (!userManager.isUserUnlocked) return@doAfter
                 StorageContext.useDeviceProtectedStorageContext = migrateDataToDeviceProtectedStorage()
+
+                if (!userManager.isUserUnlocked && !StorageContext.useDeviceProtectedStorageContext) return@doAfter
 
                 if (Prefs.prefModel.keepAlive) {
                     tryStartForegroundService(application)
@@ -66,7 +67,7 @@ object HookForegroundService {
 
         val userManager = service.getSystemService(UserManager::class.java)
         //SharedPreferences in credential encrypted storage are not available until after user is unlocked
-        if (!userManager.isUserUnlocked) return
+        if (!userManager.isUserUnlocked && !StorageContext.useDeviceProtectedStorageContext) return
 
         if (Prefs.prefModel.keepAlive) {
             val explicitForeground = intent?.getBooleanExtra(KEY_HMS_CORE_EXPLICIT_FOREGROUND, false) == true
