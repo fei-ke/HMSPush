@@ -30,16 +30,13 @@ class HookSystemService {
     fun hook(classLoader: ClassLoader) {
         val classNotificationManagerService = XposedHelpers.findClass("com.android.server.notification.NotificationManagerService", classLoader)
 
-        classNotificationManagerService.hookMethod("onBootPhase", Int::class.java) {
+        classNotificationManagerService.hookMethod("onStart") {
             doAfter {
-                //com.android.server.SystemService#PHASE_BOOT_COMPLETED
-                if (args[0] == 1000) {
-                    val context = thisObject.callMethod("getContext") as Context
-                    KeepHmsAlive(context).start()
-                    val stubClass = thisObject.get<Any>("mService").javaClass
-                    hookPermission(stubClass)
-                    hookSystemReadyFlag(stubClass)
-                }
+                val context = thisObject.callMethod("getContext") as Context
+                KeepHmsAlive(context).start()
+                val stubClass = thisObject.get<Any>("mService").javaClass
+                hookPermission(stubClass)
+                hookSystemReadyFlag(stubClass)
             }
         }
 
