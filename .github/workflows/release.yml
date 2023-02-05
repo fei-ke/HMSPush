@@ -35,12 +35,11 @@ jobs:
     - name: Write key
       run: |
         if [ ! -z "${{ secrets.SIGNING_KEY }}" ]; then
-          echo STORE_PASSWORD='${{ secrets.KEY_STORE_PASSWORD }}' >> gradle.properties
-          echo KEY_ALIAS='${{ secrets.ALIAS }}' >> gradle.properties
-          echo KEY_PASSWORD='${{ secrets.KEY_PASSWORD }}' >> gradle.properties
-          echo STORE_FILE_PATH='../release.keystore' >> gradle.properties
+          echo STORE_PASSWORD='${{ secrets.KEY_STORE_PASSWORD }}' >> local.properties
+          echo KEY_ALIAS='${{ secrets.ALIAS }}' >> local.properties
+          echo KEY_PASSWORD='${{ secrets.KEY_PASSWORD }}' >> local.properties
+          echo STORE_FILE_PATH='../release.keystore' >> local.properties
           echo ${{ secrets.SIGNING_KEY }} | base64 --decode > release.keystore
-          git update-index --assume-unchanged gradle.properties
         fi
 
     - name: Grant execute permission for gradlew

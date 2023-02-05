@@ -21,21 +21,34 @@ android {
 
     signingConfigs {
         release {
-            storeFile file(STORE_FILE_PATH)
-            keyAlias KEY_ALIAS
-            keyPassword KEY_PASSWORD
-            storePassword STORE_PASSWORD
+            def locale, keystorePwd, alias, pwd
+            if (project.rootProject.file('local.properties').exists()) {
+                Properties properties = new Properties()
+                properties.load(project.rootProject.file('local.properties').newDataInputStream())
+                locale = properties.getProperty("STORE_FILE_PATH")
+                alias = properties.getProperty("KEY_ALIAS")
+                pwd = properties.getProperty("KEY_PASSWORD")
+                keystorePwd = properties.getProperty("STORE_PASSWORD")
+            }
+            if (locale != null) {
+                storeFile file(locale)
+                storePassword keystorePwd
+                keyAlias alias
+                keyPassword pwd
+            }
         }
     }
 
     buildTypes {
         debug {
-            if (signingConfigs.release.storeFile.exists()) {
+            if (signingConfigs.release.storeFile != null &&
+                    signingConfigs.release.storeFile.exists()) {
                 signingConfig signingConfigs.release
             }
         }
         release {
-            if (signingConfigs.release.storeFile.exists()) {
+            if (signingConfigs.release.storeFile != null &&
+                    signingConfigs.release.storeFile.exists()) {
                 signingConfig signingConfigs.release
             }
             minifyEnabled true
