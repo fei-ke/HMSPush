@@ -38,6 +38,8 @@
     <string name="import_dialog_title">输入图标库地址</string>
     <string name="import_from_url">从 URL 导入</string>
     <string name="clear_icons">清空图标</string>
+    <string name="icon_contributors">贡献者：</string>
+
     <string name="keep_alive">保持 HMS Core 运行</string>
     <string name="keep_alive_summary">该选项会为HMS Core显示一个前台通知，可长按通知将其隐藏</string>
 </resources>

@@ -38,6 +38,8 @@
     <string name="import_dialog_title">Input Icon Library Url</string>
     <string name="import_from_url">Import from URL</string>
     <string name="clear_icons">Clear All Icon</string>
+    <string name="icon_contributors">Contributors: </string>
+
     <string name="keep_alive">Keep HMS Core Alive</string>
     <string name="keep_alive_summary">This option will show a foreground notification for HMS Core, You can long press and hide it</string>
 </resources>

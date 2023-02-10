@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -54,6 +55,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -111,18 +113,8 @@ fun IconScreen(iconViewModel: IconViewModel = viewModel()) {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 items(icons) {
                     Row(
-                        Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
+                        Modifier.fillMaxWidth()
                     ) {
-                        Spacer(modifier = Modifier.width(16.dp))
-                        Icon(
-                            bitmap = it.iconBitmap.asImageBitmap(),
-                            contentDescription = it.appName,
-                            modifier = Modifier
-                                .size(16.dp)
-                                .align(Alignment.CenterVertically),
-                            tint = LocalContentColor.current,
-                        )
                         Spacer(modifier = Modifier.width(8.dp))
                         Surface(
                             color = if (it.iconColor != null) Color(it.iconColor!!) else MaterialTheme.colorScheme.primary,
@@ -130,19 +122,63 @@ fun IconScreen(iconViewModel: IconViewModel = viewModel()) {
                             modifier = Modifier
                                 .padding(8.dp)
                         ) {
+                            //App Icon
                             Icon(
                                 bitmap = it.iconBitmap.asImageBitmap(),
                                 contentDescription = it.appName,
                                 modifier = Modifier
                                     .padding(8.dp)
-                                    .size(16.dp)
-                                    .align(Alignment.CenterVertically),
+                                    .size(16.dp),
                                 tint = Color.White,
                             )
                         }
+                        Spacer(modifier = Modifier.width(8.dp))
                         Column(modifier = Modifier.weight(1f)) {
-                            Text(text = it.appName)
-                            Text(text = it.packageName, fontSize = 13.sp)
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                //small Icon
+                                Icon(
+                                    bitmap = it.iconBitmap.asImageBitmap(),
+                                    contentDescription = it.appName,
+                                    modifier = Modifier
+                                        .size(16.dp)
+                                        .padding(top = 2.dp),
+                                    tint = LocalContentColor.current,
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+
+                                //App name
+                                Text(
+                                    text = it.appName,
+                                    modifier = Modifier
+                                        .align(Alignment.CenterVertically)
+                                )
+                            }
+
+                            //Package name
+                            Text(
+                                text = it.packageName,
+                                fontSize = 13.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+
+                            //contributors
+                            Row {
+                                Text(
+                                    text = stringResource(id = R.string.icon_contributors),
+                                    fontSize = 13.sp,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                it.contributorName?.let { names ->
+                                    Text(
+                                        text = names,
+                                        fontSize = 13.sp,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
+                                }
+                            }
                         }
                         IconButton(onClick = { iconViewModel.deleteIcon(it.packageName) }) {
                             Icon(imageVector = Icons.Filled.Close, contentDescription = "Delete")
