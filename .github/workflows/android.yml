@@ -54,3 +54,19 @@ jobs:
       with:
         name: ${{ env.release_artifact }}
         path: app/build/outputs/apk/release/*.apk
+        
+    # https://github.com/LSPosed/LSPosed/blob/594604423c548c5a3596dc590f52480db7aabeaf/.github/workflows/core.yml#L112
+    - name: Post to Telegram
+      if: ${{ github.event_name != 'pull_request' && success() && github.ref == 'refs/heads/master' }}
+      env:
+        CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
+        BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+        COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+        COMMIT_URL: ${{ github.event.head_commit.url }}
+      run: |
+        if [ ! -z "${{ secrets.BOT_TOKEN }}" ]; then
+          export apkRelease=$(find app/build/outputs/apk/release -name "*.apk")
+          export apkDebug=$(find app/build/outputs/apk/debug -name "*.apk")
+          ESCAPED=`python3 -c 'import json,os,urllib.parse; msg = json.dumps(os.environ["COMMIT_MESSAGE"]); print(urllib.parse.quote(msg if len(msg) <= 1024 else json.dumps(os.environ["COMMIT_URL"])))'`
+          curl -v "https://api.telegram.org/bot${BOT_TOKEN}/sendMediaGroup?chat_id=${CHANNEL_ID}&media=%5B%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2FapkRelease%22%7D%2C%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2FapkDebug%22%2C%22caption%22:${ESCAPED}%7D%5D" -F apkRelease="@$apkRelease" -F apkDebug="@$apkDebug"
+        fi
