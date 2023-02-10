@@ -14,4 +14,6 @@ interface HmsPushInterface {
     List<IconModel> getAllIcon();
     void saveIcon(in IconModel iconModel);
     void deleteIcon(in String[] packageNames);
+
+    boolean killHmsCore();
 }

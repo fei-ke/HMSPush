@@ -1,13 +1,20 @@
 package one.yufz.hmspush.app.home
 
 import android.app.Application
+import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import one.yufz.hmspush.R
 import one.yufz.hmspush.app.HmsPushClient
+import one.yufz.hmspush.app.util.registerPackageChangeFlow
 import one.yufz.hmspush.common.HMS_PACKAGE_NAME
 import one.yufz.hmspush.common.VERSION_NAME
 
@@ -31,6 +38,32 @@ class HomeViewModel(val app: Application) : AndroidViewModel(app) {
     private var _searchText = MutableStateFlow("")
     val searchText: Flow<String> = _searchText
 
+    private var registerJob: Job? = null
+
+    init {
+        app.registerPackageChangeFlow()
+            .filter { it.dataString?.removePrefix("package:") == HMS_PACKAGE_NAME }
+            .onEach { onHmsPackageChanged(it) }
+            .launchIn(viewModelScope)
+
+        registerServiceChange()
+    }
+
+    private fun onHmsPackageChanged(intent: Intent) {
+        when (intent.action) {
+            Intent.ACTION_PACKAGE_ADDED -> registerServiceChange()
+            Intent.ACTION_PACKAGE_REMOVED -> registerJob?.cancel()
+        }
+        checkHmsCore()
+    }
+
+    private fun registerServiceChange() {
+        registerJob?.cancel()
+        registerJob = HmsPushClient.getHmsPushServiceFlow()
+            .onEach { checkHmsCore() }
+            .launchIn(viewModelScope)
+    }
+
     fun setSearching(searching: Boolean) {
         _searchState.value = searching
     }
@@ -50,7 +83,7 @@ class HomeViewModel(val app: Application) : AndroidViewModel(app) {
         }
 
         if (moduleVersion.versionName != VERSION_NAME) {
-            _uiState.value = UiState(false, app.getString(R.string.hms_not_activated), Reason.HmsPushVersionNotMatch)
+            _uiState.value = UiState(false, app.getString(R.string.hms_version_not_match), Reason.HmsPushVersionNotMatch)
             return
         }
 

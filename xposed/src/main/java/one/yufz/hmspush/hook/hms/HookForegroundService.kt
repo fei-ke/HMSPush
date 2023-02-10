@@ -51,6 +51,7 @@ object HookForegroundService {
         classHMSCoreService.hookMethod("onCreate") {
             doAfter {
                 XLog.d(TAG, "onCreate() called")
+                HmsPushService.notifyHmsPushServiceCreated()
                 setupForegroundState(thisObject as Service)
             }
         }

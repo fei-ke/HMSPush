@@ -1,5 +1,6 @@
 package one.yufz.hmspush.common
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 
@@ -30,6 +31,10 @@ object HmsCoreUtil {
     }
 
     fun startHmsCoreDummyActivity(context: Context) {
-        context.startActivity(createHmsCoreDummyActivityIntent())
+        try {
+            context.startActivity(createHmsCoreDummyActivityIntent())
+        } catch (e: ActivityNotFoundException) {
+            e.printStackTrace()
+        }
     }
 }
