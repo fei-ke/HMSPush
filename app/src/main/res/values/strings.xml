@@ -39,7 +39,17 @@
     <string name="import_from_url">Import from URL</string>
     <string name="clear_icons">Clear All Icon</string>
     <string name="icon_contributors">Contributors: </string>
-
+    <string name="icon_library_notice">
+         <![CDATA[
+        The default icon library comes from <a href="https://github.com/fankes/AndroidNotifyIconAdapt">AndroidNotifyIconAdapt</a>,
+        which is an online rule repository founded and maintained by <a href="https://github.com/fankes">@fankes</a>,
+        the project aims to adapt notification icons and repair non-standard APP and vendor icons for Android in China.
+        <br/>
+        All icon data is owned by <a href="https://github.com/fankes">@fankes</a> and all contributors.
+        <br/>
+        You can also input other compatible icon library addresses.
+        ]]>
+    </string>
     <string name="keep_alive">Keep HMS Core Alive</string>
     <string name="keep_alive_summary">This option will show a foreground notification for HMS Core, You can long press and hide it</string>
 </resources>

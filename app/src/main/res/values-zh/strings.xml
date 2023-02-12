@@ -39,6 +39,17 @@
     <string name="import_from_url">从 URL 导入</string>
     <string name="clear_icons">清空图标</string>
     <string name="icon_contributors">贡献者：</string>
+    <string name="icon_library_notice">
+        <![CDATA[
+        默认图标库来自 <a href="https://github.com/fankes/AndroidNotifyIconAdapt">AndroidNotifyIconAdapt</a>，
+        其是由 <a href="https://github.com/fankes">@fankes</a>
+        发起并维护的一个在线规则平台，旨在为国内 Android 不规范的 APP 和厂商适配原生通知图标与规范图标修复。
+        <br/>
+        图标全部数据所有权属于 <a href="https://github.com/fankes">@fankes</a> 与所有贡献者所有。
+        <br/>
+        你也可以填入其他兼容的图标库地址。
+        ]]>
+    </string>
 
     <string name="keep_alive">保持 HMS Core 运行</string>
     <string name="keep_alive_summary">该选项会为HMS Core显示一个前台通知，可长按通知将其隐藏</string>
