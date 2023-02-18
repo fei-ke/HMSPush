@@ -4,13 +4,17 @@
     <string name="hms_core_not_found">HMS Core is not installed or has no permission to access</string>
     <string name="hms_not_activated">HMSPush module not activated or HMS Core needs a reboot</string>
     <string name="module_not_activated">Module not activated or Application needs a reboot</string>
+    <string name="hms_version_not_match">HMSPush module updated, HMS Core needs a reboot</string>
 
     <string name="menu_launch">Launch</string>
     <string name="menu_app_info">App Info</string>
     <string name="menu_search">Search</string>
     <string name="menu_unregister">Unregister</string>
     <string name="menu_settings">Settings</string>
-    <string name="reboot_hms_core">HMS Core</string>
+    <string name="reboot_hms_core">Reboot HMS Core</string>
+    <string name="rebooting_hms_core">Trying to restart HMS Core</string>
+    <string name="manually_reboot_hms_core">Please restart HMS Core manually</string>
+    <string name="reboot">Reboot</string>
 
     <string name="disable_signature">Disable Signature Verification</string>
     <string name="disable_signature_summary">LSPatch or modified applications need to disable signature verification</string>
@@ -34,6 +38,18 @@
     <string name="import_dialog_title">Input Icon Library Url</string>
     <string name="import_from_url">Import from URL</string>
     <string name="clear_icons">Clear All Icon</string>
+    <string name="icon_contributors">Contributors: </string>
+    <string name="icon_library_notice">
+         <![CDATA[
+        The default icon library comes from <a href="https://github.com/fankes/AndroidNotifyIconAdapt">AndroidNotifyIconAdapt</a>,
+        which is an online rule repository founded and maintained by <a href="https://github.com/fankes">@fankes</a>,
+        the project aims to adapt notification icons and repair non-standard APP and vendor icons for Android in China.
+        <br/>
+        All icon data is owned by <a href="https://github.com/fankes">@fankes</a> and all contributors.
+        <br/>
+        You can also input other compatible icon library addresses.
+        ]]>
+    </string>
     <string name="keep_alive">Keep HMS Core Alive</string>
     <string name="keep_alive_summary">This option will show a foreground notification for HMS Core, You can long press and hide it</string>
 </resources>

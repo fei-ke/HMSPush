@@ -14,12 +14,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
@@ -53,10 +56,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.text.HtmlCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import de.charlex.compose.HtmlText
 import one.yufz.hmspush.R
 import one.yufz.hmspush.app.LocalNavHostController
 import one.yufz.hmspush.app.widget.LoadingDialog
@@ -111,18 +119,8 @@ fun IconScreen(iconViewModel: IconViewModel = viewModel()) {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 items(icons) {
                     Row(
-                        Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
+                        Modifier.fillMaxWidth()
                     ) {
-                        Spacer(modifier = Modifier.width(16.dp))
-                        Icon(
-                            bitmap = it.iconBitmap.asImageBitmap(),
-                            contentDescription = it.appName,
-                            modifier = Modifier
-                                .size(16.dp)
-                                .align(Alignment.CenterVertically),
-                            tint = LocalContentColor.current,
-                        )
                         Spacer(modifier = Modifier.width(8.dp))
                         Surface(
                             color = if (it.iconColor != null) Color(it.iconColor!!) else MaterialTheme.colorScheme.primary,
@@ -130,19 +128,63 @@ fun IconScreen(iconViewModel: IconViewModel = viewModel()) {
                             modifier = Modifier
                                 .padding(8.dp)
                         ) {
+                            //App Icon
                             Icon(
                                 bitmap = it.iconBitmap.asImageBitmap(),
                                 contentDescription = it.appName,
                                 modifier = Modifier
                                     .padding(8.dp)
-                                    .size(16.dp)
-                                    .align(Alignment.CenterVertically),
+                                    .size(16.dp),
                                 tint = Color.White,
                             )
                         }
+                        Spacer(modifier = Modifier.width(8.dp))
                         Column(modifier = Modifier.weight(1f)) {
-                            Text(text = it.appName)
-                            Text(text = it.packageName, fontSize = 13.sp)
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                //small Icon
+                                Icon(
+                                    bitmap = it.iconBitmap.asImageBitmap(),
+                                    contentDescription = it.appName,
+                                    modifier = Modifier
+                                        .size(16.dp)
+                                        .padding(top = 2.dp),
+                                    tint = LocalContentColor.current,
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+
+                                //App name
+                                Text(
+                                    text = it.appName,
+                                    modifier = Modifier
+                                        .align(Alignment.CenterVertically)
+                                )
+                            }
+
+                            //Package name
+                            Text(
+                                text = it.packageName,
+                                fontSize = 13.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+
+                            //contributors
+                            Row {
+                                Text(
+                                    text = stringResource(id = R.string.icon_contributors),
+                                    fontSize = 13.sp,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                it.contributorName?.let { names ->
+                                    Text(
+                                        text = names,
+                                        fontSize = 13.sp,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
+                                }
+                            }
                         }
                         IconButton(onClick = { iconViewModel.deleteIcon(it.packageName) }) {
                             Icon(imageVector = Icons.Filled.Close, contentDescription = "Delete")
@@ -229,14 +271,25 @@ fun ImportFromUrlDialog(onConfirm: (String) -> Unit, onDismissRequest: () -> Uni
             Text(text = stringResource(id = R.string.import_dialog_title))
         },
         text = {
-            OutlinedTextField(
-                value = textState,
-                onValueChange = {
-                    textState = it
-                },
-                modifier = Modifier.fillMaxWidth(),
-                maxLines = 3
-            )
+            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                HtmlText(
+                    text = stringResource(id = R.string.icon_library_notice),
+                    color = LocalContentColor.current,
+                    urlSpanStyle = SpanStyle(
+                        color = MaterialTheme.colorScheme.primary,
+                        textDecoration = TextDecoration.Underline
+                    ),
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
+                    value = textState,
+                    onValueChange = {
+                        textState = it
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+            }
         },
         confirmButton = {
             TextButton(onClick = {

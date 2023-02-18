@@ -1,12 +1,7 @@
 package one.yufz.hmspush.app
 
 import android.content.Context
-import android.database.ContentObserver
-import android.net.Uri
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
 import one.yufz.hmspush.common.BinderCursor
 import one.yufz.hmspush.common.BridgeUri
 import one.yufz.hmspush.common.BridgeWrap
@@ -37,17 +32,21 @@ fun createHmsPushServiceProxy(context: Context): HmsPushInterface = Proxy.newPro
 
     override fun invoke(proxy: Any, method: Method, args: Array<out Any>?): Any? {
         return try {
-            call(method, args)
+            call(getService(), method, args)
         } catch (t: Throwable) {
-            call(method, args)
+            try {
+                call(getService(), method, args)
+            } catch (e: Throwable) {
+                call(HmsPushInterface.Default(), method, args)
+            }
         }
     }
 
-    private fun call(method: Method, args: Array<out Any>?): Any? {
+    private fun call(obj: Any, method: Method, args: Array<out Any>?): Any? {
         return if (args != null) {
-            method.invoke(getService(), *args)
+            method.invoke(obj, *args)
         } else {
-            method.invoke(getService())
+            method.invoke(obj)
         }
     }
 }) as HmsPushInterface
@@ -55,45 +54,17 @@ fun createHmsPushServiceProxy(context: Context): HmsPushInterface = Proxy.newPro
 object HmsPushClient : HmsPushInterface.Stub() {
     private val service = createHmsPushServiceProxy(App.instance)
 
-    fun getPushSignFlow(): Flow<List<PushSignModel>> = callbackFlow {
-        val onChange: () -> Unit = { trySendBlocking(pushSignList) }
+    fun getHmsPushServiceFlow(): Flow<Unit> =
+        BridgeWrap.registerContentAsFlow(App.instance, BridgeUri.HMS_PUSH_SERVICE.toUri()) {}
 
-        onChange()
+    fun getPushSignFlow(): Flow<List<PushSignModel>> =
+        BridgeWrap.registerContentAsFlow(App.instance, BridgeUri.PUSH_SIGN.toUri()) { pushSignList }
 
-        val observer = ObserverWrap(onChange)
+    fun getPushHistoryFlow(): Flow<List<PushHistoryModel>> =
+        BridgeWrap.registerContentAsFlow(App.instance, BridgeUri.PUSH_HISTORY.toUri()) { pushHistoryList }
 
-        registerContentObserver(BridgeUri.PUSH_SIGN.toUri(), observer)
-
-        awaitClose { unregisterContentObserver(observer) }
-    }
-
-
-    fun getPushHistoryFlow(): Flow<List<PushHistoryModel>> = callbackFlow {
-        val onChange: () -> Unit = { trySendBlocking(pushHistoryList) }
-
-        onChange()
-
-        val observer = ObserverWrap(onChange)
-
-        registerContentObserver(BridgeUri.PUSH_HISTORY.toUri(), observer)
-
-        awaitClose {
-            unregisterContentObserver(observer)
-        }
-    }
-
-    private class ObserverWrap(val observer: () -> Unit) : ContentObserver(null) {
-        override fun onChange(selfChange: Boolean) {
-            observer()
-        }
-    }
-
-    private fun registerContentObserver(uri: Uri, observer: ObserverWrap) {
-        BridgeWrap.registerObserve(App.instance, uri, observer)
-    }
-
-    private fun unregisterContentObserver(observer: ObserverWrap) {
-        BridgeWrap.unregisterObserve(App.instance, observer)
+    fun isHmsPushServiceAlive(): Boolean {
+        return moduleVersion != null
     }
 
     override fun getModuleVersion(): ModuleVersionModel? {
@@ -134,5 +105,9 @@ object HmsPushClient : HmsPushInterface.Stub() {
 
     fun saveIcon(iconData: IconData) {
         saveIcon(IconModel(iconData.packageName, iconData.toJson()))
+    }
+
+    override fun killHmsCore(): Boolean {
+        return service.killHmsCore()
     }
 }

@@ -7,6 +7,7 @@ import java.util.*
 
 object NotificationHandlers {
     private val handlers = listOf(
+        LabelHandler(),
         IconHandler(),
         GroupNotificationHandler(),
         GroupByIdHandler(),

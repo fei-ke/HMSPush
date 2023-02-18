@@ -16,6 +16,7 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.Icon
 import android.os.Build
 import android.os.PowerManager
+import android.os.UserManager
 import android.widget.Toast
 import one.yufz.hmspush.common.HMS_PACKAGE_NAME
 import one.yufz.hmspush.common.HmsCoreUtil
@@ -31,10 +32,15 @@ object HookForegroundService {
     fun hook(classLoader: ClassLoader) {
         Application::class.java.hookMethod("onCreate") {
             doAfter {
+                val application = thisObject as Application
+
                 //TODO remove this after 2023-03-01
+                val userManager = application.getSystemService(UserManager::class.java)
+                //SharedPreferences in credential encrypted storage are not available until after user is unlocked
                 StorageContext.useDeviceProtectedStorageContext = migrateDataToDeviceProtectedStorage()
 
-                val application = thisObject as Application
+                if (!userManager.isUserUnlocked && !StorageContext.useDeviceProtectedStorageContext) return@doAfter
+
                 if (Prefs.prefModel.keepAlive) {
                     tryStartForegroundService(application)
                 }
@@ -45,6 +51,7 @@ object HookForegroundService {
         classHMSCoreService.hookMethod("onCreate") {
             doAfter {
                 XLog.d(TAG, "onCreate() called")
+                HmsPushService.notifyHmsPushServiceCreated()
                 setupForegroundState(thisObject as Service)
             }
         }
@@ -58,6 +65,10 @@ object HookForegroundService {
 
     private fun setupForegroundState(service: Service, intent: Intent? = null) {
         XLog.d(TAG, "setupForeground() called")
+
+        val userManager = service.getSystemService(UserManager::class.java)
+        //SharedPreferences in credential encrypted storage are not available until after user is unlocked
+        if (!userManager.isUserUnlocked && !StorageContext.useDeviceProtectedStorageContext) return
 
         if (Prefs.prefModel.keepAlive) {
             val explicitForeground = intent?.getBooleanExtra(KEY_HMS_CORE_EXPLICIT_FOREGROUND, false) == true

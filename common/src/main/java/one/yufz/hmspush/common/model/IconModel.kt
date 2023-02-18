@@ -9,13 +9,24 @@ import java.io.FileReader
 @Parcelize
 class IconModel(val packageName: String, val iconData: String? = null, val dataFD: ParcelFileDescriptor? = null) : Parcelable {
 
-    fun toIconData(): IconData {
+    fun toIconData(): IconData? {
         if (iconData != null) {
-            return IconData.fromJson(iconData)
+            return try {
+                IconData.fromJson(iconData)
+            } catch (e: Throwable) {
+                e.printStackTrace()
+                null
+            }
         }
+
         if (dataFD != null) {
-            FileReader(dataFD.fileDescriptor).use {
-                return IconData.fromJson(it.readText())
+            try {
+                FileReader(dataFD.fileDescriptor).use {
+                    return IconData.fromJson(it.readText())
+                }
+            } catch (t: Throwable) {
+                t.printStackTrace()
+                return null
             }
         }
         throw IllegalStateException("iconData and dataFD all be null")

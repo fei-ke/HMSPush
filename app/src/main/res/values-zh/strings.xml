@@ -4,6 +4,7 @@
     <string name="hms_core_not_found">HMS Core 未安装或没有权限访问</string>
     <string name="hms_not_activated">HMSPush 模块未激活或需要重启 HMS Core</string>
     <string name="module_not_activated">模块未启用或者需要重启应用</string>
+    <string name="hms_version_not_match">模块已更新，需要重启 HMS Core</string>
 
     <string name="menu_launch">启动</string>
     <string name="menu_app_info">应用信息</string>
@@ -11,6 +12,9 @@
     <string name="menu_unregister">取消注册</string>
     <string name="menu_settings">设置</string>
     <string name="reboot_hms_core">重启 HMS Core</string>
+    <string name="rebooting_hms_core">正在尝试重启 HMS Core</string>
+    <string name="manually_reboot_hms_core">请手动停止 HMS Core</string>
+    <string name="reboot">重启</string>
 
     <string name="disable_signature">禁用签名检查</string>
     <string name="disable_signature_summary">LSPatch 或者修改版应用需要禁用签名检查</string>
@@ -34,6 +38,19 @@
     <string name="import_dialog_title">输入图标库地址</string>
     <string name="import_from_url">从 URL 导入</string>
     <string name="clear_icons">清空图标</string>
+    <string name="icon_contributors">贡献者：</string>
+    <string name="icon_library_notice">
+        <![CDATA[
+        默认图标库来自 <a href="https://github.com/fankes/AndroidNotifyIconAdapt">AndroidNotifyIconAdapt</a>，
+        其是由 <a href="https://github.com/fankes">@fankes</a>
+        发起并维护的一个在线规则平台，旨在为国内 Android 不规范的 APP 和厂商适配原生通知图标与规范图标修复。
+        <br/>
+        图标全部数据所有权属于 <a href="https://github.com/fankes">@fankes</a> 与所有贡献者所有。
+        <br/>
+        你也可以填入其他兼容的图标库地址。
+        ]]>
+    </string>
+
     <string name="keep_alive">保持 HMS Core 运行</string>
     <string name="keep_alive_summary">该选项会为HMS Core显示一个前台通知，可长按通知将其隐藏</string>
 </resources>

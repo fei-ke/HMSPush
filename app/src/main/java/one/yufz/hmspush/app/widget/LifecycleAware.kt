@@ -14,11 +14,15 @@ import androidx.lifecycle.LifecycleOwner
 fun LifecycleAware(
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
     onStart: () -> Unit = {}, // Send the 'started' analytics event
+    onResume: () -> Unit = {}, // Send the 'resumed' analytics event
+    onPause: () -> Unit = {}, // Send the 'paused' analytics event
     onStop: () -> Unit = {}, // Send the 'stopped' analytics event
     content: @Composable () -> Unit
 ) {
     // Safely update the current lambdas when a new one is provided
     val currentOnStart by rememberUpdatedState(onStart)
+    val currentOnResume by rememberUpdatedState(onResume)
+    val currentOnPause by rememberUpdatedState(onPause)
     val currentOnStop by rememberUpdatedState(onStop)
 
     // If `lifecycleOwner` changes, dispose and reset the effect
@@ -26,10 +30,12 @@ fun LifecycleAware(
         // Create an observer that triggers our remembered callbacks
         // for sending analytics events
         val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_START) {
-                currentOnStart()
-            } else if (event == Lifecycle.Event.ON_STOP) {
-                currentOnStop()
+            when (event) {
+                Lifecycle.Event.ON_START -> currentOnStart()
+                Lifecycle.Event.ON_RESUME -> currentOnResume()
+                Lifecycle.Event.ON_PAUSE -> currentOnPause()
+                Lifecycle.Event.ON_STOP -> currentOnStop()
+                else -> Unit
             }
         }
 

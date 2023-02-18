@@ -6,6 +6,8 @@
 
 package one.yufz.hmspush.app.home
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +18,7 @@ import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -27,6 +30,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -45,10 +49,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import one.yufz.hmspush.R
+import one.yufz.hmspush.app.HmsPushClient
 import one.yufz.hmspush.app.LocalNavHostController
 import one.yufz.hmspush.app.widget.LifecycleAware
 import one.yufz.hmspush.app.widget.SearchBar
 import one.yufz.hmspush.common.HMS_PACKAGE_NAME
+import one.yufz.hmspush.common.HmsCoreUtil
 
 @Composable
 fun HomeScreen(homeViewModel: HomeViewModel = viewModel()) {
@@ -73,7 +79,7 @@ fun HomeScreen(homeViewModel: HomeViewModel = viewModel()) {
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
-            LifecycleAware(onStart = { homeViewModel.checkHmsCore() }) {
+            LifecycleAware(onResume = { homeViewModel.checkHmsCore() }) {
                 if (uiState.usable) {
                     AppListScreen(searchText)
                 } else if (uiState.reason == HomeViewModel.Reason.Checking) {
@@ -115,15 +121,16 @@ private fun AppBar(
                 }
             }
             //More
-            AppBarMoreMenu()
+            AppBarMoreMenu(withSearch)
         }
     )
 }
 
 @Composable
-private fun AppBarMoreMenu() {
+private fun AppBarMoreMenu(usable: Boolean) {
     //More
     var openMoreMenu by remember { mutableStateOf(false) }
+
     IconButton(onClick = { openMoreMenu = true }) {
         Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "More")
         if (openMoreMenu) {
@@ -140,7 +147,8 @@ private fun AppBarMoreMenu() {
                     onClick = {
                         navController.navigate("settings")
                         openMoreMenu = false
-                    }
+                    },
+                    enabled = usable
                 )
                 val context = LocalContext.current
                 DropdownMenuItem(
@@ -148,12 +156,21 @@ private fun AppBarMoreMenu() {
                         Text(text = stringResource(id = R.string.reboot_hms_core))
                     },
                     onClick = {
-                        Util.launchAppInfo(context, HMS_PACKAGE_NAME)
+                        rebootHmsCore(context)
                         openMoreMenu = false
                     }
                 )
             }
         }
+    }
+}
+
+private fun rebootHmsCore(context: Context) {
+    if (HmsPushClient.killHmsCore()) {
+        Toast.makeText(context, R.string.rebooting_hms_core, Toast.LENGTH_SHORT).show()
+    } else {
+        Toast.makeText(context, R.string.manually_reboot_hms_core, Toast.LENGTH_SHORT).show()
+        Util.launchAppInfo(context, HMS_PACKAGE_NAME)
     }
 }
 
@@ -166,6 +183,7 @@ private fun Loading() {
 
 @Composable
 private fun HmsCoreTips(uiState: HomeViewModel.UiState) {
+    val context = LocalContext.current
     Box(modifier = Modifier.fillMaxWidth()) {
         Card(
             modifier = Modifier
@@ -175,8 +193,11 @@ private fun HmsCoreTips(uiState: HomeViewModel.UiState) {
                 .requiredHeight(80.dp),
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.errorContainer,
-                contentColor = MaterialTheme.colorScheme.onErrorContainer
+                contentColor = MaterialTheme.colorScheme.onErrorContainer,
             ),
+            onClick = {
+                onTipsClick(context, uiState.reason)
+            }
         ) {
             Box(
                 modifier = Modifier
@@ -186,5 +207,13 @@ private fun HmsCoreTips(uiState: HomeViewModel.UiState) {
                 Text(text = uiState.tips, Modifier.align(Alignment.Center))
             }
         }
+    }
+}
+
+private fun onTipsClick(context: Context, reason: HomeViewModel.Reason) {
+    when (reason) {
+        HomeViewModel.Reason.HmsCoreNotActivated -> HmsCoreUtil.startHmsCoreDummyActivity(context)
+        HomeViewModel.Reason.HmsPushVersionNotMatch -> rebootHmsCore(context)
+        else -> {}
     }
 }
