@@ -1,7 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="xposed_scope">
+        <item>com.autonavi.minimap</item>
+        <item>com.coolapk.market</item>
+        <item>com.daimajia.gold</item>
+        <item>com.dianping.v1</item>
+        <item>com.douban.frodo</item>
+        <item>com.eg.android.AlipayGphone</item>
         <item>com.huawei.hwid</item>
+        <item>com.sankuai.meituan</item>
+        <item>com.smzdm.client.android</item>
+        <item>com.taobao.idlefish</item>
+        <item>com.taobao.taobao</item>
+        <item>com.tencent.mobileqq</item>
+        <item>com.tencent.tim</item>
+        <item>com.tencent.wework</item>
+        <item>com.xingin.xhs</item>
+        <item>tv.danmaku.bili</item>
         <item>android</item>
     </string-array>
 </resources>
