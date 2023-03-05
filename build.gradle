@@ -1,6 +1,9 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.kotlin_version = '1.7.10'
+    //https://developer.android.com/jetpack/androidx/releases/compose-kotlin
+    ext.kotlin_version = '1.8.10'
+    ext.kotlin_compiler_extension_version = '1.4.3'
+
     repositories {
         mavenCentral()
     }
