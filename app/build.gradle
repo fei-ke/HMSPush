@@ -70,7 +70,7 @@ android {
         kotlinCompilerExtensionVersion kotlin_compiler_extension_version
     }
 }
-def lifecycle_version = "2.2.0"
+def lifecycle_version = "2.5.1"
 def activity_version = "1.6.1"
 def nav_version = "2.5.3"
 
@@ -97,7 +97,7 @@ dependencies {
 
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1'
     implementation "com.google.accompanist:accompanist-drawablepainter:0.25.1"
-    
+
     implementation "androidx.activity:activity-compose:$activity_version"
     implementation "androidx.navigation:navigation-runtime-ktx:$nav_version"
     implementation "androidx.navigation:navigation-compose:$nav_version"
