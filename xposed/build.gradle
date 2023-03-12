@@ -34,4 +34,12 @@ dependencies {
     implementation project(":common")
     compileOnly 'de.robv.android.xposed:api:82'
     implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
+
+    //compileOnly "io.github.libxposed:api:100"
+    //implementation "io.github.libxposed:helper:100.0.1"
+    //implementation "io.github.libxposed:helper-ktx:100.0.1"
+
+    compileOnly(name: 'api-100', ext: 'aar')
+    implementation(name: 'helper-100.0.1', ext: 'aar')
+    implementation(name: 'helper-ktx-100.0.1', ext: 'aar')
 }
