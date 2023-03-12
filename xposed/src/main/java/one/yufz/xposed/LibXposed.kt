@@ -1,6 +1,8 @@
 package one.yufz.xposed
 
 import android.app.Application
+import android.content.pm.ApplicationInfo
+import io.github.libxposed.api.XposedModuleInterface
 import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 import java.lang.reflect.Method
@@ -97,4 +99,23 @@ class LibXposed : Xposed {
     override fun log(message: String) {
         TODO("Not yet implemented")
     }
+}
+
+
+fun XposedModuleInterface.PackageLoadedParam.toLoadPackageParam(): LoadPackageParam {
+    return LibXposedLoadPackageParam(this)
+}
+
+class LibXposedLoadPackageParam(val origin: XposedModuleInterface.PackageLoadedParam) : LoadPackageParam {
+    override val packageName: String
+        get() = origin.packageName
+    override val processName: String
+        get() = origin.appInfo.processName
+    override val appInfo: ApplicationInfo
+        get() = origin.appInfo
+    override val classLoader: ClassLoader
+        get() = origin.classLoader
+    override val isFirstPackage: Boolean
+        get() = origin.isFirstPackage
+
 }
