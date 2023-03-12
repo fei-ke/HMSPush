@@ -4,11 +4,26 @@ package one.yufz.xposed
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
+import de.robv.android.xposed.XposedHelpers.InvocationTargetError
+import java.lang.reflect.Constructor
+import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 
+fun Class<*>.findMethodExact(methodName: String, vararg parameterTypes: Class<*>): Method =
+    XposedHelpers.findMethodExact(this, methodName, *parameterTypes)
+
+fun Class<*>.findMethodsByExactParameters(returnType: Class<*>, vararg parameterTypes: Class<*>): Array<Method> =
+    XposedHelpers.findMethodsByExactParameters(this, returnType, *parameterTypes)
+
+fun Class<*>.findConstructorExact(vararg parameterTypes: Any?): Constructor<*> =
+    XposedHelpers.findConstructorExact(this, *parameterTypes)
 
 fun Any.callMethod(methodName: String, vararg args: Any): Any? =
-    XposedHelpers.callMethod(this, methodName, *args)
+    try {
+        XposedHelpers.callMethod(this, methodName, *args)
+    } catch (e: InvocationTargetError) {
+        throw InvocationTargetException(e)
+    }
 
 fun Any.callMethod(methodName: String, parameterTypes: Array<Class<*>>, vararg args: Any): Any? =
     XposedHelpers.callMethod(this, methodName, parameterTypes, *args)
@@ -103,7 +118,19 @@ fun Class<*>.newInstance(vararg args: Any): Any = XposedHelpers.newInstance(this
 fun Class<*>.newInstance(parameterTypes: Array<Class<*>>, vararg args: Any): Any =
     XposedHelpers.newInstance(this, parameterTypes, *args)
 
-fun ClassLoader.findClass(className: String): Class<*> = XposedHelpers.findClass(className, this)
+@Throws(ClassNotFoundException::class)
+fun findClass(className: String): Class<*> = try {
+    XposedHelpers.findClass(className, null)
+} catch (e: XposedHelpers.ClassNotFoundError) {
+    throw ClassNotFoundException(e.message, e.cause)
+}
+
+@Throws(ClassNotFoundException::class)
+fun ClassLoader.findClass(className: String): Class<*> = try {
+    XposedHelpers.findClass(className, this)
+} catch (e: XposedHelpers.ClassNotFoundError) {
+    throw ClassNotFoundException(e.message, e.cause)
+}
 
 inline fun <reified T> Any.getOrNull(name: String): T? = getField(name, T::class.java)
 
@@ -150,3 +177,14 @@ fun <T> Any.setField(name: String, value: T?, fieldClass: Class<T>) {
 }
 
 private fun findField(clazz: Class<*>, fieldName: String) = XposedHelpers.findField(clazz, fieldName)
+
+fun Any.setAdditionalInstanceField(name: String, value: Any?): Any? =
+    XposedHelpers.setAdditionalInstanceField(this, name, value)
+
+fun Any.getAdditionalInstanceField(name: String): Any? =
+    XposedHelpers.getAdditionalInstanceField(this, name)
+
+fun Any.removeAdditionalInstanceField(name: String): Any? =
+    XposedHelpers.removeAdditionalInstanceField(this, name)
+
+fun log(message: String) = XposedBridge.log(message)

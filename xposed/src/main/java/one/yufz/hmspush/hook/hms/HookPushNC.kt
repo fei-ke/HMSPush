@@ -4,7 +4,6 @@ import android.app.AndroidAppHelper
 import android.app.Notification
 import android.app.NotificationChannel
 import com.huawei.android.app.NotificationManagerEx
-import de.robv.android.xposed.XposedHelpers.ClassNotFoundError
 import one.yufz.hmspush.hook.XLog
 import one.yufz.xposed.findClass
 import one.yufz.xposed.hookMethod
@@ -16,7 +15,7 @@ object HookPushNC {
         return try {
             classLoader.findClass("com.huawei.hsf.notification.HwNotificationManager")
             true
-        } catch (e: ClassNotFoundError) {
+        } catch (e: ClassNotFoundException) {
             false
         }
     }

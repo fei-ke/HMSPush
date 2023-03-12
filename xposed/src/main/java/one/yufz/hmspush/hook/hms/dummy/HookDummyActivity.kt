@@ -6,12 +6,14 @@ import android.os.Bundle
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
-import de.robv.android.xposed.XposedHelpers
 import one.yufz.hmspush.common.FLAG_HMS_DUMMY_HOOKED
 import one.yufz.hmspush.common.HMS_CORE_DUMMY_ACTIVITY
 import one.yufz.hmspush.hook.XLog
 import one.yufz.xposed.findClass
+import one.yufz.xposed.getAdditionalInstanceField
 import one.yufz.xposed.hookMethod
+import one.yufz.xposed.removeAdditionalInstanceField
+import one.yufz.xposed.setAdditionalInstanceField
 
 
 object HookDummyActivity {
@@ -28,7 +30,7 @@ object HookDummyActivity {
         classDummyActivity.hookMethod("onCreate", Bundle::class.java) {
             doBefore {
                 XLog.d(TAG, "onCreate doBefore() called")
-                XposedHelpers.setAdditionalInstanceField(thisObject, KEY_IGNORE_FIRST_FINISH, true)
+                thisObject.setAdditionalInstanceField(KEY_IGNORE_FIRST_FINISH, true)
                 val activity = thisObject as Activity
                 activity.setTheme(android.R.style.Theme_Material_Light_NoActionBar)
                 if (args[0] != null) {
@@ -55,7 +57,7 @@ object HookDummyActivity {
             doBefore {
                 val activity = this.thisObject as Activity
                 val hooked = activity.intent.getBooleanExtra(FLAG_HMS_DUMMY_HOOKED, false)
-                val ignoreFirstFinish = XposedHelpers.getAdditionalInstanceField(activity, KEY_IGNORE_FIRST_FINISH) != null
+                val ignoreFirstFinish = activity.getAdditionalInstanceField(KEY_IGNORE_FIRST_FINISH) != null
 
                 XLog.d(TAG, "finish() called, hooked = $hooked , ignoreFirstFinish = $ignoreFirstFinish")
 
@@ -64,7 +66,7 @@ object HookDummyActivity {
                 }
 
                 if (ignoreFirstFinish) {
-                    XposedHelpers.removeAdditionalInstanceField(activity, KEY_IGNORE_FIRST_FINISH)
+                    activity.removeAdditionalInstanceField(KEY_IGNORE_FIRST_FINISH)
                 }
             }
         }

@@ -2,11 +2,11 @@ package one.yufz.hmspush.hook.hms
 
 import android.content.Context
 import android.content.Intent
-import de.robv.android.xposed.XposedHelpers
 import one.yufz.hmspush.common.HMS_CORE_PUSH_ACTION_REGISTRATION
 import one.yufz.hmspush.hook.XLog
 import one.yufz.xposed.callMethod
 import one.yufz.xposed.findClass
+import one.yufz.xposed.findMethodsByExactParameters
 import one.yufz.xposed.get
 import one.yufz.xposed.hook
 import one.yufz.xposed.hookMethod
@@ -40,8 +40,8 @@ object HookLegacyTokenRequest {
         val classTokenResp = classLoader.findClass("com.huawei.hms.support.api.entity.push.TokenResp")
 
         arrayOf(
-            *XposedHelpers.findMethodsByExactParameters(clazz.superclass, Void.TYPE, classIMessageEntity, Int::class.java),
-            *XposedHelpers.findMethodsByExactParameters(clazz.superclass, Void.TYPE, classIMessageEntity, Class::class.java, Int::class.java)
+            *clazz.superclass.findMethodsByExactParameters(Void.TYPE, classIMessageEntity, Int::class.java),
+            *clazz.superclass.findMethodsByExactParameters(Void.TYPE, classIMessageEntity, Class::class.java, Int::class.java)
         ).forEach { method ->
             XLog.d(TAG, "hookGetTokenProcess() called with: method = $method")
 

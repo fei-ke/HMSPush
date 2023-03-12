@@ -2,16 +2,16 @@ package one.yufz.hmspush.hook
 
 import android.util.Log
 import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XposedBridge
+import one.yufz.xposed.log
 import java.lang.reflect.Method
 
 object XLog {
     fun d(tag: String, message: String?) {
-        XposedBridge.log("[HMSPush]  $tag  $message")
+        log("[HMSPush]  $tag  $message")
     }
 
     fun i(tag: String, message: String?) {
-        XposedBridge.log("[HMSPush]  $tag  $message")
+        log("[HMSPush]  $tag  $message")
     }
 
     fun e(tag: String, message: String?, throwable: Throwable?) {

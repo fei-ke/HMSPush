@@ -7,7 +7,6 @@ import android.database.CursorWindow
 import android.os.Build
 import com.huawei.android.app.NotificationManagerEx
 import dalvik.system.DexClassLoader
-import de.robv.android.xposed.XposedHelpers.ClassNotFoundError
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import one.yufz.hmspush.hook.XLog
 import one.yufz.hmspush.hook.bridge.HookContentProvider
@@ -72,7 +71,7 @@ class HookHMS {
 
         try {
             classLoader.findClass("com.huawei.hms.pushnc.entity.PushSelfShowMessage")
-        } catch (e: ClassNotFoundError) {
+        } catch (e: ClassNotFoundException) {
             XLog.d(TAG, "PushSelfShowMessage not Found, stop hook")
             return
         }

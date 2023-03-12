@@ -1,7 +1,6 @@
 package one.yufz.hmspush.hook.fakedevice
 
 import android.content.Context
-import de.robv.android.xposed.XposedHelpers.ClassNotFoundError
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import one.yufz.hmspush.hook.XLog
 import one.yufz.xposed.findClass
@@ -37,7 +36,7 @@ object HookHmsDeviceId {
                 }
             XLog.d(TAG, "tryHookOaid() called AdvertisingIdClient hooked")
             true
-        } catch (t: ClassNotFoundError) {
+        } catch (t: ClassNotFoundException) {
             false
         } catch (t: Throwable) {
             XLog.e(TAG, "hook AdvertisingIdClient.getAdvertisingIdInfo() error", t)

@@ -4,10 +4,10 @@ import android.app.AndroidAppHelper
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Binder
-import de.robv.android.xposed.XposedHelpers
 import one.yufz.hmspush.common.IS_SYSTEM_HOOK_READY
 import one.yufz.hmspush.hook.XLog
 import one.yufz.xposed.callMethod
+import one.yufz.xposed.findClass
 import one.yufz.xposed.get
 import one.yufz.xposed.hookMethod
 
@@ -28,7 +28,7 @@ class HookSystemService {
     }
 
     fun hook(classLoader: ClassLoader) {
-        val classNotificationManagerService = XposedHelpers.findClass("com.android.server.notification.NotificationManagerService", classLoader)
+        val classNotificationManagerService = classLoader.findClass("com.android.server.notification.NotificationManagerService")
 
         classNotificationManagerService.hookMethod("onStart") {
             doAfter {
@@ -51,7 +51,7 @@ class HookSystemService {
         }
 
 
-        val classShortcutService = XposedHelpers.findClass("com.android.server.pm.ShortcutService", classLoader)
+        val classShortcutService = classLoader.findClass("com.android.server.pm.ShortcutService")
         ShortcutPermissionHooker.hook(classShortcutService)
     }
 

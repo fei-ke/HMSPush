@@ -4,7 +4,6 @@ import android.content.pm.PackageInfo
 import android.util.Base64
 import dalvik.system.DexClassLoader
 import de.robv.android.xposed.XC_MethodHook.Unhook
-import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import one.yufz.hmspush.common.HMS_CORE_SIGNATURE
 import one.yufz.hmspush.common.HMS_PACKAGE_NAME
@@ -53,8 +52,8 @@ object FakeHmsSignature {
 
             verifyApkHashHooked = true
             verifyApkHashUnhook?.unhook()
-        } catch (e: XposedHelpers.ClassNotFoundError) {
-            XLog.d(TAG, "tryHookVerifyApkHash: ClassNotFoundError")
+        } catch (e: ClassNotFoundException) {
+            XLog.d(TAG, "tryHookVerifyApkHash: ClassNotFoundException")
         } catch (e: NoSuchMethodError) {
             XLog.d(TAG, "tryHookVerifyApkHash: NoSuchMethodError")
         } catch (e: Throwable) {
