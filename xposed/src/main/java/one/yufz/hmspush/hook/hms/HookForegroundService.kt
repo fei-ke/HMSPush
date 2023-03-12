@@ -58,7 +58,7 @@ object HookForegroundService {
         classHMSCoreService.hookMethod("onStartCommand", Intent::class.java, Int::class.java, Int::class.java) {
             doAfter {
                 XLog.d(TAG, "onStartCommand() called")
-                setupForegroundState(thisObject as Service, args[0] as Intent)
+                setupForegroundState(thisObject as Service, args[0] as Intent?)
             }
         }
     }
