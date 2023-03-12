@@ -47,8 +47,8 @@ object HookLegacyTokenRequest {
 
             method.hook {
                 doAfter {
-                    if (args[0].javaClass == classTokenResp) {
-                        mockReceive(thisObject, args[0])
+                    if (args[0]!!.javaClass == classTokenResp) {
+                        mockReceive(thisObject, args[0]!!)
                     }
                 }
             }

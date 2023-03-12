@@ -1,7 +1,7 @@
 package one.yufz.hmspush.hook
 
 import android.util.Log
-import de.robv.android.xposed.XC_MethodHook
+import one.yufz.xposed.MethodHookParam
 import one.yufz.xposed.log
 import java.lang.reflect.Method
 
@@ -19,7 +19,7 @@ object XLog {
         i(tag, Log.getStackTraceString(throwable))
     }
 
-    fun XC_MethodHook.MethodHookParam.logMethod(tag: String, stackTrace: Boolean = false) {
+    fun MethodHookParam.logMethod(tag: String, stackTrace: Boolean = false) {
         d(tag, "╔═══════════════════════════════════════════════════════")
         d(tag, method.toString())
         d(tag, "${method.name} called with ${args.contentDeepToString()}")

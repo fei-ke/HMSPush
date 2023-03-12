@@ -3,9 +3,9 @@ package one.yufz.hmspush.hook.system
 import android.app.AndroidAppHelper
 import android.content.pm.ShortcutInfo
 import android.os.Binder
-import de.robv.android.xposed.XC_MethodHook
 import one.yufz.hmspush.common.HMS_PACKAGE_NAME
 import one.yufz.xposed.HookCallback
+import one.yufz.xposed.MethodHookParam
 import one.yufz.xposed.findMethodExact
 import one.yufz.xposed.hook
 
@@ -24,7 +24,7 @@ object ShortcutPermissionHooker {
         return false
     }
 
-    private fun hookPermission(targetPackageNameParamIndex: Int, hookExtra: (XC_MethodHook.MethodHookParam.() -> Unit)? = null): HookCallback = {
+    private fun hookPermission(targetPackageNameParamIndex: Int, hookExtra: (MethodHookParam.() -> Unit)? = null): HookCallback = {
         doBefore {
             if (tryHookPermission(args[targetPackageNameParamIndex] as String)) {
                 hookExtra?.invoke(this)

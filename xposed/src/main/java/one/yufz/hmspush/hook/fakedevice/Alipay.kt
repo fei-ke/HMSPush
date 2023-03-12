@@ -1,11 +1,11 @@
 package one.yufz.hmspush.hook.fakedevice
 
-import de.robv.android.xposed.callbacks.XC_LoadPackage
+import one.yufz.xposed.LoadPackageParam
 import one.yufz.xposed.findClass
 import one.yufz.xposed.hook
 
 class Alipay : IFakeDevice {
-    override fun fake(lpparam: XC_LoadPackage.LoadPackageParam): Boolean {
+    override fun fake(lpparam: LoadPackageParam): Boolean {
         lpparam.classLoader.findClass("com.alipay.pushsdk.thirdparty.hw.HuaWeiPushWorker")
             .declaredMethods
             .find { it.returnType == Boolean::class.java }

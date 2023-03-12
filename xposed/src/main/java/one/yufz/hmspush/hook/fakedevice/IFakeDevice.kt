@@ -1,7 +1,8 @@
 package one.yufz.hmspush.hook.fakedevice
 
-import de.robv.android.xposed.callbacks.XC_LoadPackage
+import one.yufz.xposed.LoadPackageParam
+
 
 interface IFakeDevice {
-    fun fake(lpparam: XC_LoadPackage.LoadPackageParam): Boolean
+    fun fake(lpparam: LoadPackageParam): Boolean
 }

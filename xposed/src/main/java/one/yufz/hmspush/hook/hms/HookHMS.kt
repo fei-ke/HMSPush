@@ -7,7 +7,6 @@ import android.database.CursorWindow
 import android.os.Build
 import com.huawei.android.app.NotificationManagerEx
 import dalvik.system.DexClassLoader
-import de.robv.android.xposed.callbacks.XC_LoadPackage
 import one.yufz.hmspush.hook.XLog
 import one.yufz.hmspush.hook.bridge.HookContentProvider
 import one.yufz.hmspush.hook.hms.dummy.HookDummyActivity
@@ -18,7 +17,7 @@ class HookHMS {
         private const val TAG = "HookHMS"
     }
 
-    fun hook(lpparam: XC_LoadPackage.LoadPackageParam) {
+    fun hook(classLoader: ClassLoader) {
         //android.app.PendingIntent.getActivity(android.content.Context, int, android.content.Intent, int)
         PendingIntent::class.java.hookMethod("getActivity", Context::class.java, Int::class.java, Intent::class.java, Int::class.java) {
             doBefore {
@@ -58,12 +57,12 @@ class HookHMS {
             CursorWindow::class.java["sCursorWindowSize"] = 1024 * 1024 * 8
         }
 
-        HookContentProvider().hook(lpparam.classLoader)
-        fakeFingerprint(lpparam)
+        HookContentProvider().hook(classLoader)
+        fakeFingerprint(classLoader)
 
-        HookForegroundService.hook(lpparam.classLoader)
+        HookForegroundService.hook(classLoader)
 
-        HookDummyActivity.hook(lpparam.classLoader)
+        HookDummyActivity.hook(classLoader)
     }
 
     private fun hookLegacyPush(classLoader: ClassLoader) {
@@ -87,8 +86,8 @@ class HookHMS {
         }
     }
 
-    private fun fakeFingerprint(lpparam: XC_LoadPackage.LoadPackageParam) {
-        lpparam.classLoader.findClass("com.huawei.hms.auth.api.CheckFingerprintRequest")
+    private fun fakeFingerprint(classLoader: ClassLoader) {
+        classLoader.findClass("com.huawei.hms.auth.api.CheckFingerprintRequest")
             .hookMethod("parseEntity", String::class.java) {
                 doBefore {
                     if (Prefs.isDisableSignature()) {

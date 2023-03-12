@@ -15,14 +15,14 @@ object FakeHsf {
         classLoader.findClass("com.huawei.hsf.common.api.HsfAvailability").hookMethod("getInstance") {
             doAfter {
                 unhook()
-                hookHsfAvailabilityImpl(result.javaClass)
+                hookHsfAvailabilityImpl(result!!.javaClass)
             }
         }
 
         classLoader.findClass("com.huawei.hsf.common.api.HsfApi").hookAllMethods("newInstance") {
             doAfter {
                 unhook()
-                hookHsfApiImpl(result.javaClass)
+                hookHsfApiImpl(result!!.javaClass)
             }
         }
     }

@@ -3,11 +3,8 @@ package one.yufz.xposed
 import android.app.Application
 import android.content.Context
 import android.content.ContextWrapper
-import android.util.Log
 import dalvik.system.BaseDexClassLoader
-import de.robv.android.xposed.XC_MethodHook.Unhook
 import one.yufz.hmspush.common.doOnce
-import one.yufz.hmspush.hook.XLog
 
 private const val TAG = "AndroidHookUtils"
 

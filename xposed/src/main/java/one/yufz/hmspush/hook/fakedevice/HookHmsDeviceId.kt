@@ -1,8 +1,8 @@
 package one.yufz.hmspush.hook.fakedevice
 
 import android.content.Context
-import de.robv.android.xposed.callbacks.XC_LoadPackage
 import one.yufz.hmspush.hook.XLog
+import one.yufz.xposed.LoadPackageParam
 import one.yufz.xposed.findClass
 import one.yufz.xposed.hookMethod
 import one.yufz.xposed.onDexClassLoaderLoaded
@@ -10,7 +10,7 @@ import one.yufz.xposed.onDexClassLoaderLoaded
 object HookHmsDeviceId {
     private const val TAG = "HookHmsDeviceId"
 
-    fun hook(lpparam: XC_LoadPackage.LoadPackageParam) {
+    fun hook(lpparam: LoadPackageParam) {
         XLog.d(TAG, "hook() called with: processName = ${lpparam.processName}")
 
         if (tryHookOaid(lpparam.classLoader)) {

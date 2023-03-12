@@ -1,8 +1,8 @@
 package one.yufz.hmspush.hook.fakedevice
 
-import de.robv.android.xposed.callbacks.XC_LoadPackage
 import one.yufz.hmspush.common.BridgeWrap
 import one.yufz.hmspush.hook.XLog
+import one.yufz.xposed.LoadPackageParam
 import one.yufz.xposed.onApplicationAttachContext
 
 object FakeDevice {
@@ -21,7 +21,7 @@ object FakeDevice {
         "com.ss.android.ugc.aweme" to arrayOf(DouYin::class.java),
     )
 
-    fun fake(lpparam: XC_LoadPackage.LoadPackageParam) {
+    fun fake(lpparam: LoadPackageParam) {
         XLog.d(TAG, "fake() called with: packageName = ${lpparam.packageName}, processName = ${lpparam.processName}")
         if (lpparam.packageName == "com.google.android.webview") {
             XLog.d(TAG, "fake() called, ignore ${lpparam.packageName}")
@@ -34,7 +34,7 @@ object FakeDevice {
         fakeOthers(lpparam)
     }
 
-    private fun fakeOthers(lpparam: XC_LoadPackage.LoadPackageParam) {
+    private fun fakeOthers(lpparam: LoadPackageParam) {
         onApplicationAttachContext {
             XLog.d(TAG, "${this}.attachBaseContext() called")
             try {

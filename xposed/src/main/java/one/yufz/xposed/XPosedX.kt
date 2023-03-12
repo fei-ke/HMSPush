@@ -1,136 +1,78 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package one.yufz.xposed
 
 
-import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XposedBridge
-import de.robv.android.xposed.XposedHelpers
-import de.robv.android.xposed.XposedHelpers.InvocationTargetError
 import java.lang.reflect.Constructor
-import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 
+private val libXposed: Boolean = false
+
+val xposed: Xposed = if (libXposed) LibXposed() else LegacyXposed()
+
 fun Class<*>.findMethodExact(methodName: String, vararg parameterTypes: Class<*>): Method =
-    XposedHelpers.findMethodExact(this, methodName, *parameterTypes)
+    xposed.findMethodExact(this, methodName, parameterTypes as Array<Class<*>>)
 
 fun Class<*>.findMethodsByExactParameters(returnType: Class<*>, vararg parameterTypes: Class<*>): Array<Method> =
-    XposedHelpers.findMethodsByExactParameters(this, returnType, *parameterTypes)
+    xposed.findMethodsByExactParameters(this, returnType, parameterTypes as Array<Class<*>>)
 
-fun Class<*>.findConstructorExact(vararg parameterTypes: Any?): Constructor<*> =
-    XposedHelpers.findConstructorExact(this, *parameterTypes)
+fun Class<*>.findConstructorExact(vararg parameterTypes: Any): Constructor<*> =
+    xposed.findConstructorExact(this, parameterTypes as Array<Any>)
 
 fun Any.callMethod(methodName: String, vararg args: Any): Any? =
-    try {
-        XposedHelpers.callMethod(this, methodName, *args)
-    } catch (e: InvocationTargetError) {
-        throw InvocationTargetException(e)
-    }
+    xposed.callMethod(this, methodName, args as Array<Any>)
 
-fun Any.callMethod(methodName: String, parameterTypes: Array<Class<*>>, vararg args: Any): Any? =
-    XposedHelpers.callMethod(this, methodName, parameterTypes, *args)
+fun Any.callMethod(methodName: String, parameterTypes: Array<Class<*>>, vararg args: Any?): Any? =
+    xposed.callMethod(this, methodName, parameterTypes, args as Array<Any?>)
 
 fun Class<*>.callStaticMethod(methodName: String, vararg args: Any): Any? =
-    XposedHelpers.callStaticMethod(this, methodName, *args)
+    xposed.callStaticMethod(this, methodName, args as Array<Any>)
 
 fun Class<*>.callStaticMethod(
     methodName: String,
     parameterTypes: Array<Class<*>>,
-    vararg args: Any
-): Any? = XposedHelpers.callStaticMethod(this, methodName, parameterTypes, *args)
+    vararg args: Any?
+): Any? = xposed.callStaticMethod(this, methodName, parameterTypes, args as Array<Any?>)
 
-typealias HookAction = XC_MethodHook.MethodHookParam.() -> Unit
-typealias ReplaceAction = XC_MethodHook.MethodHookParam.() -> Any?
+typealias HookAction = MethodHookParam.() -> Unit
+typealias ReplaceAction = MethodHookParam.() -> Any?
 typealias HookCallback = HookContext.() -> Unit
 
-fun Class<*>.hookMethod(methodName: String, vararg parameterTypes: Class<*>, callback: HookCallback) =
-    XposedHelpers.findAndHookMethod(this, methodName, *parameterTypes, MethodHook(callback))
+fun Class<*>.hookMethod(methodName: String, vararg parameterTypes: Class<*>, callback: HookCallback): Unhook =
+    xposed.hookMethod(this, methodName, arrayOf(*parameterTypes), callback)
 
-fun Class<*>.hookConstructor(vararg parameterTypes: Class<*>, callback: HookCallback) =
-    XposedHelpers.findAndHookConstructor(this, *parameterTypes, MethodHook(callback))
+fun Class<*>.hookConstructor(vararg parameterTypes: Class<*>, callback: HookCallback): Unhook =
+    xposed.hookConstructor(this, parameterTypes as Array<Class<*>>, callback)
 
-fun Class<*>.hookAllConstructor(callback: HookCallback) =
-    XposedBridge.hookAllConstructors(this, MethodHook(callback))
+fun Class<*>.hookAllConstructor(callback: HookCallback): Set<Unhook> =
+    xposed.hookAllConstructor(this, callback)
 
-fun hookMethod(className: String, classLoader: ClassLoader, methodName: String, vararg parameterTypes: Class<*>, callback: HookCallback) =
-    XposedHelpers.findAndHookMethod(className, classLoader, methodName, *parameterTypes, MethodHook(callback))
+fun hookMethod(className: String, classLoader: ClassLoader, methodName: String, vararg parameterTypes: Class<*>, callback: HookCallback): Unhook =
+    xposed.hookMethod(className, classLoader, methodName, parameterTypes as Array<Class<*>>, callback)
 
-fun hookConstructor(className: String, classLoader: ClassLoader, methodName: String, vararg parameterTypes: Class<*>, callback: HookCallback) =
-    XposedHelpers.findAndHookConstructor(className, classLoader, methodName, *parameterTypes, MethodHook(callback))
+fun hookConstructor(className: String, classLoader: ClassLoader, methodName: String, vararg parameterTypes: Class<*>, callback: HookCallback): Unhook =
+    xposed.hookConstructor(className, classLoader, methodName, parameterTypes as Array<Class<*>>, callback)
 
-fun Method.hook(callback: HookCallback) = XposedBridge.hookMethod(this, MethodHook(callback))
+fun Method.hook(callback: HookCallback): Unhook =
+    xposed.hookMethod(this, callback)
 
-fun Class<*>.hookAllMethods(methodName: String, callback: HookCallback) =
-    XposedBridge.hookAllMethods(this, methodName, MethodHook(callback))
+fun Class<*>.hookAllMethods(methodName: String, callback: HookCallback): Set<Unhook> =
+    xposed.hookAllMethods(this, methodName, callback)
 
-class MethodHook(callback: HookCallback) : XC_MethodHook() {
-    private val context = HookContext(this).apply(callback)
 
-    override fun beforeHookedMethod(param: MethodHookParam) {
-        super.beforeHookedMethod(param)
+fun Class<*>.newInstance(vararg args: Any): Any =
+    xposed.newInstance(this, args as Array<Any>)
 
-        context.replaceAction?.let {
-            try {
-                param.result = it.invoke(param)
-            } catch (t: Throwable) {
-                param.throwable = t
-            }
-            return
-        }
-
-        context.beforeAction?.invoke(param)
-    }
-
-    override fun afterHookedMethod(param: MethodHookParam) {
-        super.afterHookedMethod(param)
-        context.afterAction?.invoke(param)
-    }
-
-}
-
-class HookContext(private val methodHook: MethodHook) {
-    internal var beforeAction: HookAction? = null
-        private set
-
-    internal var afterAction: HookAction? = null
-        private set
-
-    internal var replaceAction: ReplaceAction? = null
-        private set
-
-    fun doBefore(action: HookAction) {
-        this.beforeAction = action
-    }
-
-    fun doAfter(action: HookAction) {
-        this.afterAction = action
-    }
-
-    fun replace(action: ReplaceAction) {
-        this.replaceAction = action
-    }
-
-    fun XC_MethodHook.MethodHookParam.unhook() {
-        XposedBridge.unhookMethod(this.method, methodHook)
-    }
-}
-
-fun Class<*>.newInstance(vararg args: Any): Any = XposedHelpers.newInstance(this, *args)
-
-fun Class<*>.newInstance(parameterTypes: Array<Class<*>>, vararg args: Any): Any =
-    XposedHelpers.newInstance(this, parameterTypes, *args)
+fun Class<*>.newInstance(parameterTypes: Array<Class<*>>, vararg args: Any?): Any =
+    xposed.newInstance(this, parameterTypes, args as Array<Any?>)
 
 @Throws(ClassNotFoundException::class)
-fun findClass(className: String): Class<*> = try {
-    XposedHelpers.findClass(className, null)
-} catch (e: XposedHelpers.ClassNotFoundError) {
-    throw ClassNotFoundException(e.message, e.cause)
-}
+fun findClass(className: String): Class<*> =
+    xposed.findClass(className, null)
 
 @Throws(ClassNotFoundException::class)
-fun ClassLoader.findClass(className: String): Class<*> = try {
-    XposedHelpers.findClass(className, this)
-} catch (e: XposedHelpers.ClassNotFoundError) {
-    throw ClassNotFoundException(e.message, e.cause)
-}
+fun ClassLoader.findClass(className: String): Class<*> =
+    xposed.findClass(className, this)
 
 inline fun <reified T> Any.getOrNull(name: String): T? = getField(name, T::class.java)
 
@@ -176,15 +118,16 @@ fun <T> Any.setField(name: String, value: T?, fieldClass: Class<T>) {
     }
 }
 
-private fun findField(clazz: Class<*>, fieldName: String) = XposedHelpers.findField(clazz, fieldName)
+private fun findField(clazz: Class<*>, fieldName: String) =
+    xposed.findField(clazz, fieldName)
 
 fun Any.setAdditionalInstanceField(name: String, value: Any?): Any? =
-    XposedHelpers.setAdditionalInstanceField(this, name, value)
+    xposed.setAdditionalInstanceField(this, name, value)
 
 fun Any.getAdditionalInstanceField(name: String): Any? =
-    XposedHelpers.getAdditionalInstanceField(this, name)
+    xposed.getAdditionalInstanceField(this, name)
 
 fun Any.removeAdditionalInstanceField(name: String): Any? =
-    XposedHelpers.removeAdditionalInstanceField(this, name)
+    xposed.removeAdditionalInstanceField(this, name)
 
-fun log(message: String) = XposedBridge.log(message)
+fun log(message: String) = xposed.log(message)

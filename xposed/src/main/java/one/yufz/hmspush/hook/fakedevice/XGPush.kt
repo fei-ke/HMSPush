@@ -1,7 +1,7 @@
 package one.yufz.hmspush.hook.fakedevice
 
-import de.robv.android.xposed.callbacks.XC_LoadPackage
 import one.yufz.hmspush.hook.XLog
+import one.yufz.xposed.LoadPackageParam
 import one.yufz.xposed.findClass
 import one.yufz.xposed.hook
 import java.lang.reflect.Method
@@ -11,7 +11,7 @@ open class XGPush : IFakeDevice {
         private const val TAG = "FakeForXGPush"
     }
 
-    override fun fake(lpparam: XC_LoadPackage.LoadPackageParam): Boolean {
+    override fun fake(lpparam: LoadPackageParam): Boolean {
         val classLoader = lpparam.classLoader
 
         XLog.d(TAG, "fake() called with: classLoader = $classLoader")

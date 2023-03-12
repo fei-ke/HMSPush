@@ -4,10 +4,10 @@ import android.app.AndroidAppHelper
 import android.app.Notification
 import android.os.Binder
 import android.os.Build
-import de.robv.android.xposed.XC_MethodHook
 import one.yufz.hmspush.common.ANDROID_PACKAGE_NAME
 import one.yufz.hmspush.common.HMS_PACKAGE_NAME
 import one.yufz.xposed.HookCallback
+import one.yufz.xposed.MethodHookParam
 import one.yufz.xposed.findClass
 import one.yufz.xposed.findMethodExact
 import one.yufz.xposed.hook
@@ -27,7 +27,7 @@ object NmsPermissionHooker {
         return false
     }
 
-    private fun hookPermission(targetPackageNameParamIndex: Int, hookExtra: (XC_MethodHook.MethodHookParam.() -> Unit)? = null): HookCallback = {
+    private fun hookPermission(targetPackageNameParamIndex: Int, hookExtra: (MethodHookParam.() -> Unit)? = null): HookCallback = {
         doBefore {
             if (tryHookPermission(args[targetPackageNameParamIndex] as String)) {
                 hookExtra?.invoke(this)
