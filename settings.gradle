@@ -18,3 +18,9 @@ rootProject.name = "HMSPush"
 include ':app'
 include ':xposed'
 include ':common'
+
+include ':interface'
+project(":interface").projectDir = file("libxposed-service/interface")
+
+include ':service'
+project(":service").projectDir = file("libxposed-service/service")

@@ -1,0 +1,3 @@
+[submodule "libxposed-service"]
+	path = libxposed-service
+	url = git@github.com:libxposed/service.git
