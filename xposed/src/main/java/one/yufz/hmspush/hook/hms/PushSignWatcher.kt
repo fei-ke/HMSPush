@@ -1,11 +1,11 @@
 package one.yufz.hmspush.hook.hms
 
-import android.app.AndroidAppHelper
 import android.content.Context
 import android.content.SharedPreferences
 import one.yufz.hmspush.common.BridgeUri
 import one.yufz.hmspush.common.model.PushSignModel
 import one.yufz.hmspush.hook.XLog
+import one.yufz.xposed.AndroidAppHelper
 
 
 object PushSignWatcher : SharedPreferences.OnSharedPreferenceChangeListener {

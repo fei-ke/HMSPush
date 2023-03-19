@@ -1,10 +1,15 @@
 package one.yufz.xposed
 
+import android.app.Application
 import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 
 class LibXposed : Xposed {
+    override fun currentApplication(): Application {
+        TODO("Not yet implemented")
+    }
+
     override fun findMethodExact(clazz: Class<*>, methodName: String, parameterTypes: Array<Class<*>>): Method {
         TODO("Not yet implemented")
     }

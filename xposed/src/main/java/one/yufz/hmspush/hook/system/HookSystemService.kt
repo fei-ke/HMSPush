@@ -1,11 +1,11 @@
 package one.yufz.hmspush.hook.system
 
-import android.app.AndroidAppHelper
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Binder
 import one.yufz.hmspush.common.IS_SYSTEM_HOOK_READY
 import one.yufz.hmspush.hook.XLog
+import one.yufz.xposed.AndroidAppHelper
 import one.yufz.xposed.callMethod
 import one.yufz.xposed.findClass
 import one.yufz.xposed.get

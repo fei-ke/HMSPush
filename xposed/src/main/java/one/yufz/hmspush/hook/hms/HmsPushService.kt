@@ -1,6 +1,5 @@
 package one.yufz.hmspush.hook.hms
 
-import android.app.AndroidAppHelper
 import android.os.Handler
 import android.os.Looper
 import kotlinx.coroutines.runBlocking
@@ -14,6 +13,7 @@ import one.yufz.hmspush.common.model.PrefsModel
 import one.yufz.hmspush.common.model.PushHistoryModel
 import one.yufz.hmspush.common.model.PushSignModel
 import one.yufz.hmspush.hook.hms.icon.IconManager
+import one.yufz.xposed.AndroidAppHelper
 
 object HmsPushService : HmsPushInterface.Stub() {
     private const val TAG = "HmsPushService"

@@ -1,10 +1,10 @@
 package one.yufz.hmspush.hook.hms
 
-import android.app.AndroidAppHelper
 import android.app.Notification
 import android.app.NotificationChannel
 import com.huawei.android.app.NotificationManagerEx
 import one.yufz.hmspush.hook.XLog
+import one.yufz.xposed.AndroidAppHelper
 import one.yufz.xposed.findClass
 import one.yufz.xposed.hookMethod
 

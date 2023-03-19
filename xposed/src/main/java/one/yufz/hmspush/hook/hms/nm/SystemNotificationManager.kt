@@ -1,6 +1,5 @@
 package one.yufz.hmspush.hook.hms.nm
 
-import android.app.AndroidAppHelper
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -8,6 +7,7 @@ import android.content.Context
 import android.os.Build
 import android.service.notification.StatusBarNotification
 import one.yufz.hmspush.common.ANDROID_PACKAGE_NAME
+import one.yufz.xposed.AndroidAppHelper
 import one.yufz.xposed.callMethod
 import one.yufz.xposed.callStaticMethod
 import one.yufz.xposed.findClass

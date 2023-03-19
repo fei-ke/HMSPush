@@ -2,7 +2,7 @@ package one.yufz.hmspush.hook.hms.dummy
 
 import android.app.Activity
 import android.app.ActivityManager
-import android.app.AndroidAppHelper
+import one.yufz.xposed.AndroidAppHelper
 import android.app.Application
 import android.os.Bundle
 import one.yufz.hmspush.common.HMS_CORE_DUMMY_ACTIVITY

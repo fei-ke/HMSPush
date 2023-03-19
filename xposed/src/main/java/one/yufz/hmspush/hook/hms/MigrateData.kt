@@ -1,10 +1,10 @@
 package one.yufz.hmspush.hook.hms
 
-import android.app.AndroidAppHelper
 import android.content.Context
 import one.yufz.hmspush.common.HMSPUSH_PREF_NAME
 import one.yufz.hmspush.common.content.putValue
 import one.yufz.hmspush.hook.XLog
+import one.yufz.xposed.AndroidAppHelper
 import java.io.File
 
 private const val TAG = "MigrateData"

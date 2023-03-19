@@ -1,9 +1,9 @@
 package one.yufz.hmspush.hook.system
 
-import android.app.AndroidAppHelper
 import android.content.pm.ShortcutInfo
 import android.os.Binder
 import one.yufz.hmspush.common.HMS_PACKAGE_NAME
+import one.yufz.xposed.AndroidAppHelper
 import one.yufz.xposed.HookCallback
 import one.yufz.xposed.MethodHookParam
 import one.yufz.xposed.findMethodExact

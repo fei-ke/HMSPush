@@ -1,5 +1,6 @@
 package one.yufz.xposed
 
+import android.app.Application
 import android.content.pm.ApplicationInfo
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge
@@ -12,6 +13,10 @@ import java.lang.reflect.Member
 import java.lang.reflect.Method
 
 class LegacyXposed : Xposed {
+    override fun currentApplication(): Application {
+        return android.app.AndroidAppHelper.currentApplication()
+    }
+
     override fun findMethodExact(clazz: Class<*>, methodName: String, parameterTypes: Array<Class<*>>): Method {
         return XposedHelpers.findMethodExact(clazz, methodName, *parameterTypes)
     }

@@ -1,5 +1,6 @@
 package one.yufz.xposed
 
+import android.app.Application
 import android.content.pm.ApplicationInfo
 import java.lang.reflect.Constructor
 import java.lang.reflect.Field
@@ -66,6 +67,7 @@ class HookContext {
 }
 
 interface Xposed {
+    fun currentApplication(): Application
     fun findMethodExact(clazz: Class<*>, methodName: String, parameterTypes: Array<Class<*>>): Method
     fun findMethodsByExactParameters(clazz: Class<*>, returnType: Class<*>, parameterTypes: Array<Class<*>>): Array<Method>
     fun findConstructorExact(clazz: Class<*>, parameterTypes: Array<Any>): Constructor<*>

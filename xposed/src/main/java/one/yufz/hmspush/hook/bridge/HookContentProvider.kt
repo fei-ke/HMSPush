@@ -1,6 +1,6 @@
 package one.yufz.hmspush.hook.bridge
 
-import android.app.AndroidAppHelper
+import one.yufz.xposed.AndroidAppHelper
 import android.net.Uri
 import android.os.Binder
 import one.yufz.hmspush.common.APPLICATION_ID
