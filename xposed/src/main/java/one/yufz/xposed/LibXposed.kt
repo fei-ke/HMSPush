@@ -101,21 +101,10 @@ class LibXposed : Xposed {
     }
 }
 
-
-fun XposedModuleInterface.PackageLoadedParam.toLoadPackageParam(): LoadPackageParam {
-    return LibXposedLoadPackageParam(this)
-}
-
-class LibXposedLoadPackageParam(val origin: XposedModuleInterface.PackageLoadedParam) : LoadPackageParam {
-    override val packageName: String
-        get() = origin.packageName
-    override val processName: String
-        get() = origin.appInfo.processName
-    override val appInfo: ApplicationInfo
-        get() = origin.appInfo
-    override val classLoader: ClassLoader
-        get() = origin.classLoader
+class LibXposedLoadPackageParam(
+    override val packageName: String,
+    override val processName: String,
+    override val appInfo: ApplicationInfo,
+    override val classLoader: ClassLoader,
     override val isFirstPackage: Boolean
-        get() = origin.isFirstPackage
-
-}
+) : LoadPackageParam

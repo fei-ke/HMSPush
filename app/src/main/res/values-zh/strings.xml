@@ -10,6 +10,8 @@
     <string name="menu_app_info">应用信息</string>
     <string name="menu_search">搜索</string>
     <string name="menu_unregister">取消注册</string>
+    <string name="menu_activate_scope">激活作用域</string>
+    <string name="menu_deactivate_scope">取消作用域</string>
     <string name="menu_settings">设置</string>
     <string name="reboot_hms_core">重启 HMS Core</string>
     <string name="rebooting_hms_core">正在尝试重启 HMS Core</string>
@@ -21,6 +23,8 @@
 
     <string name="unregistered">未注册</string>
     <string name="registered">已注册</string>
+    <string name="activated">已激活</string>
+    <string name="unactivated">未激活</string>
     <string name="latest_push">&#160;&#160;•&#160;&#160;最近推送：%s</string>
 
     <string name="dialog_confirm_unregister">确定取消注册</string>

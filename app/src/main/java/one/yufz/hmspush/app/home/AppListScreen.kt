@@ -11,15 +11,11 @@ import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.ime
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
-import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -55,6 +51,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import one.yufz.hmspush.BuildConfig
 import one.yufz.hmspush.R
+import one.yufz.hmspush.app.XposedServiceManager
 import one.yufz.hmspush.app.theme.AppTheme
 import one.yufz.hmspush.app.theme.customColors
 import one.yufz.hmspush.common.HMS_PACKAGE_NAME
@@ -154,7 +151,17 @@ private fun loadAppIcon(context: Context, packageName: String): MutableState<Dra
 
 @Composable
 private fun AppStatus(info: AppInfo) {
-    val registerInfo = if (info.registered) stringResource(R.string.registered) else stringResource(R.string.unregistered)
+    val registerInfo = if (info.registered) {
+        stringResource(R.string.registered)
+    } else {
+        val activeState = if (info.scopeActivated)
+            stringResource(R.string.activated)
+        else
+            stringResource(R.string.unactivated)
+
+        activeState + " • " + stringResource(id = R.string.unregistered)
+    }
+
     val lastPushInfo = info.lastPushTime?.let { stringResource(R.string.latest_push, DateUtils.getRelativeTimeSpanString(it)) } ?: ""
     Text(
         text = registerInfo + lastPushInfo,
@@ -201,7 +208,24 @@ private fun MoreDropdownMenu(expanded: Boolean, info: AppInfo, onDismissRequest:
                 onDismissRequest()
             }
         )
-
+        DropdownMenuItem(
+            text = {
+                Text(
+                    text = if (info.scopeActivated)
+                        stringResource(id = R.string.menu_deactivate_scope)
+                    else
+                        stringResource(id = R.string.menu_activate_scope)
+                )
+            },
+            onClick = {
+                if (info.scopeActivated) {
+                    XposedServiceManager.removeScope(info.packageName)
+                } else {
+                    XposedServiceManager.requestScope(info.packageName)
+                }
+                onDismissRequest()
+            }
+        )
         //Unregister
         if (info.registered) {
             DropdownMenuItem(

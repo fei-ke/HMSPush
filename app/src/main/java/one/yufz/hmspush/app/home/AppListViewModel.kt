@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import one.yufz.hmspush.app.HmsPushClient
+import one.yufz.hmspush.app.XposedServiceManager
 import one.yufz.hmspush.app.util.registerPackageChangeFlow
 import one.yufz.hmspush.common.HMS_CORE_PUSH_ACTION_NOTIFY_MSG
 import one.yufz.hmspush.common.HMS_CORE_PUSH_ACTION_REGISTRATION
@@ -32,7 +33,10 @@ class AppListViewModel(val context: Application) : AndroidViewModel(context) {
     private val registeredListFlow = HmsPushClient.getPushSignFlow()
 
     private val historyListFlow = HmsPushClient.getPushHistoryFlow()
-    val appListFlow: Flow<List<AppInfo>> = combine(supportedAppListFlow, registeredListFlow, historyListFlow, ::mergeSource)
+
+    private val scopeListFlow = XposedServiceManager.scopeListFlow()
+
+    val appListFlow: Flow<List<AppInfo>> = combine(supportedAppListFlow, registeredListFlow, historyListFlow, scopeListFlow, ::mergeSource)
         .combine(filterKeywords, ::filterAppList)
 
     init {
@@ -75,10 +79,12 @@ class AppListViewModel(val context: Application) : AndroidViewModel(context) {
         }
     }
 
-    private fun mergeSource(appList: List<String>, registered: List<PushSignModel>, history: List<PushHistoryModel>): List<AppInfo> {
+    private fun mergeSource(appList: List<String>, registered: List<PushSignModel>, history: List<PushHistoryModel>, scopeList: List<String>): List<AppInfo> {
         val pm = context.packageManager
         val registeredSet = registered.map { it.packageName }
         val historyMap = history.associateBy { it.packageName }
+        val scopeSet = scopeList.toSet()
+
         return appList.map { packageName ->
             AppInfo(
                 packageName = packageName,
@@ -88,7 +94,8 @@ class AppListViewModel(val context: Application) : AndroidViewModel(context) {
                     packageName
                 },
                 registered = registeredSet.contains(packageName),
-                lastPushTime = historyMap[packageName]?.pushTime
+                lastPushTime = historyMap[packageName]?.pushTime,
+                scopeActivated = scopeSet.contains(packageName)
             )
         }
             .sortedWith(compareBy({ !it.registered }, { Long.MAX_VALUE - (it.lastPushTime ?: 0L) }))
