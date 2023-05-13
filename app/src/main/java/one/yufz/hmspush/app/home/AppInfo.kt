@@ -4,5 +4,6 @@ data class AppInfo(
     val packageName: String,
     val name: String,
     var registered: Boolean = false,
-    val lastPushTime: Long? = null
+    val lastPushTime: Long? = null,
+    val useZygiskFake: Boolean = false,
 )
