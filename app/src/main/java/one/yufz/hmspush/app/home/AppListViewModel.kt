@@ -1,22 +1,17 @@
 package one.yufz.hmspush.app.home
 
 import android.app.Application
-import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import one.yufz.hmspush.app.HmsPushClient
-import one.yufz.hmspush.app.util.registerPackageChangeFlow
-import one.yufz.hmspush.common.HMS_CORE_PUSH_ACTION_NOTIFY_MSG
-import one.yufz.hmspush.common.HMS_CORE_PUSH_ACTION_REGISTRATION
+import one.yufz.hmspush.app.fake.ConfigMap
+import one.yufz.hmspush.app.fake.FakeDeviceConfig
+import one.yufz.hmspush.app.hms.SupportHmsAppList
 import one.yufz.hmspush.common.model.PushHistoryModel
 import one.yufz.hmspush.common.model.PushSignModel
 
@@ -27,45 +22,21 @@ class AppListViewModel(val context: Application) : AndroidViewModel(context) {
 
     private val filterKeywords = MutableStateFlow<String>("")
 
-    private val supportedAppListFlow: MutableSharedFlow<List<String>> = MutableStateFlow(emptyList())
+    private val supportedAppList = SupportHmsAppList(context)
 
     private val registeredListFlow = HmsPushClient.getPushSignFlow()
 
     private val historyListFlow = HmsPushClient.getPushHistoryFlow()
-    val appListFlow: Flow<List<AppInfo>> = combine(supportedAppListFlow, registeredListFlow, historyListFlow, ::mergeSource)
+
+    val appListFlow: Flow<List<AppInfo>> = combine(supportedAppList.appListFlow, registeredListFlow, historyListFlow, FakeDeviceConfig.configMapFlow, ::mergeSource)
         .combine(filterKeywords, ::filterAppList)
 
     init {
         viewModelScope.launch {
-            supportedAppListFlow.emit(loadSupportedAppList())
-            context.registerPackageChangeFlow().collect {
-                supportedAppListFlow.emit(loadSupportedAppList())
-            }
+            FakeDeviceConfig.loadConfig()
+            supportedAppList.init()
         }
     }
-
-    private suspend fun loadSupportedAppList(): List<String> {
-        return withContext(Dispatchers.Default) {
-            val queryByReceiver = async(Dispatchers.IO) {
-                val intent = Intent(HMS_CORE_PUSH_ACTION_REGISTRATION)
-                context.packageManager.queryBroadcastReceivers(
-                    intent,
-                    PackageManager.MATCH_DISABLED_UNTIL_USED_COMPONENTS
-                            or PackageManager.MATCH_DISABLED_COMPONENTS
-                ).map { it.activityInfo.packageName }
-            }
-            val queryByService = async(Dispatchers.IO) {
-                val intent = Intent(HMS_CORE_PUSH_ACTION_NOTIFY_MSG)
-                context.packageManager.queryIntentServices(
-                    intent,
-                    PackageManager.MATCH_DISABLED_UNTIL_USED_COMPONENTS
-                            or PackageManager.MATCH_DISABLED_COMPONENTS
-                ).map { it.serviceInfo.packageName }
-            }
-            (queryByReceiver.await() + queryByService.await()).distinct()
-        }
-    }
-
 
     private fun filterAppList(list: List<AppInfo>, keywords: String): List<AppInfo> {
         if (keywords.isEmpty()) return list
@@ -75,7 +46,7 @@ class AppListViewModel(val context: Application) : AndroidViewModel(context) {
         }
     }
 
-    private fun mergeSource(appList: List<String>, registered: List<PushSignModel>, history: List<PushHistoryModel>): List<AppInfo> {
+    private fun mergeSource(appList: List<String>, registered: List<PushSignModel>, history: List<PushHistoryModel>, configMap: ConfigMap): List<AppInfo> {
         val pm = context.packageManager
         val registeredSet = registered.map { it.packageName }
         val historyMap = history.associateBy { it.packageName }
@@ -88,7 +59,8 @@ class AppListViewModel(val context: Application) : AndroidViewModel(context) {
                     packageName
                 },
                 registered = registeredSet.contains(packageName),
-                lastPushTime = historyMap[packageName]?.pushTime
+                lastPushTime = historyMap[packageName]?.pushTime,
+                useZygiskFake = configMap.contains(packageName)
             )
         }
             .sortedWith(compareBy({ !it.registered }, { Long.MAX_VALUE - (it.lastPushTime ?: 0L) }))
@@ -102,5 +74,17 @@ class AppListViewModel(val context: Application) : AndroidViewModel(context) {
 
     fun unregisterPush(packageName: String) {
         HmsPushClient.unregisterPush(packageName)
+    }
+
+    fun enableZygiskFake(packageName: String) {
+        viewModelScope.launch {
+            FakeDeviceConfig.update(packageName, emptyList())
+        }
+    }
+
+    fun disableZygiskFake(packageName: String) {
+        viewModelScope.launch {
+            FakeDeviceConfig.deleteConfig(packageName)
+        }
     }
 }
