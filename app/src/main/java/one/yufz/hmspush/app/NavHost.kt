@@ -11,11 +11,16 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import one.yufz.hmspush.app.fake.FakeDeviceScreen
 import one.yufz.hmspush.app.home.HomeScreen
 import one.yufz.hmspush.app.icon.IconScreen
 import one.yufz.hmspush.app.settings.SettingsScreen
 
 val LocalNavHostController = staticCompositionLocalOf<NavHostController> { error("shouldn't happen") }
+
+object Routers {
+    const val FAKE_DEVICE = "fake_device"
+}
 
 @Composable
 fun AppNavHost(
@@ -34,6 +39,7 @@ fun AppNavHost(
             composable("home") { HomeScreen() }
             composable("settings") { SettingsScreen() }
             composable("icon") { IconScreen() }
+            composable(Routers.FAKE_DEVICE) { FakeDeviceScreen() }
         }
     }
 }
