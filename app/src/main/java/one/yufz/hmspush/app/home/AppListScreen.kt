@@ -1,9 +1,13 @@
+@file:OptIn(ExperimentalAnimationApi::class)
+
 package one.yufz.hmspush.app.home
 
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.text.format.DateUtils
 import android.widget.Toast
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,15 +16,11 @@ import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.ime
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
-import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -34,6 +34,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -53,15 +54,17 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import one.yufz.hmspush.BuildConfig
 import one.yufz.hmspush.R
 import one.yufz.hmspush.app.HmsPushClient
+import one.yufz.hmspush.app.fake.FakeDeviceConfig
 import one.yufz.hmspush.app.theme.AppTheme
 import one.yufz.hmspush.app.theme.customColors
 import one.yufz.hmspush.common.HMS_PACKAGE_NAME
 import one.yufz.hmspush.common.HmsCoreUtil
-import one.yufz.hmspush.hook.hms.HmsPushService
+import java.lang.StringBuilder
 
 @Composable
 fun AppListScreen(searchText: String, appListViewModel: AppListViewModel = viewModel()) {
@@ -143,6 +146,20 @@ private fun AppCard(info: AppInfo) {
 }
 
 @Composable
+private fun FakeDeviceStatus(app: AppInfo) {
+    Row {
+        Text(
+            text = "Zygisk",
+            color = MaterialTheme.colorScheme.contentColorFor(MaterialTheme.colorScheme.surfaceVariant),
+            style = MaterialTheme.typography.labelSmall,
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.surfaceVariant, MaterialTheme.shapes.small)
+                .padding(horizontal = 8.dp, vertical = 4.dp)
+        )
+    }
+}
+
+@Composable
 private fun loadAppIcon(context: Context, packageName: String): MutableState<Drawable?> {
     val drawable = remember { mutableStateOf<Drawable?>(null) }
 
@@ -157,10 +174,24 @@ private fun loadAppIcon(context: Context, packageName: String): MutableState<Dra
 
 @Composable
 private fun AppStatus(info: AppInfo) {
+    val divider = " • "
+    val builder = StringBuilder()
+
     val registerInfo = if (info.registered) stringResource(R.string.registered) else stringResource(R.string.unregistered)
-    val lastPushInfo = info.lastPushTime?.let { stringResource(R.string.latest_push, DateUtils.getRelativeTimeSpanString(it)) } ?: ""
+    builder.append(registerInfo)
+
+    if (info.lastPushTime != null) {
+        val lastPushInfo = stringResource(R.string.latest_push, DateUtils.getRelativeTimeSpanString(info.lastPushTime))
+        builder.append(divider)
+        builder.append(lastPushInfo)
+    }
+
+    if (info.useZygiskFake) {
+        builder.append(divider)
+        builder.append("Zygisk")
+    }
     Text(
-        text = registerInfo + lastPushInfo,
+        text = builder.toString(),
         color = if (info.registered) MaterialTheme.customColors.active else Color.Unspecified,
         fontSize = 13.sp,
         maxLines = 1,
@@ -215,7 +246,31 @@ private fun MoreDropdownMenu(expanded: Boolean, info: AppInfo, onDismissRequest:
                 onDismissRequest()
             }
         )
-
+        if (info.useZygiskFake) {
+            DropdownMenuItem(
+                text = {
+                    Text(text = stringResource(R.string.menu_enable_zygisk_fake))
+                },
+                onClick = {
+                    onDismissRequest()
+                    GlobalScope.launch {
+                        FakeDeviceConfig.deleteConfig(info.packageName)
+                    }
+                }
+            )
+        } else {
+            DropdownMenuItem(
+                text = {
+                    Text(text = stringResource(R.string.menu_disable_zygisk_fake))
+                },
+                onClick = {
+                    onDismissRequest()
+                    GlobalScope.launch {
+                        FakeDeviceConfig.update(info.packageName, emptyList())
+                    }
+                }
+            )
+        }
         //Unregister
         if (info.registered) {
             DropdownMenuItem(

@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -30,7 +29,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -51,6 +49,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import one.yufz.hmspush.R
 import one.yufz.hmspush.app.HmsPushClient
 import one.yufz.hmspush.app.LocalNavHostController
+import one.yufz.hmspush.app.Routers
 import one.yufz.hmspush.app.widget.LifecycleAware
 import one.yufz.hmspush.app.widget.SearchBar
 import one.yufz.hmspush.common.HMS_PACKAGE_NAME
@@ -149,6 +148,14 @@ private fun AppBarMoreMenu(usable: Boolean) {
                         openMoreMenu = false
                     },
                     enabled = usable
+                )
+                DropdownMenuItem(
+                    text = {
+                        Text(text = stringResource(id = R.string.fake_device))
+                    },
+                    onClick = {
+                        navController.navigate(Routers.FAKE_DEVICE)
+                    }
                 )
                 val context = LocalContext.current
                 DropdownMenuItem(
