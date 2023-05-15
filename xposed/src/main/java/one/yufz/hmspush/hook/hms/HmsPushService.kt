@@ -4,6 +4,7 @@ import android.app.AndroidAppHelper
 import android.os.Handler
 import android.os.Looper
 import kotlinx.coroutines.runBlocking
+import one.yufz.hmspush.common.API_VERSION
 import one.yufz.hmspush.common.BridgeUri
 import one.yufz.hmspush.common.HmsPushInterface
 import one.yufz.hmspush.common.VERSION_CODE
@@ -31,7 +32,7 @@ object HmsPushService : HmsPushInterface.Stub() {
     }
 
     override fun getModuleVersion(): ModuleVersionModel {
-        return ModuleVersionModel(VERSION_NAME, VERSION_CODE)
+        return ModuleVersionModel(VERSION_NAME, VERSION_CODE, API_VERSION)
     }
 
     override fun getPushSignList(): List<PushSignModel> {

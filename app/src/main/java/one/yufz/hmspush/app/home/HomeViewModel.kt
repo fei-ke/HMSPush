@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.onEach
 import one.yufz.hmspush.R
 import one.yufz.hmspush.app.HmsPushClient
 import one.yufz.hmspush.app.util.registerPackageChangeFlow
+import one.yufz.hmspush.common.API_VERSION
 import one.yufz.hmspush.common.HMS_PACKAGE_NAME
 import one.yufz.hmspush.common.VERSION_NAME
 
@@ -82,7 +83,7 @@ class HomeViewModel(val app: Application) : AndroidViewModel(app) {
             return
         }
 
-        if (moduleVersion.versionName != VERSION_NAME) {
+        if (moduleVersion.apiVersion != API_VERSION) {
             _uiState.value = UiState(false, app.getString(R.string.hms_version_not_match), Reason.HmsPushVersionNotMatch)
             return
         }
