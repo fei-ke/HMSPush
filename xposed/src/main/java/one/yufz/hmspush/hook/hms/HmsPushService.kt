@@ -1,8 +1,10 @@
 package one.yufz.hmspush.hook.hms
 
 import android.app.AndroidAppHelper
+import android.os.Binder
 import android.os.Handler
 import android.os.Looper
+import com.huawei.android.app.NotificationManagerEx
 import kotlinx.coroutines.runBlocking
 import one.yufz.hmspush.common.API_VERSION
 import one.yufz.hmspush.common.BridgeUri
@@ -70,5 +72,9 @@ object HmsPushService : HmsPushInterface.Stub() {
     override fun killHmsCore(): Boolean {
         Handler(Looper.getMainLooper()).post { android.os.Process.killProcess(android.os.Process.myPid()) }
         return true
+    }
+
+    override fun clearHmsNotificationChannels(packageName: String) {
+        NotificationManagerEx.clearHmsNotificationChannels(packageName, Binder.getCallingUid() / 100000)
     }
 }

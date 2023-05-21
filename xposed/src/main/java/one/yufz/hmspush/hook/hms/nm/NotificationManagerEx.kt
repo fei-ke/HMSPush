@@ -67,6 +67,11 @@ object NotificationManagerEx {
         tryInvoke { notificationManager.deleteNotificationChannel(packageName, channelId) }
     }
 
+    fun clearHmsNotificationChannels(packageName: String, userId: Int) {
+        XLog.d(TAG, "clearHmsNotificationChannels() called with: packageName = $packageName, userId = $userId")
+        tryInvoke { notificationManager.clearHmsNotificationChannels(packageName, userId) }
+    }
+
     private inline fun <R> tryInvoke(invoke: () -> R): R {
         try {
             return invoke()

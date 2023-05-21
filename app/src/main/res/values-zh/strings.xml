@@ -53,4 +53,6 @@
 
     <string name="keep_alive">保持 HMS Core 运行</string>
     <string name="keep_alive_summary">该选项会为HMS Core显示一个前台通知，可长按通知将其隐藏</string>
+    <string name="clear_hms_notification_channels">清除通知分类</string>
+    <string name="clear_hms_notification_channels_done">操作已执行，请自行在通知分类页查看结果</string>
 </resources>

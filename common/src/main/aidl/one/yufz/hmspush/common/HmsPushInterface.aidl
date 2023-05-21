@@ -16,4 +16,5 @@ interface HmsPushInterface {
     void deleteIcon(in String[] packageNames);
 
     boolean killHmsCore();
+    void clearHmsNotificationChannels(String packageName);
 }

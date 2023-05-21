@@ -110,4 +110,8 @@ object HmsPushClient : HmsPushInterface.Stub() {
     override fun killHmsCore(): Boolean {
         return service.killHmsCore()
     }
+
+    override fun clearHmsNotificationChannels(packageName: String) {
+        service.clearHmsNotificationChannels(packageName)
+    }
 }

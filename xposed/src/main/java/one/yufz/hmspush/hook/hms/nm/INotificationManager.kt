@@ -13,4 +13,6 @@ interface INotificationManager {
     fun cancelNotification(context: Context, packageName: String, id: Int)
     fun deleteNotificationChannel(packageName: String, channelId: String)
     fun getActiveNotifications(packageName: String, userId: Int): Array<StatusBarNotification>
+    fun getNotificationChannels(packageName: String, userId: Int): List<NotificationChannel>
+    fun clearHmsNotificationChannels(packageName: String, userId: Int)
 }
