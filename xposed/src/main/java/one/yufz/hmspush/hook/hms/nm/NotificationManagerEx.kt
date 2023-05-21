@@ -3,6 +3,7 @@ package com.huawei.android.app
 
 import android.app.Notification
 import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import de.robv.android.xposed.XposedHelpers
 import one.yufz.hmspush.hook.XLog
@@ -53,6 +54,9 @@ object NotificationManagerEx {
     }
 
     fun createNotificationChannels(packageName: String, userId: Int, channels: List<NotificationChannel>) {
+        channels.forEach {
+            it.importance = NotificationManager.IMPORTANCE_HIGH
+        }
         XLog.d(TAG, "createNotificationChannels() called with: packageName = $packageName, userId = $userId, channels = $channels")
         tryInvoke { notificationManager.createNotificationChannels(packageName, userId, channels) }
     }
