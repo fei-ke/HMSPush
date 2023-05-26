@@ -118,7 +118,7 @@ class SystemNotificationManager : INotificationManager {
     }
 
     override fun clearHmsNotificationChannels(packageName: String, userId: Int) {
-        getNotificationChannels(packageName, userId).filter { it.name.startsWith("[HMS]") }.forEach {
+        getNotificationChannels(packageName, userId).filter { it.id.startsWith("com.huawei.hms.pushagent") }.forEach {
             XLog.d(TAG, "delete channel name: ${it.name}, channelId: ${it.id}")
             deleteNotificationChannel(packageName, it.id)
         }
