@@ -16,7 +16,7 @@ object XLog {
 
     fun e(tag: String, message: String?, throwable: Throwable?) {
         i(tag, message)
-        XposedBridge.log(throwable)
+        i(tag, Log.getStackTraceString(throwable))
     }
 
     fun XC_MethodHook.MethodHookParam.logMethod(tag: String, stackTrace: Boolean = false) {

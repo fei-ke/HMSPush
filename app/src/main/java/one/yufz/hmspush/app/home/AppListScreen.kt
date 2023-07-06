@@ -3,14 +3,24 @@ package one.yufz.hmspush.app.home
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.text.format.DateUtils
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
+import androidx.compose.foundation.layout.safeContent
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -46,10 +56,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import one.yufz.hmspush.BuildConfig
 import one.yufz.hmspush.R
+import one.yufz.hmspush.app.HmsPushClient
 import one.yufz.hmspush.app.theme.AppTheme
 import one.yufz.hmspush.app.theme.customColors
 import one.yufz.hmspush.common.HMS_PACKAGE_NAME
 import one.yufz.hmspush.common.HmsCoreUtil
+import one.yufz.hmspush.hook.hms.HmsPushService
 
 @Composable
 fun AppListScreen(searchText: String, appListViewModel: AppListViewModel = viewModel()) {
@@ -62,7 +74,8 @@ fun AppListScreen(searchText: String, appListViewModel: AppListViewModel = viewM
 
 @Composable
 private fun AppList(appList: List<AppInfo>) {
-    LazyColumn() {
+    val bottomPadding = WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom).asPaddingValues()
+    LazyColumn(contentPadding = bottomPadding) {
         items(
             items = appList,
             key = { it.packageName }
@@ -188,6 +201,17 @@ private fun MoreDropdownMenu(expanded: Boolean, info: AppInfo, onDismissRequest:
             },
             onClick = {
                 Util.launchAppInfo(context, info.packageName)
+                onDismissRequest()
+            }
+        )
+
+        DropdownMenuItem(
+            text = {
+                Text(text = stringResource(id = R.string.clear_hms_notification_channels))
+            },
+            onClick = {
+                HmsPushClient.clearHmsNotificationChannels(info.packageName)
+                Toast.makeText(context, R.string.clear_hms_notification_channels_done, Toast.LENGTH_SHORT).show()
                 onDismissRequest()
             }
         )

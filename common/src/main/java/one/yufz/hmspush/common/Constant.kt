@@ -5,6 +5,7 @@ private const val TAG = "Constant"
 const val APPLICATION_ID = BuildConfig.APPLICATION_ID
 const val VERSION_NAME = BuildConfig.VERSION_NAME
 const val VERSION_CODE = BuildConfig.VERSION_CODE
+const val API_VERSION = 2
 
 const val ANDROID_PACKAGE_NAME = "android"
 

@@ -78,7 +78,7 @@ fun HomeScreen(homeViewModel: HomeViewModel = viewModel()) {
         },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { padding ->
-        Box(modifier = Modifier.padding(padding)) {
+        Box(modifier = Modifier.padding(top = padding.calculateTopPadding())) {
             LifecycleAware(onResume = { homeViewModel.checkHmsCore() }) {
                 if (uiState.usable) {
                     AppListScreen(searchText)

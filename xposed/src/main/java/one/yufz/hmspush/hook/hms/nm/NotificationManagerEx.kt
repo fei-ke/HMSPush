@@ -3,6 +3,7 @@ package com.huawei.android.app
 
 import android.app.Notification
 import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import de.robv.android.xposed.XposedHelpers
 import one.yufz.hmspush.hook.XLog
@@ -53,6 +54,9 @@ object NotificationManagerEx {
     }
 
     fun createNotificationChannels(packageName: String, userId: Int, channels: List<NotificationChannel>) {
+        channels.forEach {
+            it.importance = NotificationManager.IMPORTANCE_HIGH
+        }
         XLog.d(TAG, "createNotificationChannels() called with: packageName = $packageName, userId = $userId, channels = $channels")
         tryInvoke { notificationManager.createNotificationChannels(packageName, userId, channels) }
     }
@@ -65,6 +69,11 @@ object NotificationManagerEx {
     fun deleteNotificationChannel(packageName: String, channelId: String) {
         XLog.d(TAG, "deleteNotificationChannel() called with: packageName = $packageName, channelId = $channelId")
         tryInvoke { notificationManager.deleteNotificationChannel(packageName, channelId) }
+    }
+
+    fun clearHmsNotificationChannels(packageName: String, userId: Int) {
+        XLog.d(TAG, "clearHmsNotificationChannels() called with: packageName = $packageName, userId = $userId")
+        tryInvoke { notificationManager.clearHmsNotificationChannels(packageName, userId) }
     }
 
     private inline fun <R> tryInvoke(invoke: () -> R): R {

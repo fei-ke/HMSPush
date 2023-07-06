@@ -3,6 +3,7 @@ package one.yufz.hmspush.hook.hms.nm
 import android.app.AndroidAppHelper
 import android.app.Notification
 import android.app.NotificationChannel
+import android.app.NotificationChannelGroup
 import android.app.NotificationManager
 import android.content.Context
 import android.service.notification.StatusBarNotification
@@ -57,5 +58,16 @@ class SelfNotificationManager : INotificationManager {
 
     override fun getActiveNotifications(packageName: String, userId: Int): Array<StatusBarNotification> {
         return notificationManager.activeNotifications
+    }
+
+    override fun getNotificationChannels(packageName: String, userId: Int): List<NotificationChannel> {
+        return notificationManager.notificationChannels
+    }
+
+    override fun clearHmsNotificationChannels(packageName: String, userId: Int) {
+        val applicationName = getApplicationName(packageName)
+        getNotificationChannels(packageName, userId).filter { it.name == applicationName }.forEach {
+            notificationManager.deleteNotificationChannel(it.id)
+        }
     }
 }
