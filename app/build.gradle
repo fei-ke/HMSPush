@@ -43,7 +43,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.4.2'
+        kotlinCompilerExtensionVersion '1.4.8'
     }
 }
 
@@ -54,13 +54,13 @@ dependencies {
     //remove this line will cause proguard to remove code from library module
     compileOnly 'de.robv.android.xposed:api:82'
 
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
-    final def activity_version = "1.6.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
+    final def activity_version = "1.7.2"
     implementation "androidx.activity:activity-ktx:$activity_version"
     implementation "androidx.activity:activity-compose:$activity_version"
 
     //compose
-    implementation platform('androidx.compose:compose-bom:2023.01.00')
+    implementation platform('androidx.compose:compose-bom:2023.06.01')
     implementation "androidx.compose.material3:material3"
     implementation "androidx.compose.animation:animation"
     debugImplementation "androidx.compose.ui:ui-tooling"
@@ -70,10 +70,10 @@ dependencies {
     implementation "androidx.compose.material:material-icons-core"
     implementation "androidx.compose.material:material-icons-extended"
 
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1'
-    implementation "com.google.accompanist:accompanist-drawablepainter:0.28.0"
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1'
+    implementation "com.google.accompanist:accompanist-drawablepainter:0.30.1"
 
-    final def nav_version = "2.5.3"
+    final def nav_version = "2.6.0"
     implementation "androidx.navigation:navigation-runtime-ktx:$nav_version"
     implementation "androidx.navigation:navigation-compose:$nav_version"
 
