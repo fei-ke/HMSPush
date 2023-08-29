@@ -19,5 +19,5 @@ android {
 }
 
 dependencies {
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
 }
