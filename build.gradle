@@ -56,7 +56,7 @@ ext {
     gitVersionName = getVersionName()
     APPLICATION_ID = "one.yufz.hmspush"
 
-    COMPILE_SDK = 33
+    COMPILE_SDK = 34
     MIN_SDK = 26
-    TARGET_SDK = 33
+    TARGET_SDK = 34
 }
