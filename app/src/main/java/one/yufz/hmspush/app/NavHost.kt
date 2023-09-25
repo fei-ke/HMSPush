@@ -1,5 +1,8 @@
 package one.yufz.hmspush.app
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -24,7 +27,9 @@ fun AppNavHost(
         NavHost(
             modifier = modifier,
             navController = navController,
-            startDestination = startDestination
+            startDestination = startDestination,
+            enterTransition = { fadeIn(animationSpec = tween()) },
+            exitTransition = { fadeOut(animationSpec = tween()) },
         ) {
             composable("home") { HomeScreen() }
             composable("settings") { SettingsScreen() }
