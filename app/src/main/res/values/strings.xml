@@ -30,6 +30,13 @@
     <string name="keep_history_message">Keep History Messages</string>
     <string name="keep_history_message_summary">Some Apps like QQ only show the latest message, turn on this switch to keep the history</string>
 
+    <string name="low_notification_importance">Marketing notification</string>
+    <string name="notification_importance_high">Heads-Up</string>
+    <string name="notification_importance_default">Noise</string>
+    <string name="notification_importance_low">Silent</string>
+    <string name="notification_importance_min">Minimize</string>
+    <string name="notification_importance_none">Hidden</string>
+
     <string name="notification_icon">Custom Notification Icon</string>
     <string name="tint_notification_icon">Tint Icon Color On Notification Panel</string>
     <string name="tint_notification_icon_summary">May not work on some device</string>

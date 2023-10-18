@@ -7,6 +7,7 @@ import android.app.NotificationManager
 import android.content.Context
 import de.robv.android.xposed.XposedHelpers
 import one.yufz.hmspush.hook.XLog
+import one.yufz.hmspush.hook.hms.Prefs
 import one.yufz.hmspush.hook.hms.PushHistory
 import one.yufz.hmspush.hook.hms.nm.INotificationManager
 import one.yufz.hmspush.hook.hms.nm.SelfNotificationManager
@@ -54,8 +55,19 @@ object NotificationManagerEx {
     }
 
     fun createNotificationChannels(packageName: String, userId: Int, channels: List<NotificationChannel>) {
-        channels.forEach {
-            it.importance = NotificationManager.IMPORTANCE_HIGH
+        channels.forEach { channel ->
+            if (channel.id.startsWith("com.huawei.hms.pushagent.low") && Prefs.prefModel.lowNotificationImportance != NotificationManager.IMPORTANCE_HIGH) {
+                channel.importance = Prefs.prefModel.lowNotificationImportance
+            } else {
+                channel.importance = NotificationManager.IMPORTANCE_HIGH
+            }
+
+            getNotificationChannel(packageName, userId, channel.id, false)?.let { oldChannel ->
+                if (oldChannel.importance != channel.importance) {
+                    XLog.d(TAG, "createNotificationChannels: importance changed, delete old channel ${oldChannel.id}")
+                    tryInvoke { deleteNotificationChannel(packageName, channel.id) }
+                }
+            }
         }
         XLog.d(TAG, "createNotificationChannels() called with: packageName = $packageName, userId = $userId, channels = $channels")
         tryInvoke { notificationManager.createNotificationChannels(packageName, userId, channels) }

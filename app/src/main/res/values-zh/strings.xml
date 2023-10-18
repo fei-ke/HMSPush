@@ -30,6 +30,13 @@
     <string name="keep_history_message">保留历史消息</string>
     <string name="keep_history_message_summary">一些应用，比如 QQ 默认只显示最新一条消息，开启此开关可保留历史消息</string>
 
+    <string name="low_notification_importance">营销通知</string>
+    <string name="notification_importance_high">弹窗通知</string>
+    <string name="notification_importance_default">声音通知</string>
+    <string name="notification_importance_low">静音通知</string>
+    <string name="notification_importance_min">最小化通知</string>
+    <string name="notification_importance_none">不通知</string>
+
     <string name="notification_icon">自定义通知图标</string>
     <string name="tint_notification_icon">通知栏图标染色</string>
     <string name="tint_notification_icon_summary">在某些设备上可能无效果</string>

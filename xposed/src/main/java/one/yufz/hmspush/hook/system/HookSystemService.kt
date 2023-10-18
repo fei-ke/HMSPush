@@ -1,14 +1,19 @@
 package one.yufz.hmspush.hook.system
 
 import android.app.AndroidAppHelper
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Binder
+import android.os.Build
+import android.os.Process
 import de.robv.android.xposed.XposedHelpers
 import one.yufz.hmspush.common.IS_SYSTEM_HOOK_READY
 import one.yufz.hmspush.hook.XLog
+import one.yufz.xposed.HookContext
 import one.yufz.xposed.callMethod
 import one.yufz.xposed.get
+import one.yufz.xposed.hookAllMethods
 import one.yufz.xposed.hookMethod
 
 class HookSystemService {
@@ -53,6 +58,31 @@ class HookSystemService {
 
         val classShortcutService = XposedHelpers.findClass("com.android.server.pm.ShortcutService", classLoader)
         ShortcutPermissionHooker.hook(classShortcutService)
+
+        hookCreateNotificationChannel(classLoader)
+    }
+
+    private fun hookCreateNotificationChannel(classLoader: ClassLoader) {
+        val callback: HookContext.() -> Unit = {
+            doBefore {
+                val channel = args[2] as NotificationChannel
+                val callingUid = Binder.getCallingUid()
+                if (callingUid == Process.SYSTEM_UID && channel.id.startsWith("com.huawei.hms.pushagent")) {
+                    XLog.i(TAG, "createNotificationChannel: seem from hms, change fromTargetApp to false")
+                    args[3] = false
+                }
+            }
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            //    public boolean createNotificationChannel(String pkg, int uid, NotificationChannel channel, boolean fromTargetApp, boolean hasDndAccess,
+            //    int callingUid, boolean fromSystemOrSystemUi)
+            XposedHelpers.findClass("com.android.server.notification.PreferencesHelper", classLoader)
+                .hookAllMethods("createNotificationChannel", callback)
+        } else {
+            //public void createNotificationChannel(String pkg, int uid, NotificationChannel channel, boolean fromTargetApp, boolean hasDndAccess)
+            XposedHelpers.findClass("com.android.server.notification.RankingHelper", classLoader)
+                .hookAllMethods("createNotificationChannel", callback)
+        }
     }
 
     private fun hookSystemReadyFlag(stubClass: Class<Any>) {
