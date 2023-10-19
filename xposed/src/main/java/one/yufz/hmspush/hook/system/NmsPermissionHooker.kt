@@ -15,6 +15,7 @@ import de.robv.android.xposed.XposedHelpers.findMethodExact
 import one.yufz.hmspush.common.ANDROID_PACKAGE_NAME
 import one.yufz.hmspush.common.HMS_PACKAGE_NAME
 import one.yufz.xposed.HookCallback
+import one.yufz.xposed.HookContext
 import one.yufz.xposed.hook
 import one.yufz.xposed.hookMethod
 
@@ -96,28 +97,32 @@ object NmsPermissionHooker {
         findMethodExact(classINotificationManager, "getNotificationChannelsForPackage", String::class.java, Int::class.java, Boolean::class.java)
             .hook(hookPermission(0))
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        val deleteNotificationChannelHook: HookContext.() -> Unit = {
+            doBefore {
+                val packageName = args[0] as String
+                if (packageName != HMS_PACKAGE_NAME && Binder.getCallingUid() == Process.SYSTEM_UID) {
+                    args[1] = getPackageUid(packageName)
+                }
+            }
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            findClass("com.android.server.notification.PreferencesHelper", classINotificationManager.classLoader)
+                //public boolean deleteNotificationChannel(String pkg, int uid, String channelId, int callingUid, boolean fromSystemOrSystemUi)
+                .hookMethod("deleteNotificationChannel", String::class.java, Int::class.java, String::class.java, Int::class.java, Boolean::class.java,
+                    callback = deleteNotificationChannelHook
+                )
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             findClass("com.android.server.notification.PreferencesHelper", classINotificationManager.classLoader)
                 //public boolean deleteNotificationChannel(String pkg, int uid, String channelId)
-                .hookMethod("deleteNotificationChannel", String::class.java, Int::class.java, String::class.java) {
-                    doBefore {
-                        val packageName = args[0] as String
-                        if (packageName != HMS_PACKAGE_NAME && Binder.getCallingUid() == Process.SYSTEM_UID) {
-                            args[1] = getPackageUid(packageName)
-                        }
-                    }
-                }
+                .hookMethod("deleteNotificationChannel", String::class.java, Int::class.java, String::class.java,
+                    callback = deleteNotificationChannelHook
+                )
         } else {
             findClass("com.android.server.notification.RankingHelper", classINotificationManager.classLoader)
                 //public void deleteNotificationChannel(String pkg, int uid, String channelId)
-                .hookMethod("deleteNotificationChannel", String::class.java, Int::class.java, String::class.java) {
-                    doBefore {
-                        val packageName = args[0] as String
-                        if (packageName != HMS_PACKAGE_NAME && Binder.getCallingUid() == Process.SYSTEM_UID) {
-                            args[1] = getPackageUid(packageName)
-                        }
-                    }
-                }
+                .hookMethod("deleteNotificationChannel", String::class.java, Int::class.java, String::class.java,
+                    callback = deleteNotificationChannelHook
+                )
         }
     }
 }
