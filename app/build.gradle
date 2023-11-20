@@ -77,5 +77,5 @@ dependencies {
     implementation "androidx.navigation:navigation-runtime-ktx:$nav_version"
     implementation "androidx.navigation:navigation-compose:$nav_version"
 
-    implementation 'de.charlex.compose:html-text:1.5.0'
+    implementation 'de.charlex.compose:html-text:1.6.0'
 }
