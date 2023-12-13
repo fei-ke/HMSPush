@@ -55,7 +55,7 @@ dependencies {
     compileOnly 'de.robv.android.xposed:api:82'
 
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2"
-    final def activity_version = "1.8.1"
+    final def activity_version = "1.8.2"
     implementation "androidx.activity:activity-ktx:$activity_version"
     implementation "androidx.activity:activity-compose:$activity_version"
 
