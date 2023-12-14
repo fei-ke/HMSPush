@@ -52,13 +52,13 @@ jobs:
         echo "release_artifact=$(basename -s .apk app/build/outputs/apk/release/*.apk)" >> $GITHUB_ENV
 
     - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ env.release_artifact }}
         path: app/build/outputs/apk/release/*.apk
 
     - name: Upload Mapping
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: mapping
         path: app/build/outputs/mapping/release/mapping.txt
