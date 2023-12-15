@@ -8,8 +8,11 @@
 
     <string name="menu_launch">启动</string>
     <string name="menu_app_info">应用信息</string>
-    <string name="menu_search">搜索</string>
+    <string name="menu_enable_zygisk_fake">取消 Zygisk 伪装</string>
+    <string name="menu_disable_zygisk_fake">启用 Zygisk 伪装</string>
     <string name="menu_unregister">取消注册</string>
+
+    <string name="menu_search">搜索</string>
     <string name="menu_settings">设置</string>
     <string name="reboot_hms_core">重启 HMS Core</string>
     <string name="rebooting_hms_core">正在尝试重启 HMS Core</string>
@@ -21,7 +24,7 @@
 
     <string name="unregistered">未注册</string>
     <string name="registered">已注册</string>
-    <string name="latest_push">&#160;&#160;•&#160;&#160;最近推送：%s</string>
+    <string name="latest_push">最近推送：%s</string>
 
     <string name="dialog_confirm_unregister">确定取消注册</string>
     <string name="dialog_confirm">确定</string>
@@ -29,6 +32,13 @@
 
     <string name="keep_history_message">保留历史消息</string>
     <string name="keep_history_message_summary">一些应用，比如 QQ 默认只显示最新一条消息，开启此开关可保留历史消息</string>
+
+    <string name="low_notification_importance">营销通知</string>
+    <string name="notification_importance_high">弹窗通知</string>
+    <string name="notification_importance_default">声音通知</string>
+    <string name="notification_importance_low">静音通知</string>
+    <string name="notification_importance_min">最小化通知</string>
+    <string name="notification_importance_none">不通知</string>
 
     <string name="notification_icon">自定义通知图标</string>
     <string name="tint_notification_icon">通知栏图标染色</string>
@@ -55,4 +65,6 @@
     <string name="keep_alive_summary">该选项会为HMS Core显示一个前台通知，可长按通知将其隐藏</string>
     <string name="clear_hms_notification_channels">清除通知分类</string>
     <string name="clear_hms_notification_channels_done">操作已执行，请自行在通知分类页查看结果</string>
+
+    <string name="fake_device">设备伪装</string>
 </resources>
