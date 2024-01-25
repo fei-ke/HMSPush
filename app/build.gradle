@@ -71,7 +71,7 @@ dependencies {
     implementation "androidx.compose.material:material-icons-extended"
 
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0'
-    implementation "com.google.accompanist:accompanist-drawablepainter:0.32.0"
+    implementation "com.google.accompanist:accompanist-drawablepainter:0.34.0"
 
     final def nav_version = "2.7.6"
     implementation "androidx.navigation:navigation-runtime-ktx:$nav_version"
