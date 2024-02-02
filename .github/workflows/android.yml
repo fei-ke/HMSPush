@@ -21,7 +21,7 @@ jobs:
         java-version: '17'
         distribution: 'zulu'
 
-    - uses: gradle/gradle-build-action@v2
+    - uses: gradle/actions/setup-gradle@v3
       with:
         gradle-home-cache-cleanup: true
 
@@ -55,7 +55,7 @@ jobs:
       with:
         name: ${{ env.release_artifact }}
         path: app/build/outputs/apk/release/*.apk
-        
+
     # https://github.com/LSPosed/LSPosed/blob/594604423c548c5a3596dc590f52480db7aabeaf/.github/workflows/core.yml#L112
     - name: Post to Telegram
       if: ${{ github.event_name != 'pull_request' && success() && github.ref == 'refs/heads/master' }}
