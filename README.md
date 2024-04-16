@@ -14,7 +14,7 @@ HMS Core 是华为提供的一套服务，其中包含了推送功能，可以�
 > 对应用进行设备伪装会导致应用环境异常，从而导致封号等后果，请自行承担使用风险！
 
 ### 安装步骤：
-- 从应用市场下载并安装 `HMS Core`，比如 [华为应用商店](https://appgallery.huawei.com/app/C10132067)、[酷安](https://www.coolapk.com/apk/com.huawei.hwid)、[APKMirror](https://www.apkmirror.com/apk/huawei-internet-services/huawei-mobile-services)
+- 从应用市场下载并安装 `HMS Core`，比如 [腾讯应用宝](https://sj.qq.com/appdetail/com.huawei.hwid)、[酷安](https://www.coolapk.com/apk/com.huawei.hwid)、[APKMirror](https://www.apkmirror.com/apk/huawei-internet-services/huawei-mobile-services)
 
 - 下载最新版本 HMS Push 安装，在 LSPosed 中启用 HMSPush 模块，并勾选 「系统框架」、「HMS Core 」作用域，然后重启设备，[下载地址](https://github.com/fei-ke/HMSPush/releases/latest)
 
