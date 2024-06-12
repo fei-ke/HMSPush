@@ -1,10 +1,12 @@
 package one.yufz.hmspush.app.settings
 
+import android.app.NotificationManager
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.height
@@ -16,14 +18,15 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.outlined.ArrowUpward
 import androidx.compose.material.icons.outlined.Computer
 import androidx.compose.material.icons.outlined.FormatColorFill
 import androidx.compose.material.icons.outlined.FormatListBulleted
+import androidx.compose.material.icons.outlined.NotificationsOff
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.RemoveModerator
-import androidx.compose.material.icons.outlined.Upgrade
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,6 +39,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -47,6 +53,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import one.yufz.hmspush.R
 import one.yufz.hmspush.app.LocalNavHostController
 import one.yufz.hmspush.common.model.PrefsModel
+
+private val importanceMap = mapOf(
+    NotificationManager.IMPORTANCE_HIGH to R.string.notification_importance_high,
+    NotificationManager.IMPORTANCE_DEFAULT to R.string.notification_importance_default,
+    NotificationManager.IMPORTANCE_LOW to R.string.notification_importance_low,
+    NotificationManager.IMPORTANCE_MIN to R.string.notification_importance_min,
+    NotificationManager.IMPORTANCE_NONE to R.string.notification_importance_none,
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -93,6 +107,7 @@ fun SettingsScreen(viewModel: SettingsViewModel = viewModel()) {
                         viewModel.updatePreference { groupMessageById = it }
                     }
                 )
+
                 SwitchPreference(
                     title = stringResource(id = R.string.keep_alive),
                     summary = stringResource(id = R.string.keep_alive_summary),
@@ -126,6 +141,16 @@ fun SettingsScreen(viewModel: SettingsViewModel = viewModel()) {
                         }
                     )
                 }
+
+                DropdownPreferences(
+                    title = stringResource(id = R.string.low_notification_importance),
+                    icon = Icons.Outlined.NotificationsOff,
+                    data = importanceMap,
+                    initKey = preferences.lowNotificationImportance,
+                    onSelectChanged = {
+                        viewModel.updatePreference { lowNotificationImportance = it }
+                    }
+                )
             }
 
         }
@@ -152,7 +177,33 @@ fun SwitchPreference(
 }
 
 @Composable
-fun Preference(title: String, summary: String? = null, icon: ImageVector?, showDivider: Boolean = false, action: (@Composable () -> Unit)? = null, onClick: () -> Unit) {
+fun <Key> DropdownPreferences(
+    title: String, summary: String? = null, icon: ImageVector?,
+    data: Map<Key, Int>, initKey: Key,
+    onSelectChanged: (index: Key) -> Unit,
+) {
+    var showDropdown by remember { mutableStateOf(false) }
+
+    Preference(title = title, summary = summary ?: stringResource(id = data.getValue(initKey)), icon = icon, action = {
+        Surface(modifier = Modifier.align(Alignment.Bottom)) {
+            DropdownMenu(expanded = showDropdown, onDismissRequest = { showDropdown = false }) {
+                data.forEach { (key, textRes) ->
+                    DropdownMenuItem(
+                        text = { Text(text = stringResource(id = textRes)) },
+                        onClick = {
+                            onSelectChanged(key)
+                            showDropdown = false
+                        })
+                }
+            }
+        }
+    }, onClick = {
+        showDropdown = true
+    })
+}
+
+@Composable
+fun Preference(title: String, summary: String? = null, icon: ImageVector?, showDivider: Boolean = false, action: (@Composable RowScope.() -> Unit)? = null, onClick: () -> Unit) {
     Surface(
         modifier = Modifier
             .clickable { onClick() }

@@ -1,5 +1,6 @@
 package one.yufz.hmspush.common.model
 
+import android.app.NotificationManager
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import one.yufz.hmspush.common.content.ContentModel
@@ -12,6 +13,7 @@ data class PrefsModel constructor(
     var useCustomIcon: Boolean,
     var tintIconColor: Boolean,
     var keepAlive: Boolean,
+    var lowNotificationImportance: Int,
 ) : ContentModel, Parcelable {
 
     constructor() : this(
@@ -20,6 +22,7 @@ data class PrefsModel constructor(
         useCustomIcon = false,
         tintIconColor = true,
         keepAlive = false,
+        lowNotificationImportance = NotificationManager.IMPORTANCE_LOW
     )
 
     companion object {
@@ -30,6 +33,7 @@ data class PrefsModel constructor(
             .property("useCustomIcon", PrefsModel::useCustomIcon)
             .property("tintIconColor", PrefsModel::tintIconColor)
             .property("keepAlive", PrefsModel::keepAlive)
+            .property("lowNotificationImportance", PrefsModel::lowNotificationImportance)
             .build()
     }
 }
