@@ -2,6 +2,11 @@
 package one.yufz.hmspush.common;
 
 import one.yufz.hmspush.common.model.models;
+import one.yufz.hmspush.common.model.ModuleVersionModel;
+import one.yufz.hmspush.common.model.PushSignModel;
+import one.yufz.hmspush.common.model.PushHistoryModel;
+import one.yufz.hmspush.common.model.PrefsModel;
+import one.yufz.hmspush.common.model.IconModel;
 
 interface HmsPushInterface {
     ModuleVersionModel getModuleVersion();
