@@ -35,7 +35,7 @@ object FakeHmsSignature {
                 if (packageName == HMS_PACKAGE_NAME) {
                     val info = result as PackageInfo
                     info.signatures?.firstOrNull()?.let {
-                        info.signatures[0]["mSignature"] = Base64.decode(HMS_CORE_SIGNATURE, Base64.NO_WRAP)
+                        checkNotNull(info.signatures)[0]["mSignature"] = Base64.decode(HMS_CORE_SIGNATURE, Base64.NO_WRAP)
                     }
                 }
             }

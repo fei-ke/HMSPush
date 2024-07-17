@@ -11,10 +11,10 @@ plugins {
 allprojects {
     plugins.withType(AndroidBasePlugin).configureEach {
         project.android {
-            compileSdk 34
+            compileSdk 35
             defaultConfig {
                 minSdk 26
-                targetSdk 34
+                targetSdk compileSdk
                 vectorDrawables.useSupportLibrary = true
             }
         }
