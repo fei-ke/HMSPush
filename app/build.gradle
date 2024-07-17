@@ -52,11 +52,6 @@ dependencies {
     //remove this line will cause proguard to remove code from library module
     compileOnly 'de.robv.android.xposed:api:82'
 
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.3"
-    final def activity_version = "1.9.0"
-    implementation "androidx.activity:activity-ktx:$activity_version"
-    implementation "androidx.activity:activity-compose:$activity_version"
-
     //compose
     implementation platform('androidx.compose:compose-bom:2024.06.00')
     implementation "androidx.compose.material3:material3"
@@ -68,12 +63,11 @@ dependencies {
     implementation "androidx.compose.material:material-icons-core"
     implementation "androidx.compose.material:material-icons-extended"
 
+    implementation "androidx.activity:activity-compose:1.9.0"
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.8.3'
-    implementation "com.google.accompanist:accompanist-drawablepainter:0.34.0"
+    implementation "androidx.navigation:navigation-compose:2.7.7"
 
-    final def nav_version = "2.7.7"
-    implementation "androidx.navigation:navigation-runtime-ktx:$nav_version"
-    implementation "androidx.navigation:navigation-compose:$nav_version"
+    implementation "com.google.accompanist:accompanist-drawablepainter:0.34.0"
 
     implementation 'de.charlex.compose:html-text:1.6.0'
 }
