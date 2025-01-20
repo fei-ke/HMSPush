@@ -14,5 +14,5 @@ android {
 dependencies {
     implementation projects.common
     compileOnly 'de.robv.android.xposed:api:82'
-    implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
+    implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:5.0'
 }
