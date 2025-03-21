@@ -72,9 +72,9 @@ class HookSystemService {
                         }
                     }
                 }
-            } catch (e: Throwable) {
+            } catch (e: NoSuchMethodError) {
                 //Samsung One UI 7 delete this method
-                XLog.e(TAG, "hook isCallerAndroid error", e)
+                XLog.d(TAG, "hook isCallerAndroid error, NoSuchMethodError")
             }
         }
 

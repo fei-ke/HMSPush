@@ -14,12 +14,15 @@ import de.robv.android.xposed.XposedHelpers.findClass
 import de.robv.android.xposed.XposedHelpers.findMethodExact
 import one.yufz.hmspush.common.ANDROID_PACKAGE_NAME
 import one.yufz.hmspush.common.HMS_PACKAGE_NAME
+import one.yufz.hmspush.hook.XLog
 import one.yufz.xposed.HookCallback
 import one.yufz.xposed.HookContext
 import one.yufz.xposed.hook
 import one.yufz.xposed.hookMethod
 
 object NmsPermissionHooker {
+    private const val TAG = "NmsPermissionHooker"
+
     private fun fromHms() = try {
         Binder.getCallingUid() == getPackageUid(HMS_PACKAGE_NAME)
     } catch (e: Throwable) {
@@ -106,11 +109,17 @@ object NmsPermissionHooker {
             }
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            findClass("com.android.server.notification.PreferencesHelper", classINotificationManager.classLoader)
-                //public boolean deleteNotificationChannel(String pkg, int uid, String channelId, int callingUid, boolean fromSystemOrSystemUi)
-                .hookMethod("deleteNotificationChannel", String::class.java, Int::class.java, String::class.java, Int::class.java, Boolean::class.java,
-                    callback = deleteNotificationChannelHook
-                )
+            try {
+                findClass("com.android.server.notification.PreferencesHelper", classINotificationManager.classLoader)
+                    //public boolean deleteNotificationChannel(String pkg, int uid, String channelId, int callingUid, boolean fromSystemOrSystemUi)
+                    .hookMethod(
+                        "deleteNotificationChannel", String::class.java, Int::class.java, String::class.java, Int::class.java, Boolean::class.java,
+                        callback = deleteNotificationChannelHook
+                    )
+            } catch (e: NoSuchMethodError) {
+                //Samsung One UI 7 delete this method
+                XLog.d(TAG, "hook deleteNotificationChannel error, NoSuchMethodError")
+            }
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             findClass("com.android.server.notification.PreferencesHelper", classINotificationManager.classLoader)
                 //public boolean deleteNotificationChannel(String pkg, int uid, String channelId)
