@@ -10,7 +10,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        jcenter()
+        maven { url = "https://api.xposed.info/" }
     }
 }
 rootProject.name = "HMSPush"
