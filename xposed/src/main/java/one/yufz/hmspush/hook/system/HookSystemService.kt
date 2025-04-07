@@ -4,11 +4,15 @@ import android.app.AndroidAppHelper
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Binder
+import android.os.Build
 import de.robv.android.xposed.XposedHelpers
+import one.yufz.hmspush.common.ANDROID_PACKAGE_NAME
 import one.yufz.hmspush.common.IS_SYSTEM_HOOK_READY
 import one.yufz.hmspush.hook.XLog
 import one.yufz.xposed.callMethod
+import one.yufz.xposed.deoptimizeMethod
 import one.yufz.xposed.get
+import one.yufz.xposed.hook
 import one.yufz.xposed.hookMethod
 
 class HookSystemService {
@@ -50,6 +54,29 @@ class HookSystemService {
             }
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            //int resolveNotificationUid(String callingPkg, String targetPkg, int callingUid, int userId)
+            XposedHelpers.findMethodExact(classNotificationManagerService, "resolveNotificationUid", String::class.java, String::class.java, Int::class.java, Int::class.java)
+                .deoptimizeMethod()
+
+            //https://cs.android.com/android/platform/superproject/+/android-cts-10.0_r1:frameworks/base/services/core/java/com/android/server/notification/NotificationManagerService.java;drc=86869c922207a240884697215ba0bf5b89bd0b37;l=1738
+            // there is a bug from android 10, the enqueueNotificationInternal method 3rd parameter is need a callingUid, in this method, r.sbn.getUid() actually is the targetUid
+            // when a notification post from HMSPush and snoozed, then the notification will never show again
+            // this hook temporary fix this issue
+            try {
+                classNotificationManagerService.hookMethod("isCallerAndroid", String::class.java, Int::class.java) {
+                    doBefore {
+                        val callingPkg = args[0] as String
+                        if (callingPkg == ANDROID_PACKAGE_NAME) {
+                            result = true
+                        }
+                    }
+                }
+            } catch (e: NoSuchMethodError) {
+                //Samsung One UI 7 delete this method
+                XLog.d(TAG, "hook isCallerAndroid error, NoSuchMethodError")
+            }
+        }
 
         val classShortcutService = XposedHelpers.findClass("com.android.server.pm.ShortcutService", classLoader)
         ShortcutPermissionHooker.hook(classShortcutService)

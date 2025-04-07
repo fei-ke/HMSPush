@@ -4,6 +4,7 @@ package one.yufz.xposed
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
+import java.lang.reflect.Member
 import java.lang.reflect.Method
 
 
@@ -150,3 +151,11 @@ fun <T> Any.setField(name: String, value: T?, fieldClass: Class<T>) {
 }
 
 private fun findField(clazz: Class<*>, fieldName: String) = XposedHelpers.findField(clazz, fieldName)
+
+
+private val method_deoptimizeMethod = try {
+    XposedBridge::class.java.getDeclaredMethod("deoptimizeMethod", Member::class.java)
+} catch (e: NoSuchMethodException) {
+    null
+}
+fun Method.deoptimizeMethod() = method_deoptimizeMethod?.invoke(null, this)
