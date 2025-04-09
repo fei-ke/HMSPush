@@ -12,6 +12,7 @@ data class PrefsModel constructor(
     var useCustomIcon: Boolean,
     var tintIconColor: Boolean,
     var keepAlive: Boolean,
+    var hideAppIcon: Boolean,
 ) : ContentModel, Parcelable {
 
     constructor() : this(
@@ -20,6 +21,7 @@ data class PrefsModel constructor(
         useCustomIcon = false,
         tintIconColor = true,
         keepAlive = false,
+        hideAppIcon = false,
     )
 
     companion object {
@@ -30,6 +32,7 @@ data class PrefsModel constructor(
             .property("useCustomIcon", PrefsModel::useCustomIcon)
             .property("tintIconColor", PrefsModel::tintIconColor)
             .property("keepAlive", PrefsModel::keepAlive)
+            .property("hideAppIcon", PrefsModel::hideAppIcon)
             .build()
     }
 }
