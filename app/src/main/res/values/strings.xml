@@ -54,4 +54,5 @@
     <string name="keep_alive_summary">This option will show a foreground notification for HMS Core, You can long press and hide it</string>
     <string name="clear_hms_notification_channels">Clear notification categories</string>
     <string name="clear_hms_notification_channels_done">Operation is done, please check the result on the Notification categories page</string>
+    <string name="hide_app_icon">Hide App Icon</string>
 </resources>
