@@ -6,7 +6,9 @@
 
 package one.yufz.hmspush.app.home
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.widget.Toast
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Box
@@ -153,6 +155,15 @@ private fun AppBarMoreMenu(usable: Boolean) {
                 val context = LocalContext.current
                 DropdownMenuItem(
                     text = {
+                        Text(text = stringResource(id = R.string.open_hms_core_settings))
+                    },
+                    onClick = {
+                        openHmsCoreSettings(context)
+                        openMoreMenu = false
+                    }
+                )
+                DropdownMenuItem(
+                    text = {
                         Text(text = stringResource(id = R.string.reboot_hms_core))
                     },
                     onClick = {
@@ -162,6 +173,16 @@ private fun AppBarMoreMenu(usable: Boolean) {
                 )
             }
         }
+    }
+}
+
+private fun openHmsCoreSettings(context: Context) {
+    val intent = Intent(Intent.ACTION_APPLICATION_PREFERENCES)
+        .setPackage(HMS_PACKAGE_NAME)
+    try {
+        context.startActivity(intent)
+    } catch (_: ActivityNotFoundException) {
+        Toast.makeText(context, R.string.hms_core_settings_not_found, Toast.LENGTH_SHORT).show()
     }
 }
 
