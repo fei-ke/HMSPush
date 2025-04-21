@@ -17,3 +17,5 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+val mainActivityAlias = "${MainActivity::class.java.name}Alias"
