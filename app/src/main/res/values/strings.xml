@@ -11,8 +11,7 @@
     <string name="menu_search">Search</string>
     <string name="menu_unregister">Unregister</string>
     <string name="menu_settings">Settings</string>
-    <string name="open_hms_core_settings">Open HMS Core Settings</string>
-    <string name="hms_core_settings_not_found">HMS Core Settings not found</string>
+    <string name="open_hms_core_app_info">Open HMS Core App Info</string>
     <string name="reboot_hms_core">Reboot HMS Core</string>
     <string name="rebooting_hms_core">Trying to restart HMS Core</string>
     <string name="manually_reboot_hms_core">Please restart HMS Core manually</string>
