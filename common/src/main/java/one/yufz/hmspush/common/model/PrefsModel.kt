@@ -6,7 +6,7 @@ import one.yufz.hmspush.common.content.ContentModel
 import one.yufz.hmspush.common.content.ContentProperties
 
 @Parcelize
-data class PrefsModel constructor(
+data class PrefsModel(
     var disableSignature: Boolean,
     var groupMessageById: Boolean,
     var useCustomIcon: Boolean,

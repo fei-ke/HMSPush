@@ -7,7 +7,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import android.service.notification.StatusBarNotification
-import android.util.Log
 import de.robv.android.xposed.XposedHelpers
 import one.yufz.hmspush.common.ANDROID_PACKAGE_NAME
 import one.yufz.hmspush.hook.XLog

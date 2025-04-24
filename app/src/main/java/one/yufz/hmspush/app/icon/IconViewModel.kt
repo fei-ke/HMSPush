@@ -12,7 +12,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import one.yufz.hmspush.R
 import one.yufz.hmspush.app.HmsPushClient
-import one.yufz.hmspush.common.BridgeWrap
 import one.yufz.hmspush.common.IconData
 import org.json.JSONArray
 import org.json.JSONObject
@@ -20,7 +19,6 @@ import java.net.URL
 
 class IconViewModel(val app: Application) : AndroidViewModel(app) {
     companion object {
-        private const val TAG = "IconViewModel"
         const val ICON_URL = "https://raw.githubusercontent.com/fankes/AndroidNotifyIconAdapt/main/APP/NotifyIconsSupportConfig.json"
     }
 
@@ -31,7 +29,7 @@ class IconViewModel(val app: Application) : AndroidViewModel(app) {
     private val _importState = MutableStateFlow<ImportState>(ImportState(false))
     val importState: StateFlow<ImportState> = _importState
 
-    private val filterKeywords = MutableStateFlow<String>("")
+    private val filterKeywords = MutableStateFlow("")
 
     val iconsFlow: Flow<List<IconData>> = _iconsFlow.combine(filterKeywords) { list, keywords ->
         if (keywords.isEmpty()) return@combine list
@@ -100,7 +98,7 @@ class IconViewModel(val app: Application) : AndroidViewModel(app) {
     }
 
     fun deleteIcon(vararg packageName: String) {
-        viewModelScope.launch() {
+        viewModelScope.launch {
             val set = packageName.toHashSet()
             _iconsFlow.value = _iconsFlow.value.filterNot { it.packageName in set }
 

@@ -3,8 +3,8 @@ package one.yufz.hmspush.app.home
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.provider.Settings
+import androidx.core.net.toUri
 
 object Util {
     fun launchApp(context: Context, packageName: String) {
@@ -18,7 +18,7 @@ object Util {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
             addCategory(Intent.CATEGORY_DEFAULT)
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            data = Uri.parse("package:${packageName}")
+            data = "package:${packageName}".toUri()
         }
         try {
             context.startActivity(intent)

@@ -2,10 +2,7 @@ package one.yufz.hmspush.hook.hms.nm.handler
 
 import android.app.Notification
 import android.content.Context
-import android.graphics.drawable.Icon
 import one.yufz.hmspush.hook.XLog
-import one.yufz.hmspush.hook.hms.Prefs
-import one.yufz.hmspush.hook.hms.icon.IconManager
 import one.yufz.hmspush.hook.hms.nm.INotificationManager
 import one.yufz.hmspush.hook.hms.nm.SelfNotificationManager
 import one.yufz.hmspush.hook.util.newBuilder

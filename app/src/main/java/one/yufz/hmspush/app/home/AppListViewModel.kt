@@ -21,11 +21,7 @@ import one.yufz.hmspush.common.model.PushHistoryModel
 import one.yufz.hmspush.common.model.PushSignModel
 
 class AppListViewModel(val context: Application) : AndroidViewModel(context) {
-    companion object {
-        private const val TAG = "AppListViewModel"
-    }
-
-    private val filterKeywords = MutableStateFlow<String>("")
+    private val filterKeywords = MutableStateFlow("")
 
     private val supportedAppListFlow: MutableSharedFlow<List<String>> = MutableStateFlow(emptyList())
 
