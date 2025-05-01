@@ -51,6 +51,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import one.yufz.hmspush.R
 import one.yufz.hmspush.app.HmsPushClient
 import one.yufz.hmspush.app.LocalNavHostController
+import one.yufz.hmspush.app.Routers
 import one.yufz.hmspush.app.widget.LifecycleAware
 import one.yufz.hmspush.app.widget.SearchBar
 import one.yufz.hmspush.common.HMS_PACKAGE_NAME
@@ -149,6 +150,14 @@ private fun AppBarMoreMenu(usable: Boolean) {
                         openMoreMenu = false
                     },
                     enabled = usable
+                )
+                DropdownMenuItem(
+                    text = {
+                        Text(text = stringResource(id = R.string.fake_device))
+                    },
+                    onClick = {
+                        navController.navigate(Routers.FAKE_DEVICE)
+                    }
                 )
                 val context = LocalContext.current
                 DropdownMenuItem(
