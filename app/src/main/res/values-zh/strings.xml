@@ -11,6 +11,7 @@
     <string name="menu_search">搜索</string>
     <string name="menu_unregister">取消注册</string>
     <string name="menu_settings">设置</string>
+    <string name="open_hms_core_app_info">打开 HMS Core 应用详情</string>
     <string name="reboot_hms_core">重启 HMS Core</string>
     <string name="rebooting_hms_core">正在尝试重启 HMS Core</string>
     <string name="manually_reboot_hms_core">请手动停止 HMS Core</string>

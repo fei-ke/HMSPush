@@ -6,7 +6,9 @@
 
 package one.yufz.hmspush.app.home
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.widget.Toast
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Box
@@ -18,7 +20,6 @@ import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -30,7 +31,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -151,6 +151,15 @@ private fun AppBarMoreMenu(usable: Boolean) {
                     enabled = usable
                 )
                 val context = LocalContext.current
+                DropdownMenuItem(
+                    text = {
+                        Text(text = stringResource(id = R.string.open_hms_core_app_info))
+                    },
+                    onClick = {
+                        Util.launchAppInfo(context, HMS_PACKAGE_NAME)
+                        openMoreMenu = false
+                    }
+                )
                 DropdownMenuItem(
                     text = {
                         Text(text = stringResource(id = R.string.reboot_hms_core))
