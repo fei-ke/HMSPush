@@ -131,7 +131,7 @@ fun SearchBar(
 @OptIn(ExperimentalComposeUiApi::class)
 @Preview
 @Composable
-fun preView() {
+fun PreView() {
     SearchBar("1234") {
 
     }
