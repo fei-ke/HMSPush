@@ -124,6 +124,13 @@ fun SettingsScreen(viewModel: SettingsViewModel = viewModel()) {
                         }
                     )
                 }
+                SwitchPreference(
+                    title = stringResource(id = R.string.hide_app_icon),
+                    icon = Icons.Outlined.Palette,
+                    checked = preferences.hideAppIcon,
+                    showDivider = true,
+                    onCheckedChange = viewModel::toggleAppIcon,
+                )
             }
 
         }

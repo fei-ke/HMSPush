@@ -11,6 +11,7 @@
     <string name="menu_search">Search</string>
     <string name="menu_unregister">Unregister</string>
     <string name="menu_settings">Settings</string>
+    <string name="open_hms_core_app_info">Open HMS Core App Info</string>
     <string name="reboot_hms_core">Reboot HMS Core</string>
     <string name="rebooting_hms_core">Trying to restart HMS Core</string>
     <string name="manually_reboot_hms_core">Please restart HMS Core manually</string>
@@ -54,4 +55,5 @@
     <string name="keep_alive_summary">This option will show a foreground notification for HMS Core, You can long press and hide it</string>
     <string name="clear_hms_notification_channels">Clear notification categories</string>
     <string name="clear_hms_notification_channels_done">Operation is done, please check the result on the Notification categories page</string>
+    <string name="hide_app_icon">Hide App Icon</string>
 </resources>

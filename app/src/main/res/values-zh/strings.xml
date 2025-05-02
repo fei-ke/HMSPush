@@ -11,6 +11,7 @@
     <string name="menu_search">搜索</string>
     <string name="menu_unregister">取消注册</string>
     <string name="menu_settings">设置</string>
+    <string name="open_hms_core_app_info">打开 HMS Core 应用详情</string>
     <string name="reboot_hms_core">重启 HMS Core</string>
     <string name="rebooting_hms_core">正在尝试重启 HMS Core</string>
     <string name="manually_reboot_hms_core">请手动停止 HMS Core</string>
@@ -55,4 +56,6 @@
     <string name="keep_alive_summary">该选项会为HMS Core显示一个前台通知，可长按通知将其隐藏</string>
     <string name="clear_hms_notification_channels">清除通知分类</string>
     <string name="clear_hms_notification_channels_done">操作已执行，请自行在通知分类页查看结果</string>
+
+    <string name="hide_app_icon">隐藏应用图标</string>
 </resources>
