@@ -4,4 +4,4 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class PushHistoryModel constructor(var packageName: String, var pushTime: Long) : Parcelable
+class PushHistoryModel(var packageName: String, var pushTime: Long) : Parcelable

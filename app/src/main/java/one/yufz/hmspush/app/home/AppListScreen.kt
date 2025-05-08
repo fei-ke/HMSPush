@@ -12,15 +12,11 @@ import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.ime
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
-import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -61,7 +57,6 @@ import one.yufz.hmspush.app.theme.AppTheme
 import one.yufz.hmspush.app.theme.customColors
 import one.yufz.hmspush.common.HMS_PACKAGE_NAME
 import one.yufz.hmspush.common.HmsCoreUtil
-import one.yufz.hmspush.hook.hms.HmsPushService
 
 @Composable
 fun AppListScreen(searchText: String, appListViewModel: AppListViewModel = viewModel()) {
@@ -136,7 +131,7 @@ private fun AppCard(info: AppInfo) {
         var showDropdownMenu by remember { mutableStateOf(false) }
         IconButton(onClick = { showDropdownMenu = true }) {
             Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "More")
-            MoreDropdownMenu(showDropdownMenu, info, { showDropdownMenu = false })
+            MoreDropdownMenu(showDropdownMenu, info) { showDropdownMenu = false }
         }
 
     }
@@ -279,7 +274,7 @@ private fun Preview() {
         packageName = BuildConfig.APPLICATION_ID, lastPushTime = System.currentTimeMillis(), name = stringResource(R.string.app_name), registered = true
     )
     val list = listOf(appInfo, appInfo.copy(registered = false))
-    AppTheme() {
+    AppTheme {
         AppList(list)
     }
 }

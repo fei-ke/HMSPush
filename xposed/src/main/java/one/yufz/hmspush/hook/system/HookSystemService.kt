@@ -12,7 +12,6 @@ import one.yufz.hmspush.hook.XLog
 import one.yufz.xposed.callMethod
 import one.yufz.xposed.deoptimizeMethod
 import one.yufz.xposed.get
-import one.yufz.xposed.hook
 import one.yufz.xposed.hookMethod
 
 class HookSystemService {

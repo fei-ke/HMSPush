@@ -17,7 +17,6 @@ import one.yufz.hmspush.app.HmsPushClient
 import one.yufz.hmspush.app.util.registerPackageChangeFlow
 import one.yufz.hmspush.common.API_VERSION
 import one.yufz.hmspush.common.HMS_PACKAGE_NAME
-import one.yufz.hmspush.common.VERSION_NAME
 
 class HomeViewModel(val app: Application) : AndroidViewModel(app) {
     enum class Reason {
