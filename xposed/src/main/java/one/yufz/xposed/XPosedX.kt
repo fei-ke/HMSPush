@@ -114,7 +114,7 @@ inline operator fun <reified T> Any.set(name: String, value: T?) = setField(name
 
 fun <T> Any.getField(name: String, fieldClazz: Class<T>): T? {
     val obj = if (this is Class<*>) null else this
-    val thisClass = if (this is Class<*>) this else this.javaClass
+    val thisClass = this as? Class<*> ?: this.javaClass
     val field = findField(thisClass, name)
 
     val value = when (fieldClazz) {
@@ -133,7 +133,7 @@ fun <T> Any.getField(name: String, fieldClazz: Class<T>): T? {
 
 fun <T> Any.setField(name: String, value: T?, fieldClass: Class<T>) {
     val obj = if (this is Class<*>) null else this
-    val thisClass = if (this is Class<*>) this else this.javaClass
+    val thisClass = this as? Class<*> ?: this.javaClass
 
     val field = findField(thisClass, name)
 

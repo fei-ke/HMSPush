@@ -24,7 +24,9 @@ object PushSignWatcher : SharedPreferences.OnSharedPreferenceChangeListener {
         pushSignPref.registerOnSharedPreferenceChangeListener(this)
     }
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        sharedPreferences ?: return
+        key ?: return
         XLog.d(TAG, "onPushSignChanged() called with: key = $key")
         logPushSign(sharedPreferences)
     }

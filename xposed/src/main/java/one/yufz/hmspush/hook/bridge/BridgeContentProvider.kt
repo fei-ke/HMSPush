@@ -18,7 +18,7 @@ class BridgeContentProvider {
         private val uriMatcher = UriMatcher(UriMatcher.NO_MATCH)
 
         init {
-            BridgeUri.values().forEach {
+            BridgeUri.entries.forEach {
                 uriMatcher.addURI(AUTHORITIES, it.path, it.ordinal)
             }
         }
@@ -29,7 +29,7 @@ class BridgeContentProvider {
 
         val code = uriMatcher.match(uri)
         return if (code != -1) {
-            when (BridgeUri.values()[code]) {
+            when (BridgeUri.entries[code]) {
                 BridgeUri.DISABLE_SIGNATURE -> queryIsDisableSignature()
                 BridgeUri.HMS_PUSH_SERVICE -> BinderCursor(HmsPushService)
                 else -> throw IllegalStateException("Unsupported")

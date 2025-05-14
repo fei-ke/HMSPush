@@ -14,17 +14,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.FormatListBulleted
 import androidx.compose.material.icons.filled.Android
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.outlined.ArrowUpward
 import androidx.compose.material.icons.outlined.Computer
 import androidx.compose.material.icons.outlined.FormatColorFill
-import androidx.compose.material.icons.outlined.FormatListBulleted
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.RemoveModerator
-import androidx.compose.material.icons.outlined.Upgrade
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -62,7 +60,7 @@ fun SettingsScreen(viewModel: SettingsViewModel = viewModel()) {
                             navHostController.popBackStack()
                         }
                     ) {
-                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "back")
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "back")
                     }
                 },
                 title = {
@@ -87,7 +85,7 @@ fun SettingsScreen(viewModel: SettingsViewModel = viewModel()) {
                 SwitchPreference(
                     title = stringResource(id = R.string.keep_history_message),
                     summary = stringResource(id = R.string.keep_history_message_summary),
-                    icon = Icons.Outlined.FormatListBulleted,
+                    icon = Icons.AutoMirrored.Outlined.FormatListBulleted,
                     checked = preferences.groupMessageById,
                     onCheckedChange = {
                         viewModel.updatePreference { groupMessageById = it }
@@ -204,7 +202,7 @@ fun Preference(title: String, summary: String? = null, icon: ImageVector?, showD
 
             if (action != null) {
                 if (showDivider) {
-                    Divider(
+                    HorizontalDivider(
                         Modifier
                             .padding(horizontal = 8.dp)
                             .width(1.dp)
