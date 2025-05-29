@@ -1,37 +1,18 @@
 plugins {
     id 'com.android.library'
-    id 'kotlin-android'
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
     namespace 'one.yufz.hmspush.xposed'
-    compileSdk COMPILE_SDK
 
     defaultConfig {
-        minSdk MIN_SDK
-        targetSdk TARGET_SDK
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = '1.8'
     }
 }
 
 dependencies {
-    implementation project(":common")
+    implementation projects.common
     compileOnly 'de.robv.android.xposed:api:82'
-    implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
+    implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:6.1'
 }

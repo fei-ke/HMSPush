@@ -24,7 +24,7 @@ enum class Property(val entry: Pair<String, String>) {
 
 fun fakeProperty(property: Property, overrideValue: String) = fakeProperty(Pair(property.key, overrideValue))
 
-fun fakeAllBuildInProperties() = fakeProperty(*Property.values().map { it.entry }.toTypedArray())
+fun fakeAllBuildInProperties() = fakeProperty(*Property.entries.map { it.entry }.toTypedArray())
 
 fun fakeProperty(vararg properties: Property) {
     fakeProperty(*properties.map { it.entry }.toTypedArray())

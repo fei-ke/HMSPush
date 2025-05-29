@@ -1,62 +1,46 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-buildscript {
-    //https://developer.android.com/jetpack/androidx/releases/compose-kotlin
-    ext.kotlin_version = '1.8.10'
-    ext.kotlin_compiler_extension_version = '1.4.3'
+import com.android.build.gradle.api.AndroidBasePlugin
 
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
 plugins {
-    id 'com.android.application' version '7.4.1' apply false
-    id 'com.android.library' version '7.4.1' apply false
-    id 'org.jetbrains.kotlin.android' version '1.7.10' apply false
+    id 'com.android.application' version '8.10.1' apply false
+    id 'com.android.library' version '8.10.1' apply false
+    id 'org.jetbrains.kotlin.android' version '2.1.21' apply false
+    id 'org.jetbrains.kotlin.plugin.compose' version '2.1.21' apply false
+    id 'org.jetbrains.kotlin.plugin.parcelize' version '2.1.21' apply false
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
-def getVersionCode = { ->
-    try {
-        def stdout = new ByteArrayOutputStream()
-        exec {
-            commandLine 'git', 'rev-list', '--first-parent', '--count', 'HEAD'
-            standardOutput = stdout
+allprojects {
+    plugins.withType(AndroidBasePlugin).configureEach {
+        project.android {
+            compileSdk 35
+            defaultConfig {
+                minSdk 26
+                targetSdk compileSdk
+                vectorDrawables.useSupportLibrary = true
+            }
         }
-        return Integer.parseInt(stdout.toString().trim())
-    } catch (ignored) {
-        return -1;
+    }
+
+    plugins.withType(JavaBasePlugin).configureEach {
+        java.toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
     }
 }
 
-def getVersionName = { ->
-    try {
-        def stdout = new ByteArrayOutputStream()
-        exec {
-            commandLine 'git', 'describe', '--tags', '--dirty'
-            standardOutput = stdout
-        }
+final def getVersionCode = providers.exec {
+    commandLine('git', 'rev-list', '--first-parent', '--count', 'HEAD')
+}.standardOutput.asText.get().trim()
 
-        def versionName = stdout.toString().trim()
-        if (versionName.startsWith("v")) {
-            return versionName.substring(1)
-        } else {
-            return versionName
-        }
-    } catch (ignored) {
-        return null;
-    }
-}
+final def getVersionName = providers.exec {
+    commandLine('git', 'describe', '--tags', '--dirty')
+}.standardOutput.asText.get().trim() - "v"
+
 ext {
-    gitVersionCode = getVersionCode()
-    gitVersionName = getVersionName()
+    gitVersionCode = getVersionCode
+    gitVersionName = getVersionName
     APPLICATION_ID = "one.yufz.hmspush"
+}
 
-    COMPILE_SDK = 34
-    MIN_SDK = 26
-    TARGET_SDK = 34
+tasks.register('clean') {
+    delete rootProject.layout.buildDirectory
 }
