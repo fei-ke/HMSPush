@@ -75,6 +75,6 @@ object HmsPushService : HmsPushInterface.Stub() {
     }
 
     override fun clearHmsNotificationChannels(packageName: String) {
-        NotificationManagerEx.clearHmsNotificationChannels(packageName, Binder.getCallingUid() / 100000)
+        NotificationManagerEx.clearHmsNotificationChannels(packageName, getCallingUid() / 100000)
     }
 }

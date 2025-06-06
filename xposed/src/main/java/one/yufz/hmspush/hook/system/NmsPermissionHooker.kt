@@ -1,15 +1,12 @@
 package one.yufz.hmspush.hook.system
 
 import android.app.AndroidAppHelper
-import android.app.Application
 import android.app.Notification
 import android.content.Context
 import android.os.Binder
 import android.os.Build
 import android.os.Process
-import android.os.UserHandle
 import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XposedHelpers.findAndHookMethod
 import de.robv.android.xposed.XposedHelpers.findClass
 import de.robv.android.xposed.XposedHelpers.findMethodExact
 import one.yufz.hmspush.common.ANDROID_PACKAGE_NAME
