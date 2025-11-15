@@ -102,7 +102,11 @@ private fun AppBar(
     onSearchTextChanged: (String) -> Unit
 ) {
     TopAppBar(
-        title = { Text(text = stringResource(id = R.string.app_name)) },
+        title = {
+            if (!searching) {
+                Text(text = stringResource(id = R.string.app_name))
+            }
+        },
         scrollBehavior = scrollBehavior,
         actions = {
             //Search

@@ -125,8 +125,6 @@ private fun AppCard(info: AppInfo) {
                 overflow = TextOverflow.Ellipsis
             )
 
-            Spacer(modifier = Modifier.height(4.dp))
-
             //Status
             AppStatus(info)
         }

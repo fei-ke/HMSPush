@@ -75,6 +75,7 @@ import one.yufz.hmspush.app.widget.SearchBar
 fun IconScreen(iconViewModel: IconViewModel = viewModel()) {
     val navHostController = LocalNavHostController.current
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    var searching by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -85,10 +86,11 @@ fun IconScreen(iconViewModel: IconViewModel = viewModel()) {
                     }
                 },
                 title = {
-                    Text(text = stringResource(id = R.string.notification_icon))
+                    if (!searching) {
+                        Text(text = stringResource(id = R.string.notification_icon))
+                    }
                 },
                 actions = {
-                    var searching by remember { mutableStateOf(false) }
 
                     if (!searching) {
                         IconButton(onClick = { searching = true }) {
