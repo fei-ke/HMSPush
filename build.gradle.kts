@@ -1,42 +1,91 @@
-import org.gradle.api.Project
-import java.io.ByteArrayOutputStream
+import com.android.build.api.dsl.ApplicationDefaultConfig
+import com.android.build.api.dsl.ApplicationExtension
+import com.android.build.api.dsl.CommonExtension
+import com.android.build.gradle.api.AndroidBasePlugin
+import org.lsposed.lsplugin.ApksignExtension
+import org.lsposed.lsplugin.ApksignPlugin
 
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.parcelize) apply false
+    alias(libs.plugins.compose.compiler) apply false
+    alias(libs.plugins.lsplugin.jgit)
+    alias(libs.plugins.lsplugin.apksign) apply false
 }
 
-fun Project.runGitCommand(vararg args: String): String? =
-    try {
-        val stdout = ByteArrayOutputStream()
-        exec {
-            commandLine("git", *args)
-            standardOutput = stdout
+val repo = jgit.repo()
+val commitCount = (repo?.commitCount("refs/remotes/origin/master") ?: 1)
+val latestTag = repo?.latestTag?.removePrefix("v") ?: "0.0"
+
+val appNamespace by extra("one.yufz.hmspush")
+val appApplicationId by extra("one.yufz.hmspush")
+
+val appVersionCode by extra(commitCount)
+val appVersionName by extra(latestTag)
+
+val androidTargetSdkVersion by extra(35)
+val androidMinSdkVersion by extra(27)
+val androidBuildToolsVersion by extra("35.0.0")
+val androidCompileSdkVersion by extra(36)
+val androidSourceCompatibility by extra(JavaVersion.VERSION_21)
+val androidTargetCompatibility by extra(JavaVersion.VERSION_21)
+
+tasks.register("Delete", Delete::class) {
+    delete(rootProject.layout.buildDirectory)
+}
+
+subprojects {
+    plugins.withType<AndroidBasePlugin> {
+        extensions.configure(CommonExtension::class.java) {
+            compileSdk = androidCompileSdkVersion
+            buildToolsVersion = androidBuildToolsVersion
+
+            defaultConfig {
+                minSdk = androidMinSdkVersion
+            }
+            lint {
+                abortOnError = true
+                checkReleaseBuilds = false
+            }
+
+            compileOptions {
+                sourceCompatibility = androidSourceCompatibility
+                targetCompatibility = androidTargetCompatibility
+            }
         }
-        stdout.toString().trim().ifBlank { null }
-    } catch (_: Exception) {
-        null
+        extensions.configure(BasePluginExtension::class.java) {
+            archivesName.set("${rootProject.name}-v$appVersionName-$appVersionCode")
+        }
     }
 
-fun Project.resolveVersionCode(): Int =
-    runGitCommand("rev-list", "--first-parent", "--count", "HEAD")?.toIntOrNull() ?: -1
+    plugins.withId("com.android.application") {
+        extensions.configure(ApplicationExtension::class.java) {
+            defaultConfig {
+                targetSdk = androidTargetSdkVersion
+                versionCode = appVersionCode
+                versionName = appVersionName
 
-fun Project.resolveVersionName(): String? =
-    runGitCommand("describe", "--tags", "--dirty")?.let {
-        if (it.startsWith("v")) it.substring(1) else it
+                namespace = appNamespace
+                applicationId = appApplicationId
+            }
+        }
     }
 
-val gitVersionCodeValue = resolveVersionCode()
-val gitVersionNameValue = resolveVersionName()
+    plugins.withType(JavaPlugin::class.java) {
+        extensions.configure(JavaPluginExtension::class.java) {
+            sourceCompatibility = androidSourceCompatibility
+            targetCompatibility = androidTargetCompatibility
+        }
+    }
 
-extra.apply {
-    set("gitVersionCode", gitVersionCodeValue)
-    set("gitVersionName", gitVersionNameValue ?: "")
-    set("applicationId", "one.yufz.hmspush")
-}
-
-tasks.register<Delete>("clean") {
-    delete(rootProject.buildDir)
+    plugins.withType(ApksignPlugin::class.java) {
+        extensions.configure(ApksignExtension::class.java) {
+            storeFileProperty = "StoreFile"
+            storePasswordProperty = "StorePassword"
+            keyAliasProperty = "KeyAlias"
+            keyPasswordProperty = "KeyPassword"
+        }
+    }
 }

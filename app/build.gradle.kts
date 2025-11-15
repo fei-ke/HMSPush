@@ -4,27 +4,13 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.compose.compiler)
+
 }
 
-val gitVersionCode = rootProject.extra["gitVersionCode"] as Int
-val gitVersionName = (rootProject.extra["gitVersionName"] as String).ifBlank { null }
-val applicationIdValue = rootProject.extra["applicationId"] as String
-
 android {
-    namespace = applicationIdValue
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
     defaultConfig {
-        applicationId = applicationIdValue
-        minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = gitVersionCode
-        versionName = gitVersionName
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        val archiveVersionName = gitVersionName ?: "dev"
-        setProperty("archivesBaseName", "${rootProject.name}-v$archiveVersionName-$gitVersionCode")
     }
 
     signingConfigs {
@@ -63,14 +49,6 @@ android {
                 "proguard-rules.pro"
             )
         }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
     }
     buildFeatures {
         compose = true
