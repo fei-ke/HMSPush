@@ -10,7 +10,7 @@ typealias ConfigMap = Map<String, List<String>>
 object FakeDeviceConfig {
     private const val TAG = "FakeDeviceConfig"
 
-    private const val CONFIG_PATH = "/data/misc/hmspush/app.conf"
+    private const val CONFIG_PATH = "/data/adb/hmspush/app.conf"
 
     private var _configMapFlow: MutableStateFlow<ConfigMap> = MutableStateFlow(emptyMap())
     val configMapFlow: StateFlow<ConfigMap> = _configMapFlow
