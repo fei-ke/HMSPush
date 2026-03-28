@@ -17,10 +17,10 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: set up JDK 17
+    - name: set up JDK
       uses: actions/setup-java@v4
       with:
-        java-version: '17'
+        java-version: '21'
         distribution: 'adopt'
         cache: gradle
 
