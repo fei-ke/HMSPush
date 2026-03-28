@@ -8,8 +8,8 @@
 
     <string name="menu_launch">启动</string>
     <string name="menu_app_info">应用信息</string>
-    <string name="menu_enable_zygisk_fake">取消 Zygisk 伪装</string>
-    <string name="menu_disable_zygisk_fake">启用 Zygisk 伪装</string>
+    <string name="menu_enable_zygisk_fake">启用 Zygisk 伪装</string>
+    <string name="menu_disable_zygisk_fake">取消 Zygisk 伪装</string>
     <string name="menu_unregister">取消注册</string>
 
     <string name="menu_search">搜索</string>
