@@ -13,9 +13,8 @@ class LocalOnlyFlagHandler : NotificationHandler {
     }
 
     override fun handle(chain: NotificationHandler.Chain, manager: INotificationManager, context: Context, packageName: String, id: Int, notification: Notification) {
-        val newNotification = notification.newBuilder(context)
-            .setFlags(notification.flags and Notification.FLAG_LOCAL_ONLY.inv())
-            .build()
+        val newNotification = notification.newBuilder(context).build()
+        newNotification.flags = notification.flags and Notification.FLAG_LOCAL_ONLY.inv()
         chain.proceed(manager, context, packageName, id, newNotification)
     }
 }
