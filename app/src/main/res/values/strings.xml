@@ -63,6 +63,8 @@
     <string name="hide_app_icon">Hide App Icon</string>
     <string name="hide_app_icon_desc">The application icon will be hidden from the launcher, you can still open this application from Xposed Manager.</string>
     <string name="fake_device">Fake Device</string>
+    <string name="force_remove_local_only">Sync Notifications to Wearables</string>
+    <string name="force_remove_local_only_summary">Remove the local-only flag so that push notifications also appear on paired wearable devices such as watches</string>
 
     <string name="hms_push_zygisk_tips">
          <![CDATA[

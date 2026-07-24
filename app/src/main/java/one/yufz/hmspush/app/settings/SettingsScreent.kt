@@ -22,6 +22,7 @@ import androidx.compose.material.icons.outlined.FormatListBulleted
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.RemoveModerator
 import androidx.compose.material.icons.outlined.VisibilityOff
+import androidx.compose.material.icons.outlined.Watch
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -157,6 +158,15 @@ fun SettingsScreen(viewModel: SettingsViewModel = mavericksViewModel()) {
                             viewModel.toggleAppIcon(false)
                         }
                     },
+                )
+                SwitchPreference(
+                    title = stringResource(id = R.string.force_remove_local_only),
+                    summary = stringResource(id = R.string.force_remove_local_only_summary),
+                    icon = Icons.Outlined.Watch,
+                    checked = preferences.forceRemoveLocalOnly,
+                    onCheckedChange = {
+                        viewModel.updatePreference { forceRemoveLocalOnly = it }
+                    }
                 )
             }
 

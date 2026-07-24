@@ -63,6 +63,8 @@
     <string name="hide_app_icon">隐藏应用图标</string>
     <string name="hide_app_icon_desc">将在启动器中隐藏此应用图标，你仍然可以从 Xposed 管理器中打开此应用</string>
     <string name="fake_device">设备伪装</string>
+    <string name="force_remove_local_only">通知同步到穿戴设备</string>
+    <string name="force_remove_local_only_summary">移除通知的本地限制标志，使其同步到已配对的手表等穿戴设备</string>
     <string name="hms_push_zygisk_tips">
          <![CDATA[
         使用 Zygisk 伪装设备，可绕过部分应用对hook 环境的检测。
