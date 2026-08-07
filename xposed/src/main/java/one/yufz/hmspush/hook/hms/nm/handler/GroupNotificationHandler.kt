@@ -4,7 +4,6 @@ import android.app.Notification
 import android.content.Context
 import one.yufz.hmspush.hook.XLog
 import one.yufz.hmspush.hook.hms.nm.INotificationManager
-import one.yufz.hmspush.hook.hms.nm.SelfNotificationManager
 import one.yufz.xposed.set
 
 class GroupNotificationHandler : NotificationHandler {
@@ -13,7 +12,7 @@ class GroupNotificationHandler : NotificationHandler {
     }
 
     override fun careAbout(manager: INotificationManager, context: Context, packageName: String, id: Int, notification: Notification): Boolean {
-        return manager is SelfNotificationManager
+        return true
     }
 
     override fun handle(chain: NotificationHandler.Chain, manager: INotificationManager, context: Context, packageName: String, id: Int, notification: Notification) {
