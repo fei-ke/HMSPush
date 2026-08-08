@@ -76,4 +76,12 @@
     </string>
     <string name="hmspush_zygisk_installed">Zygisk</string>
     <string name="hmspush_zygisk_not_install">Zygisk 模块未安装</string>
+
+    <string name="push_history">推送历史</string>
+    <string name="push_history_count">共 %d 条</string>
+    <string name="push_history_empty">暂无推送记录</string>
+    <string name="push_history_refresh">刷新</string>
+    <string name="push_history_export">导出到 Download</string>
+    <string name="push_history_clear">清空历史</string>
+    <string name="push_history_clear_confirm">将永久删除全部推送记录。如需保留，请先导出。</string>
 </resources>

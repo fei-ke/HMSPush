@@ -151,6 +151,16 @@ private fun AppBarMoreMenu(usable: Boolean) {
                 )
                 DropdownMenuItem(
                     text = {
+                        Text(text = stringResource(id = R.string.push_history))
+                    },
+                    onClick = {
+                        navigator.navigate(Router.PushHistory())
+                        openMoreMenu = false
+                    },
+                    enabled = usable
+                )
+                DropdownMenuItem(
+                    text = {
                         Text(text = stringResource(id = R.string.fake_device))
                     },
                     onClick = {

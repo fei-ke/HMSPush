@@ -8,6 +8,7 @@ import android.content.Context
 import de.robv.android.xposed.XposedHelpers
 import one.yufz.hmspush.hook.XLog
 import one.yufz.hmspush.hook.hms.PushHistory
+import one.yufz.hmspush.hook.hms.PushRecordStore
 import one.yufz.hmspush.hook.hms.nm.INotificationManager
 import one.yufz.hmspush.hook.hms.nm.SelfNotificationManager
 import one.yufz.hmspush.hook.hms.nm.SystemNotificationManager
@@ -51,6 +52,8 @@ object NotificationManagerEx {
         }
 
         PushHistory.record(packageName)
+        //完整历史：每条推送单独留一行，内部已自行 try/catch，不会冒回 HMS 的 notify()
+        PushRecordStore.record(packageName, id, notification)
     }
 
     fun createNotificationChannels(packageName: String, userId: Int, channels: List<NotificationChannel>) {

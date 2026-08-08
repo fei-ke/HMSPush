@@ -58,6 +58,8 @@ import one.yufz.hmspush.BuildConfig
 import one.yufz.hmspush.R
 import one.yufz.hmspush.app.HmsPushClient
 import one.yufz.hmspush.app.fake.FakeDeviceConfig
+import one.yufz.hmspush.app.nav.LocalNavigator
+import one.yufz.hmspush.app.nav.Router
 import one.yufz.hmspush.app.theme.AppTheme
 import one.yufz.hmspush.app.theme.customColors
 import one.yufz.hmspush.app.workaround.mavericksViewModel
@@ -198,6 +200,7 @@ private fun AppStatus(info: AppInfo, zygiskEnabled: Boolean) {
 @Composable
 private fun MoreDropdownMenu(expanded: Boolean, info: AppInfo, zygiskEnabled: Boolean, onDismissRequest: () -> Unit) {
     val context = LocalContext.current
+    val navigator = LocalNavigator.current
 
     var showUnregisterDialog by remember { mutableStateOf(false) }
 
@@ -228,6 +231,17 @@ private fun MoreDropdownMenu(expanded: Boolean, info: AppInfo, zygiskEnabled: Bo
             },
             onClick = {
                 Util.launchAppInfo(context, info.packageName)
+                onDismissRequest()
+            }
+        )
+
+        //Push history for this app
+        DropdownMenuItem(
+            text = {
+                Text(text = stringResource(id = R.string.push_history))
+            },
+            onClick = {
+                navigator.navigate(Router.PushHistory(info.packageName))
                 onDismissRequest()
             }
         )

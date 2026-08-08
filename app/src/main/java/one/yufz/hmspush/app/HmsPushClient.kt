@@ -11,6 +11,7 @@ import one.yufz.hmspush.common.model.IconModel
 import one.yufz.hmspush.common.model.ModuleVersionModel
 import one.yufz.hmspush.common.model.PrefsModel
 import one.yufz.hmspush.common.model.PushHistoryModel
+import one.yufz.hmspush.common.model.PushRecordModel
 import one.yufz.hmspush.common.model.PushSignModel
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Method
@@ -63,6 +64,10 @@ object HmsPushClient : HmsPushInterface.Stub() {
     fun getPushHistoryFlow(): Flow<List<PushHistoryModel>> =
         BridgeWrap.registerContentAsFlow(App.instance, BridgeUri.PUSH_HISTORY.toUri()) { pushHistoryList }
 
+    /** 推送记录变化通知，用于列表自动刷新 */
+    fun getPushRecordChangeFlow(): Flow<Unit> =
+        BridgeWrap.registerContentAsFlow(App.instance, BridgeUri.PUSH_RECORD.toUri()) {}
+
     fun isHmsPushServiceAlive(): Boolean {
         return moduleVersion != null
     }
@@ -81,6 +86,22 @@ object HmsPushClient : HmsPushInterface.Stub() {
 
     override fun getPushHistoryList(): List<PushHistoryModel> {
         return service.pushHistoryList ?: emptyList()
+    }
+
+    override fun getPushRecords(limit: Int, offset: Int): List<PushRecordModel> {
+        return service.getPushRecords(limit, offset) ?: emptyList()
+    }
+
+    override fun getPushRecordCount(): Int {
+        return service.pushRecordCount
+    }
+
+    override fun clearPushRecords() {
+        service.clearPushRecords()
+    }
+
+    override fun getPushRecordFilePath(): String {
+        return service.pushRecordFilePath ?: ""
     }
 
     override fun getPreference(): PrefsModel {

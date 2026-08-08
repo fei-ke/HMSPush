@@ -12,6 +12,7 @@ private const val NOTIFY_NO_DELAY = 1 shl 15
 enum class BridgeUri(val path: String) {
     PUSH_SIGN("hmspush/sign"),
     PUSH_HISTORY("hmspush/history"),
+    PUSH_RECORD("hmspush/record"),
     DISABLE_SIGNATURE("hmspush/disableSignature"),
     HMS_PUSH_SERVICE("hmspush/service");
 

@@ -4,6 +4,7 @@ package one.yufz.hmspush.common;
 import one.yufz.hmspush.common.model.ModuleVersionModel;
 import one.yufz.hmspush.common.model.PushSignModel;
 import one.yufz.hmspush.common.model.PushHistoryModel;
+import one.yufz.hmspush.common.model.PushRecordModel;
 import one.yufz.hmspush.common.model.PrefsModel;
 import one.yufz.hmspush.common.model.IconModel;
 
@@ -12,6 +13,12 @@ interface HmsPushInterface {
     List<PushSignModel> getPushSignList();
     void unregisterPush(String packageName);
     List<PushHistoryModel> getPushHistoryList();
+
+    List<PushRecordModel> getPushRecords(int limit, int offset);
+    int getPushRecordCount();
+    void clearPushRecords();
+    String getPushRecordFilePath();
+
     PrefsModel getPreference();
     void updatePreference(in PrefsModel model);
 
