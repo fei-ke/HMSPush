@@ -77,4 +77,12 @@
     </string>
     <string name="hmspush_zygisk_installed">Zygisk</string>
     <string name="hmspush_zygisk_not_install">Zygisk 模块未安装</string>
+
+    <string name="push_history">Push History</string>
+    <string name="push_history_count">%d records</string>
+    <string name="push_history_empty">No push records yet</string>
+    <string name="push_history_refresh">Refresh</string>
+    <string name="push_history_export">Export to Download</string>
+    <string name="push_history_clear">Clear History</string>
+    <string name="push_history_clear_confirm">All push records will be deleted permanently. Export them first if you want to keep a copy.</string>
 </resources>

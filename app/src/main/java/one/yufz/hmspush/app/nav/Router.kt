@@ -16,4 +16,8 @@ sealed interface Router : NavKey {
 
     @Serializable
     data object FakeDevice : Router
+
+    /** packageName 非空时只显示该应用的推送记录 */
+    @Serializable
+    data class PushHistory(val packageName: String? = null) : Router
 }

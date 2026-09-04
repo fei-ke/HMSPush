@@ -15,6 +15,7 @@ import one.yufz.hmspush.common.model.IconModel
 import one.yufz.hmspush.common.model.ModuleVersionModel
 import one.yufz.hmspush.common.model.PrefsModel
 import one.yufz.hmspush.common.model.PushHistoryModel
+import one.yufz.hmspush.common.model.PushRecordModel
 import one.yufz.hmspush.common.model.PushSignModel
 import one.yufz.hmspush.hook.hms.icon.IconManager
 
@@ -33,6 +34,10 @@ object HmsPushService : HmsPushInterface.Stub() {
         BridgeUri.PUSH_HISTORY.notifyContentChanged(AndroidAppHelper.currentApplication())
     }
 
+    fun notifyPushRecordChanged() {
+        BridgeUri.PUSH_RECORD.notifyContentChanged(AndroidAppHelper.currentApplication())
+    }
+
     override fun getModuleVersion(): ModuleVersionModel {
         return ModuleVersionModel(VERSION_NAME, VERSION_CODE, API_VERSION)
     }
@@ -47,6 +52,22 @@ object HmsPushService : HmsPushInterface.Stub() {
 
     override fun getPushHistoryList(): List<PushHistoryModel> {
         return PushHistory.getAll()
+    }
+
+    override fun getPushRecords(limit: Int, offset: Int): List<PushRecordModel> {
+        return PushRecordStore.getRecords(limit, offset)
+    }
+
+    override fun getPushRecordCount(): Int {
+        return PushRecordStore.getRecordCount()
+    }
+
+    override fun clearPushRecords() {
+        PushRecordStore.clear()
+    }
+
+    override fun getPushRecordFilePath(): String {
+        return PushRecordStore.getRecordFilePath()
     }
 
     override fun getPreference(): PrefsModel {

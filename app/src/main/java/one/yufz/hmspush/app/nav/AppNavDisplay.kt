@@ -9,6 +9,7 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import one.yufz.hmspush.app.fake.FakeDeviceScreen
+import one.yufz.hmspush.app.history.PushHistoryScreen
 import one.yufz.hmspush.app.home.HomeScreen
 import one.yufz.hmspush.app.icon.IconScreen
 import one.yufz.hmspush.app.settings.SettingsScreen
@@ -20,6 +21,7 @@ val appEntryProvider = entryProvider<NavKey> {
     entry<Router.Settings> { SettingsScreen() }
     entry<Router.Icon> { IconScreen() }
     entry<Router.FakeDevice> { FakeDeviceScreen() }
+    entry<Router.PushHistory> { PushHistoryScreen(packageName = it.packageName) }
 }
 
 @Composable
